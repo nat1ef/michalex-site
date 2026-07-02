@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger } from "@/components/motion/animation-provider";
 import { cn } from "@/lib/utils";
@@ -80,7 +80,9 @@ export function VideoBackground({
   const videoBRef = useRef<HTMLVideoElement>(null);
   const activeRef = useRef<0 | 1>(0);
   const swappingRef = useRef(false);
-  const srcWithFragment = `${src}#t=${loopStart}`;
+  const [isVideoReady, setIsVideoReady] = useState(false);
+  const srcWithFragment =
+    loopStart > 0 ? `${src}#t=${loopStart}` : src;
 
   useEffect(() => {
     const videoA = videoARef.current;
@@ -91,8 +93,10 @@ export function VideoBackground({
     videos.forEach(armInlinePlayback);
 
     const startPlayback = async () => {
+      setIsVideoReady(false);
       await prepareAtLoopStart(videoA, loopStart, crossfade);
       await tryPlay(videoA);
+      setIsVideoReady(true);
       await prepareAtLoopStart(videoB, loopStart, crossfade);
       videoB.pause();
     };
@@ -197,13 +201,26 @@ export function VideoBackground({
       className={cn("absolute inset-0 overflow-hidden", className)}
     >
       <div ref={videoWrapRef} className="absolute inset-0 scale-[1.03] will-change-transform">
+        {poster ? (
+          <div
+            aria-hidden
+            className={cn(
+              "absolute inset-0 bg-cover bg-center transition-opacity duration-500",
+              isVideoReady ? "opacity-0" : "opacity-100"
+            )}
+            style={{ backgroundImage: `url(${poster})` }}
+          />
+        ) : null}
         <video
           ref={videoARef}
           muted
           playsInline
           preload="auto"
           poster={poster}
-          className={cn(videoClass, "opacity-100")}
+          className={cn(
+            videoClass,
+            isVideoReady ? "opacity-100" : "opacity-0"
+          )}
         >
           <source src={srcWithFragment} type="video/mp4" />
         </video>

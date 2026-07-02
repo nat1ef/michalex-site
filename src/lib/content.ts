@@ -3,9 +3,10 @@ export const siteConfig = {
   tagline: "Μηχανουργείο — Κατασκεύες ειδών μετάδοσης κίνησης και μηχανολογικών εξαρτημάτων",
   description:
     "Εργαστήριο κατασκευής μηχανημάτων στην Αθήνα. Δεκαετίες εμπειρίας σε τόρνο, φρέζα και custom μηχανουργικές κατασκευές.",
-  heroVideo: "/videos/workshop-hero.mp4",
-  heroPoster: "/images/workshop-gear-hobbing.jpg",
-  heroLoopStart: 2.4,
+  heroVideo: "/videos/workshop-hero-loop.mp4",
+  heroPoster: "/images/hero-loop-poster.jpg",
+  heroLoopStart: 0,
+  ogShareImage: "/images/og-share.jpg?v=3",
   googleReviewsUrl:
     "https://www.google.com/maps/search/?api=1&query=Καστοριάς+2,+Αθήνα+104+41",
   siteUrl: "https://michalex-site.pages.dev",

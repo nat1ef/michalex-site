@@ -122,7 +122,7 @@ export function ProcessChapters() {
               fill
               className="object-cover object-center brightness-105 saturate-[0.85] contrast-110"
               sizes="100vw"
-              priority={i === 0}
+              loading="lazy"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/55 to-background/20" />
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_80%_20%,oklch(0.72_0.145_55/0.12),transparent)]" />

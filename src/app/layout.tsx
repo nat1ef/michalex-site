@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/images/og-share.jpg",
+        url: siteConfig.ogShareImage,
         width: 1200,
         height: 630,
         alt: `${siteConfig.name} — Μηχανουργείο Αθήνα`,
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
-    images: ["/images/og-share.jpg"],
+    images: [siteConfig.ogShareImage],
   },
   robots: { index: true, follow: true },
 };
@@ -74,6 +74,12 @@ export default function RootLayout({
       lang="el"
       className={`dark ${ibmPlexSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <link
+          rel="image_src"
+          href={`${siteConfig.siteUrl}${siteConfig.ogShareImage}`}
+        />
+      </head>
       <body className="min-h-full flex flex-col">
         <LocalBusinessJsonLd />
         <TooltipProvider delay={200}>{children}</TooltipProvider>
