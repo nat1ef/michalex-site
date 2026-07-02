@@ -89,7 +89,13 @@ export function Hero() {
       className="relative min-h-[100svh] overflow-hidden"
       style={{ perspective: "1400px" }}
     >
-      <VideoBackground src={siteConfig.heroVideo} poster={siteConfig.heroPoster} parallax />
+      <VideoBackground
+        src={siteConfig.heroVideo}
+        poster={siteConfig.heroPoster}
+        loopStart={siteConfig.heroLoopStart}
+        crossfade={0.6}
+        parallax
+      />
       <div
         ref={overlayRef}
         className="pointer-events-none absolute inset-0 bg-background/0"

@@ -10,6 +10,10 @@ type VideoBackgroundProps = {
   poster?: string;
   className?: string;
   parallax?: boolean;
+  /** Skip shaky intro frames before loop segment starts */
+  loopStart?: number;
+  /** Crossfade duration at loop seam (seconds) */
+  crossfade?: number;
 };
 
 export function VideoBackground({
@@ -17,32 +21,94 @@ export function VideoBackground({
   poster,
   className,
   parallax = true,
+  loopStart = 0.6,
+  crossfade = 0.55,
 }: VideoBackgroundProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoWrapRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoARef = useRef<HTMLVideoElement>(null);
+  const videoBRef = useRef<HTMLVideoElement>(null);
+  const activeRef = useRef<0 | 1>(0);
+  const swappingRef = useRef(false);
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
+    const videoA = videoARef.current;
+    const videoB = videoBRef.current;
+    if (!videoA || !videoB) return;
+
+    const videos = [videoA, videoB];
+
+    const prime = (video: HTMLVideoElement) => {
+      const applyStart = () => {
+        if (video.duration && loopStart < video.duration - crossfade - 0.5) {
+          video.currentTime = loopStart;
+        }
+      };
+      if (video.readyState >= 1) applyStart();
+      else video.addEventListener("loadedmetadata", applyStart, { once: true });
+    };
+
+    videos.forEach(prime);
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          video.play().catch(() => undefined);
+          videos.forEach((v) => v.play().catch(() => undefined));
         } else {
-          video.pause();
+          videos.forEach((v) => v.pause());
         }
       },
       { threshold: 0.15 }
     );
 
-    observer.observe(video);
-    return () => observer.disconnect();
-  }, []);
+    observer.observe(videoA);
+
+    const swapAtLoop = (current: HTMLVideoElement, next: HTMLVideoElement) => {
+      if (swappingRef.current || !current.duration) return;
+      if (current.duration - current.currentTime > crossfade) return;
+
+      swappingRef.current = true;
+      next.currentTime = loopStart;
+      next.play().catch(() => undefined);
+
+      gsap.to(current, { opacity: 0, duration: crossfade, ease: "power1.inOut" });
+      gsap.to(next, {
+        opacity: 1,
+        duration: crossfade,
+        ease: "power1.inOut",
+        onComplete: () => {
+          current.pause();
+          swappingRef.current = false;
+        },
+      });
+
+      activeRef.current = activeRef.current === 0 ? 1 : 0;
+    };
+
+    const onTimeUpdateA = () => {
+      if (activeRef.current !== 0) return;
+      swapAtLoop(videoA, videoB);
+    };
+    const onTimeUpdateB = () => {
+      if (activeRef.current !== 1) return;
+      swapAtLoop(videoB, videoA);
+    };
+
+    videoA.addEventListener("timeupdate", onTimeUpdateA);
+    videoB.addEventListener("timeupdate", onTimeUpdateB);
+
+    videoA.play().catch(() => undefined);
+
+    return () => {
+      observer.disconnect();
+      videoA.removeEventListener("timeupdate", onTimeUpdateA);
+      videoB.removeEventListener("timeupdate", onTimeUpdateB);
+    };
+  }, [src, loopStart, crossfade]);
 
   useGSAP(
     () => {
+      if (!parallax) return;
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       const container = containerRef.current;
       const videoWrap = videoWrapRef.current;
@@ -51,19 +117,21 @@ export function VideoBackground({
       const isMobile = window.innerWidth < 768;
 
       gsap.to(videoWrap, {
-        yPercent: isMobile ? 18 : 22,
-        scale: isMobile ? 1.1 : 1.15,
+        yPercent: isMobile ? 10 : 14,
         ease: "none",
         scrollTrigger: {
           trigger: container,
           start: "top top",
           end: "bottom top",
-          scrub: 1.4,
+          scrub: 1.6,
         },
       });
     },
     { scope: containerRef }
   );
+
+  const videoClass =
+    "absolute inset-0 h-full w-full object-cover object-center";
 
   return (
     <div
@@ -71,16 +139,25 @@ export function VideoBackground({
       aria-hidden
       className={cn("absolute inset-0 overflow-hidden", className)}
     >
-      <div ref={videoWrapRef} className="absolute inset-0 will-change-transform">
+      <div ref={videoWrapRef} className="absolute inset-0 scale-[1.03] will-change-transform">
         <video
-          ref={videoRef}
+          ref={videoARef}
           autoPlay
-          loop
           muted
           playsInline
-          preload="metadata"
+          preload="auto"
           poster={poster}
-          className="h-[115%] w-full scale-[1.05] object-cover object-center"
+          className={cn(videoClass, "opacity-100")}
+        >
+          <source src={src} type="video/mp4" />
+        </video>
+        <video
+          ref={videoBRef}
+          muted
+          playsInline
+          preload="auto"
+          poster={poster}
+          className={cn(videoClass, "opacity-0")}
         >
           <source src={src} type="video/mp4" />
         </video>
