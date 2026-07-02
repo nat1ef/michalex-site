@@ -18,10 +18,13 @@ export function AnimationProvider({ children }: { children: React.ReactNode }) {
     if (prefersReducedMotion) return;
 
     const lenis = new Lenis({
-      duration: 1.35,
+      lerp: 0.085,
+      duration: 1.6,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      wheelMultiplier: 1.1,
+      wheelMultiplier: 0.85,
+      touchMultiplier: 1.15,
+      syncTouch: true,
     });
 
     lenisRef.current = lenis;
@@ -30,7 +33,7 @@ export function AnimationProvider({ children }: { children: React.ReactNode }) {
 
     const tick = (time: number) => lenis.raf(time * 1000);
     gsap.ticker.add(tick);
-    gsap.ticker.lagSmoothing(0);
+    gsap.ticker.lagSmoothing(500, 33);
 
     ScrollTrigger.refresh();
 

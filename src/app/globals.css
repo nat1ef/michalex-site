@@ -51,29 +51,29 @@
 }
 
 :root {
-  --background: oklch(0.07 0.008 250);
+  --background: oklch(0.13 0.012 250);
   --foreground: oklch(0.97 0.004 250);
-  --card: oklch(0.1 0.01 250);
+  --card: oklch(0.17 0.014 250);
   --card-foreground: oklch(0.97 0.004 250);
-  --popover: oklch(0.1 0.01 250);
+  --popover: oklch(0.17 0.014 250);
   --popover-foreground: oklch(0.97 0.004 250);
   --primary: oklch(0.97 0.004 250);
-  --primary-foreground: oklch(0.08 0.01 250);
-  --secondary: oklch(0.14 0.012 250);
-  --secondary-foreground: oklch(0.92 0.004 250);
-  --muted: oklch(0.14 0.012 250);
-  --muted-foreground: oklch(0.58 0.015 250);
-  --accent: oklch(0.16 0.014 250);
+  --primary-foreground: oklch(0.12 0.012 250);
+  --secondary: oklch(0.2 0.014 250);
+  --secondary-foreground: oklch(0.94 0.004 250);
+  --muted: oklch(0.2 0.014 250);
+  --muted-foreground: oklch(0.68 0.018 250);
+  --accent: oklch(0.22 0.016 250);
   --accent-foreground: oklch(0.97 0.004 250);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(1 0 0 / 8%);
-  --input: oklch(1 0 0 / 10%);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 14%);
   --ring: oklch(0.72 0.145 55);
-  --steel: oklch(0.55 0.04 250);
-  --copper: oklch(0.72 0.145 55);
-  --chart-1: oklch(0.72 0.145 55);
+  --steel: oklch(0.62 0.04 250);
+  --copper: oklch(0.74 0.15 55);
+  --chart-1: oklch(0.74 0.15 55);
   --radius: 0.375rem;
-  --sidebar: oklch(0.1 0.01 250);
+  --sidebar: oklch(0.17 0.014 250);
   --sidebar-foreground: oklch(0.97 0.004 250);
   --sidebar-primary: oklch(0.97 0.004 250);
   --sidebar-primary-foreground: oklch(0.08 0.01 250);
@@ -157,8 +157,8 @@
   .cinematic-vignette {
     background: radial-gradient(
       ellipse 85% 75% at 50% 50%,
-      transparent 35%,
-      oklch(0.04 0.01 250 / 0.65) 100%
+      transparent 45%,
+      oklch(0.08 0.01 250 / 0.35) 100%
     );
   }
 

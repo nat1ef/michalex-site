@@ -1,79 +1,49 @@
 "use client";
 
 import { useRef } from "react";
+import { Star } from "lucide-react";
 import { useGSAP } from "@gsap/react";
-import { gsap, ScrollTrigger } from "@/components/motion/animation-provider";
+import { gsap } from "@/components/motion/animation-provider";
 import { SectionLabel } from "@/components/ui/section-label";
 import { SplitText, RevealBlock } from "@/components/motion/split-text";
 import { siteConfig, reviews } from "@/lib/content";
 import { sectionMeta } from "@/lib/sections";
 
+function StarRow({ rating }: { rating: number }) {
+  return (
+    <div className="flex gap-0.5" aria-label={`${rating} από 5 αστέρια`}>
+      {Array.from({ length: 5 }).map((_, i) => (
+        <Star
+          key={i}
+          className={`h-4 w-4 ${i < rating ? "fill-copper text-copper" : "text-border"}`}
+        />
+      ))}
+    </div>
+  );
+}
+
 export function Reviews() {
   const sectionRef = useRef<HTMLElement>(null);
-  const stackRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
   const meta = sectionMeta.reviews;
 
   useGSAP(
     () => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      const stack = stackRef.current;
-      const section = sectionRef.current;
-      if (!stack || !section) return;
+      const cards = gridRef.current?.querySelectorAll("[data-review-card]");
+      if (!cards?.length) return;
 
-      const cards = gsap.utils.toArray<HTMLElement>("[data-stack-card]", stack);
-      if (cards.length < 2) return;
-
-      const mm = gsap.matchMedia();
-
-      mm.add("(min-width: 768px)", () => {
-        const totalScroll = cards.length * window.innerHeight * 0.55;
-
-        ScrollTrigger.create({
-          trigger: stack,
-          start: "top top",
-          end: `+=${totalScroll}`,
-          pin: true,
-          scrub: 1,
-          anticipatePin: 1,
-        });
-
-        cards.forEach((card, i) => {
-          if (i === cards.length - 1) return;
-
-          gsap.to(card, {
-            scale: 0.9 - i * 0.02,
-            opacity: 0.35,
-            y: -40 * (i + 1),
-            filter: "brightness(0.5)",
-            ease: "none",
-            scrollTrigger: {
-              trigger: stack,
-              start: `top top+=${(i + 1) * (totalScroll / cards.length)}`,
-              end: `top top+=${(i + 2) * (totalScroll / cards.length)}`,
-              scrub: 1,
-            },
-          });
-        });
-
-        cards.forEach((card, i) => {
-          if (i === 0) return;
-          gsap.fromTo(
-            card,
-            { y: window.innerHeight * 0.4, opacity: 0, scale: 0.92 },
-            {
-              y: 0,
-              opacity: 1,
-              scale: 1,
-              ease: "none",
-              scrollTrigger: {
-                trigger: stack,
-                start: `top top+=${i * (totalScroll / cards.length)}`,
-                end: `top top+=${(i + 0.8) * (totalScroll / cards.length)}`,
-                scrub: 1,
-              },
-            }
-          );
-        });
+      gsap.from(cards, {
+        y: 36,
+        opacity: 0,
+        duration: 0.7,
+        stagger: 0.08,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: gridRef.current,
+          start: "top 88%",
+          toggleActions: "play none none reverse",
+        },
       });
     },
     { scope: sectionRef }
@@ -101,49 +71,33 @@ export function Reviews() {
               href={siteConfig.googleReviewsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="telemetry-label transition-colors hover:text-foreground"
+              className="inline-flex items-center gap-2 rounded-sm border border-copper/30 bg-copper/10 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.15em] text-foreground transition-colors hover:bg-copper/15"
             >
+              <Star className="h-3.5 w-3.5 fill-copper text-copper" />
               {siteConfig.rating}/5 · {siteConfig.reviewCount} κριτικές Google
             </a>
           </RevealBlock>
         </div>
 
         <div
-          ref={stackRef}
-          className="relative mt-16 min-h-[70vh] md:mt-20 md:min-h-[100svh]"
+          ref={gridRef}
+          className="mt-12 grid gap-4 sm:mt-16 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
         >
           {reviews.map((review, i) => (
             <blockquote
               key={review.author}
-              data-stack-card
-              className="absolute inset-x-0 top-8 mx-auto flex max-w-3xl flex-col justify-between border border-border/40 bg-background/90 p-8 backdrop-blur-md sm:p-12 md:top-[12vh]"
-              style={{ zIndex: i + 1 }}
+              data-review-card
+              className="flex min-h-[220px] flex-col justify-between border border-border/50 bg-card/80 p-6 backdrop-blur-sm sm:p-7"
             >
-              <p className="text-lg leading-relaxed text-muted-foreground sm:text-xl">
-                &ldquo;{review.text}&rdquo;
-              </p>
-              <footer className="mt-10 border-t border-border/30 pt-8">
-                <p className="text-lg font-medium">{review.author}</p>
-                <p className="telemetry-label mt-2">
-                  {String(i + 1).padStart(2, "0")} · {review.source} · {review.rating}/5
+              <div>
+                <StarRow rating={review.rating} />
+                <p className="mt-4 text-base leading-relaxed text-foreground/85">
+                  &ldquo;{review.text}&rdquo;
                 </p>
-              </footer>
-            </blockquote>
-          ))}
-        </div>
-
-        <div className="mt-8 grid gap-3 md:hidden">
-          {reviews.map((review, i) => (
-            <blockquote
-              key={`mobile-${review.author}`}
-              className="flex flex-col justify-between border border-border/30 bg-foreground/[0.02] p-8"
-            >
-              <p className="text-base leading-relaxed text-muted-foreground">
-                &ldquo;{review.text}&rdquo;
-              </p>
-              <footer className="mt-8 border-t border-border/30 pt-6">
-                <p className="font-medium">{review.author}</p>
-                <p className="telemetry-label mt-1">
+              </div>
+              <footer className="mt-6 border-t border-border/40 pt-4">
+                <p className="font-medium text-foreground">{review.author}</p>
+                <p className="telemetry-label mt-1 text-muted-foreground">
                   {String(i + 1).padStart(2, "0")} · {review.source}
                 </p>
               </footer>

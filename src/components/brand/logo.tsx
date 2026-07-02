@@ -19,9 +19,9 @@ function LogoMarkGraphic({ className }: { className?: string }) {
         y="1"
         width="34"
         height="34"
-        rx="2.5"
+        rx="2"
         stroke="currentColor"
-        strokeOpacity="0.16"
+        strokeOpacity="0.2"
         strokeWidth="1"
       />
       <path
@@ -33,92 +33,63 @@ function LogoMarkGraphic({ className }: { className?: string }) {
       <path
         d="M1.5 27.5V34.5H8.5"
         stroke="currentColor"
-        strokeOpacity="0.1"
+        strokeOpacity="0.14"
         strokeWidth="1"
+        strokeLinecap="square"
+      />
+
+      <circle
+        cx="26"
+        cy="10"
+        r="5.25"
+        stroke="currentColor"
+        strokeOpacity="0.35"
+        strokeWidth="0.9"
+      />
+      <path
+        d="M26 4.75V6.5M26 13.5V15.25M20.75 10H22.5M29.5 10H31.25M22.2 6.2L23.45 7.45M28.55 12.55L29.8 13.8M29.8 6.2L28.55 7.45M23.45 12.55L22.2 13.8"
+        stroke="currentColor"
+        strokeOpacity="0.28"
+        strokeWidth="0.65"
+        strokeLinecap="square"
+      />
+      <circle cx="26" cy="10" r="1.35" stroke="var(--copper)" strokeWidth="0.75" />
+
+      <path
+        d="M6 24.5H14.5V27.5H9.5V30.5H6V24.5Z"
+        stroke="currentColor"
+        strokeOpacity="0.45"
+        strokeWidth="0.9"
+        strokeLinejoin="miter"
+      />
+      <path d="M6 27.5H9.5" stroke="currentColor" strokeOpacity="0.25" strokeWidth="0.65" />
+      <path
+        d="M15.5 24.75L18.25 23.25L17.75 25.25L16.25 27.75Z"
+        fill="var(--copper)"
+        fillOpacity="0.9"
+      />
+      <path
+        d="M16.25 22.75L18.25 22"
+        stroke="var(--copper)"
+        strokeWidth="1.25"
         strokeLinecap="square"
       />
 
       <line
         x1="5"
-        y1="29.25"
+        y1="31.5"
         x2="31"
-        y2="29.25"
-        stroke="currentColor"
-        strokeOpacity="0.12"
-        strokeWidth="0.75"
-      />
-      <line
-        x1="10"
-        y1="28.75"
-        x2="10"
-        y2="29.75"
-        stroke="currentColor"
-        strokeOpacity="0.18"
-        strokeWidth="0.5"
-      />
-      <line
-        x1="18"
-        y1="28.75"
-        x2="18"
-        y2="29.75"
-        stroke="currentColor"
-        strokeOpacity="0.18"
-        strokeWidth="0.5"
-      />
-      <line
-        x1="26"
-        y1="28.75"
-        x2="26"
-        y2="29.75"
-        stroke="var(--copper)"
-        strokeOpacity="0.45"
-        strokeWidth="0.5"
-      />
-
-      <line
-        x1="18"
-        y1="7.5"
-        x2="18"
-        y2="29.25"
-        stroke="currentColor"
-        strokeOpacity="0.08"
-        strokeWidth="0.5"
-        strokeDasharray="1.5 2"
-      />
-
-      <path
-        d="M21.5 10.5H27.5V15H25.5V22.5H21.5V10.5Z"
-        stroke="currentColor"
-        strokeOpacity="0.42"
-        strokeWidth="1"
-        strokeLinejoin="miter"
-        fill="none"
-      />
-      <path
-        d="M21.5 15H25.5"
-        stroke="currentColor"
-        strokeOpacity="0.22"
-        strokeWidth="0.75"
-      />
-      <path
-        d="M21.5 18.75H24.75"
+        y2="31.5"
         stroke="currentColor"
         strokeOpacity="0.14"
-        strokeWidth="0.5"
+        strokeWidth="0.75"
       />
+      <line x1="10" y1="31" x2="10" y2="32" stroke="currentColor" strokeOpacity="0.2" strokeWidth="0.5" />
+      <line x1="18" y1="31" x2="18" y2="32" stroke="currentColor" strokeOpacity="0.2" strokeWidth="0.5" />
+      <line x1="26" y1="31" x2="26" y2="32" stroke="var(--copper)" strokeOpacity="0.5" strokeWidth="0.5" />
 
-      <path
-        d="M8.25 23.25L12.75 21.25L12.25 23.25L10.75 25.75Z"
-        fill="var(--copper)"
-        fillOpacity="0.92"
-      />
-      <path
-        d="M10.75 21.5L12.75 20.75"
-        stroke="var(--copper)"
-        strokeWidth="1.35"
-        strokeLinecap="square"
-      />
-      <circle cx="21.5" cy="15" r="0.85" fill="var(--copper)" fillOpacity="0.85" />
+      <circle cx="7.5" cy="7.5" r="0.65" fill="currentColor" fillOpacity="0.35" />
+      <circle cx="31" cy="31" r="0.65" fill="currentColor" fillOpacity="0.2" />
     </svg>
   );
 }

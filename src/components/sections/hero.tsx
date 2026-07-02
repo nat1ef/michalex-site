@@ -28,39 +28,32 @@ export function Hero() {
       const scrollCue = scrollCueRef.current;
       if (!section || !content || !overlay) return;
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: "top top",
-          end: "+=160%",
-          pin: true,
-          scrub: 1.2,
-          anticipatePin: 1,
-        },
+      const mm = gsap.matchMedia();
+
+      mm.add("(min-width: 768px)", () => {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: "+=140%",
+            pin: true,
+            scrub: 1.4,
+            anticipatePin: 1,
+          },
+        });
+
+        tl.to(content, {
+          y: -140,
+          opacity: 0,
+          scale: 0.92,
+          ease: "power2.in",
+        })
+          .to(overlay, { opacity: 0.75, ease: "power2.in" }, 0)
+          .to(marquee, { y: 60, opacity: 0, ease: "power2.in" }, 0.1)
+          .to(scrollCue, { opacity: 0, y: 20, ease: "power2.in" }, 0);
       });
 
-      tl.to(content, {
-        y: -180,
-        opacity: 0,
-        scale: 0.88,
-        rotateX: 8,
-        transformPerspective: 1200,
-        ease: "power2.in",
-      })
-        .to(overlay, { opacity: 0.92, ease: "power2.in" }, 0)
-        .to(marquee, { y: 80, opacity: 0, ease: "power2.in" }, 0.1)
-        .to(scrollCue, { opacity: 0, y: 20, ease: "power2.in" }, 0);
-
-      gsap.to(content, {
-        y: -30,
-        ease: "none",
-        scrollTrigger: {
-          trigger: section,
-          start: "top top",
-          end: "+=80%",
-          scrub: 2,
-        },
-      });
+      return () => mm.revert();
     },
     { scope: sectionRef }
   );

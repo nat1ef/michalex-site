@@ -6,13 +6,18 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-border/30">
+    <footer className="border-t border-border/40 bg-card/30">
       <div className="section-shell py-12 sm:py-16">
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-2">
             <LogoFull className="max-w-[220px]" />
-            <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-4 max-w-md text-sm leading-relaxed text-muted-foreground">
               {siteConfig.tagline}
+            </p>
+            <p className="mt-3 text-xs leading-relaxed text-muted-foreground/80">
+              Εργαστήριο κατασκευής και επισκευής μηχανολογικών εξαρτημάτων στην
+              Αθήνα. Οι πληροφορίες του ιστότοπου έχουν ενημερωτικό χαρακτήρα και
+              δεν αποτελούν δεσμευτική προσφορά.
             </p>
           </div>
 
@@ -42,21 +47,44 @@ export function Footer() {
               <li>{siteConfig.address}</li>
               <li>
                 <a href={siteConfig.phoneHref} className="hover:text-foreground">
-                  {siteConfig.phone}
+                  Τηλ.: {siteConfig.phone}
                 </a>
               </li>
               <li>
                 <a href={siteConfig.viberHref} className="text-[#7360F2] hover:underline">
-                  Viber
+                  Viber: 690 749 3500
                 </a>
               </li>
+              <li className="text-xs">{siteConfig.hours.weekdays}</li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-2 border-t border-border/30 pt-8 font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>© {year} Μηχανουργείο Αλεξανδράκης</p>
-          <p>Καστοριάς 2 · Αθήνα 104 41</p>
+        <div className="mt-12 space-y-4 border-t border-border/40 pt-8 text-xs leading-relaxed text-muted-foreground">
+          <p>
+            © {year} Μηχανουργείο Αλεξανδράκης. Με επιφύλαξη παντός δικαιώματος. Όλα
+            τα κείμενα, φωτογραφίες, βίντεο και γραφικά στοιχεία προστατεύονται από
+            πνευματικά δικαιώματα.
+          </p>
+          <p>
+            Απαγορεύεται η αναπαραγωγή, αντιγραφή ή διανομή του περιεχομένου χωρίς
+            προηγούμενη έγγραφη άδεια. Τα εμπορικά σήματα τρίτων ανήκουν στους
+            νόμιμους κατόχους τους.
+          </p>
+          <div className="flex flex-col gap-2 font-mono text-[10px] uppercase tracking-[0.12em] sm:flex-row sm:items-center sm:justify-between">
+            <p>Καστοριάς 2 · Αθήνα 104 41 · Ελλάδα</p>
+            <p>
+              Κριτικές πελατών από{" "}
+              <a
+                href={siteConfig.googleReviewsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-foreground/70 hover:text-foreground"
+              >
+                Google Maps
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </footer>

@@ -47,7 +47,7 @@ export function ViberButton({
         fullWidth && "w-full",
         className
       )}
-      aria-label={`${label} — ${siteConfig.phone}`}
+      aria-label={`${label} — Viber 690 749 3500`}
       rel="noopener noreferrer"
     >
       <ViberIcon className={iconSizes[size]} />

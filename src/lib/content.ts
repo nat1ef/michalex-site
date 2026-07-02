@@ -11,8 +11,13 @@ export const siteConfig = {
   phone: "210 522 2541",
   phoneHref: "tel:+302105222541",
   phoneInternational: "302105222541",
-  viberHref: "https://viber.me/302105222541",
-  viberDeepLink: "viber://chat?number=302105222541",
+  viberNumber: "306907493500",
+  viberMessage:
+    "Καλησπέρα, θα ήθελα να ρωτήσω σχετικά με μηχανουργική εργασία.",
+  viberHref:
+    "https://viber.me/306907493500?text=%CE%9A%CE%B1%CE%BB%CE%B7%CF%83%CF%80%CE%AD%CF%81%CE%B1%2C%20%CE%B8%CE%B1%20%CE%AE%CE%B8%CE%B5%CE%BB%CE%B1%20%CE%BD%CE%B1%20%CF%81%CF%89%CF%84%CE%AE%CF%83%CF%89%20%CF%83%CF%87%CE%B5%CF%84%CE%B9%CE%BA%CE%AC%20%CE%BC%CE%B5%20%CE%BC%CE%B7%CF%87%CE%B1%CE%BD%CE%BF%CF%85%CF%81%CE%B3%CE%B9%CE%BA%CE%AE%20%CE%B5%CF%81%CE%B3%CE%B1%CF%83%CE%AF%CE%B1.",
+  viberDeepLink:
+    "viber://chat?number=306907493500&text=%CE%9A%CE%B1%CE%BB%CE%B7%CF%83%CF%80%CE%AD%CF%81%CE%B1%2C%20%CE%B8%CE%B1%20%CE%AE%CE%B8%CE%B5%CE%BB%CE%B1%20%CE%BD%CE%B1%20%CF%81%CF%89%CF%84%CEAE%CF%83%CF%89%20%CF%83%CF%87%CE%B5%CF%84%CE%B9%CE%BA%CE%AC%20%CE%BC%CE%B5%20%CE%BC%CE%B7%CF%87%CE%B1%CE%BD%CE%BF%CF%85%CF%81%CE%B3%CE%B9%CE%BA%CE%AE%20%CE%B5%CF%81%CE%B3%CE%B1%CF%83%CE%AF%CE%B1.",
   address: "Καστοριάς 2, Αθήνα 104 41",
   mapsUrl: "https://maps.google.com/?q=Καστοριάς+2,+Αθήνα+104+41",
   hours: {
@@ -95,6 +100,36 @@ export const reviews = [
     author: "Στεργίου Χ.",
     rating: 5,
     text: "Επαγγελματική δουλειά σε κόψιμο άξονα και ακριβή κατεργασία. Γρήγορη εξυπηρέτηση και σωστή τιμολόγηση.",
+    source: "Google",
+  },
+  {
+    author: "Νίκος Κ.",
+    rating: 5,
+    text: "Έφτιαξαν γρανάζι που δεν βρίσκεις έτοιμο πουθενά. Άψογη ποιότητα, σωστές διαστάσεις και παράδοση στην ώρα της.",
+    source: "Google",
+  },
+  {
+    author: "Dimitris A.",
+    rating: 5,
+    text: "Πολύ καλή δουλειά σε φρεζάρισμα και τόρνευση. Επαγγελματίες με πείρα — τους εμπιστεύομαι χρόνια τώρα.",
+    source: "Google",
+  },
+  {
+    author: "Γιώργος Μ.",
+    rating: 5,
+    text: "Επισκευή άξονα σε πολύ καλή τιμή. Εξήγησαν ακριβώς τι χρειαζόταν και το αποτέλεσμα ήταν άριστο.",
+    source: "Google",
+  },
+  {
+    author: "Panagiotis V.",
+    rating: 5,
+    text: "Μικρό αλλά πολύ οργανωμένο εργαστήριο. Κατασκευή εξαρτήματος κατά σχέδιο χωρίς καθυστερήσεις.",
+    source: "Google",
+  },
+  {
+    author: "Ανδρέας Τ.",
+    rating: 4,
+    text: "Σοβαρή μηχανουργική δουλειά, σωστή συνεννόηση και καθαρό αποτέλεσμα. Το συνιστώ ανεπιφύλακτα.",
     source: "Google",
   },
 ] as const;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger } from "@/components/motion/animation-provider";
 import { cn } from "@/lib/utils";
@@ -20,24 +20,45 @@ export function VideoBackground({
 }: VideoBackgroundProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoWrapRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          video.play().catch(() => undefined);
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
 
   useGSAP(
     () => {
       if (!parallax) return;
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      if (window.innerWidth < 768) return;
       const container = containerRef.current;
       const videoWrap = videoWrapRef.current;
       if (!container || !videoWrap) return;
 
       gsap.to(videoWrap, {
-        yPercent: 35,
-        scale: 1.35,
+        yPercent: 22,
+        scale: 1.15,
         ease: "none",
         scrollTrigger: {
           trigger: container,
           start: "top top",
           end: "bottom top",
-          scrub: 1.2,
+          scrub: 1.5,
         },
       });
     },
@@ -52,22 +73,22 @@ export function VideoBackground({
     >
       <div ref={videoWrapRef} className="absolute inset-0 will-change-transform">
         <video
+          ref={videoRef}
           autoPlay
           loop
           muted
           playsInline
-          preload="auto"
+          preload="metadata"
           poster={poster}
-          className="h-[120%] w-full scale-[1.08] object-cover object-center motion-safe:animate-[ken-burns_24s_ease-in-out_infinite_alternate]"
+          className="h-[115%] w-full scale-[1.05] object-cover object-center"
         >
           <source src={src} type="video/mp4" />
         </video>
       </div>
 
-      <div className="absolute inset-0 bg-black/30" />
-      <div className="absolute inset-0 bg-gradient-to-r from-background from-15% via-background/75 via-45% to-transparent to-100%" />
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/15 to-background/55" />
-      <div className="grain-overlay absolute inset-0" />
+      <div className="absolute inset-0 bg-black/15" />
+      <div className="absolute inset-0 bg-gradient-to-r from-background from-10% via-background/55 via-40% to-transparent to-100%" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/10 to-background/35" />
     </div>
   );
 }

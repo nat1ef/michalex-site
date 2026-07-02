@@ -71,7 +71,8 @@ export function BentoFacility() {
                   muted
                   playsInline
                   poster={cell.poster}
-                  className="absolute inset-0 h-full w-full object-cover grayscale contrast-125 transition-transform duration-700 group-hover:scale-105"
+                  preload="metadata"
+                  className="absolute inset-0 h-full w-full object-cover brightness-105 saturate-[0.9] contrast-110 transition-transform duration-700 group-hover:scale-105"
                 >
                   <source src={cell.src} type="video/mp4" />
                 </video>
@@ -80,13 +81,13 @@ export function BentoFacility() {
                   src={cell.src}
                   alt={cell.alt}
                   fill
-                  className="object-cover grayscale contrast-125 transition-transform duration-700 group-hover:scale-105"
+                  className="object-cover brightness-105 saturate-[0.9] contrast-110 transition-transform duration-700 group-hover:scale-105"
                   sizes="(max-width: 768px) 50vw, 25vw"
                 />
               )}
 
               <div className="grain-overlay absolute inset-0 z-10 opacity-30" />
-              <div className="absolute inset-0 z-20 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
+              <div className="absolute inset-0 z-20 bg-gradient-to-t from-background/80 via-background/15 to-transparent" />
 
               <div className="relative z-30 flex h-full min-h-[180px] flex-col justify-end p-5 sm:p-6">
                 <p className="telemetry-label text-copper/90">{cell.code}</p>

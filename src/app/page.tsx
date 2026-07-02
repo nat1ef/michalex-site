@@ -15,16 +15,16 @@ import { SiteExperience } from "@/components/motion/site-experience";
 import { ScrollProgress } from "@/components/motion/scroll-progress";
 import { MagneticButtons } from "@/components/motion/magnetic-buttons";
 import { HorizontalFeatures } from "@/components/motion/horizontal-features";
-import { AmbientMechanical } from "@/components/motion/ambient-mechanical";
 import { AmbientField } from "@/components/motion/ambient-field";
+import { ScrollRestoration } from "@/components/motion/scroll-restoration";
 import { CinematicOverlay } from "@/components/motion/cinematic-overlay";
 
 export default function Home() {
   return (
     <AnimationProvider>
+      <ScrollRestoration />
       <SiteExperience>
         <AmbientField />
-        <AmbientMechanical />
         <CinematicOverlay />
         <div className="relative z-10">
           <ScrollProgress />

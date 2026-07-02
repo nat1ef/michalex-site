@@ -132,11 +132,11 @@ export function ProcessChapters() {
               src={chapter.image}
               alt={chapter.imageAlt}
               fill
-              className="object-cover object-center grayscale contrast-125"
+              className="object-cover object-center brightness-105 saturate-[0.85] contrast-110"
               sizes="100vw"
               priority={i === 0}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/30" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/55 to-background/20" />
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_80%_20%,oklch(0.72_0.145_55/0.12),transparent)]" />
           </div>
 
