@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import { SectionLink } from "@/components/ui/section-link";
 import { ButtonLink } from "@/components/ui/button-link";
 import { navLinks, siteConfig } from "@/lib/content";
 import { LogoFull, LogoMark } from "@/components/brand/logo";
@@ -60,19 +60,19 @@ export function Header() {
       )}
     >
       <div className="section-shell flex h-16 items-center justify-between sm:h-[4.5rem]">
-        <Link
+        <SectionLink
           href="#αρχικη"
           className="group inline-flex items-center transition-opacity hover:opacity-90"
         >
           <LogoMark className="h-9 w-9 sm:hidden" />
           <LogoFull className="hidden sm:flex" />
-        </Link>
+        </SectionLink>
 
         <nav className="hidden items-center gap-8 lg:flex">
           {navLinks.map((link) => {
             const id = link.href.replace("#", "");
             return (
-              <Link
+              <SectionLink
                 key={link.href}
                 href={link.href}
                 className={cn(
@@ -86,7 +86,7 @@ export function Header() {
                 {active === id && (
                   <span className="absolute -bottom-1.5 left-0 h-px w-full bg-copper" />
                 )}
-              </Link>
+              </SectionLink>
             );
           })}
         </nav>

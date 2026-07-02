@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { SectionLink } from "@/components/ui/section-link";
 import { ArrowUpRight, MapPin, Phone } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button-link";
 import { ViberButton } from "@/components/contact/viber-button";
@@ -59,9 +59,9 @@ export function MobileNav({ open, onOpenChange, active }: MobileNavProps) {
 
                 return (
                   <li key={link.href}>
-                    <Link
+                    <SectionLink
                       href={link.href}
-                      onClick={() => onOpenChange(false)}
+                      onNavigate={() => onOpenChange(false)}
                       className={cn(
                         "group flex items-center gap-4 rounded-sm border border-transparent px-3 py-3.5 transition-colors",
                         isActive
@@ -88,7 +88,7 @@ export function MobileNav({ open, onOpenChange, active }: MobileNavProps) {
                             : "opacity-0 -translate-x-1 group-hover:translate-x-0 group-hover:opacity-60"
                         )}
                       />
-                    </Link>
+                    </SectionLink>
                   </li>
                 );
               })}
@@ -96,9 +96,18 @@ export function MobileNav({ open, onOpenChange, active }: MobileNavProps) {
           </nav>
 
           <div className="mt-auto space-y-3 border-t border-border/40 bg-foreground/[0.02] p-5">
-            <div className="flex items-start gap-2 text-xs text-muted-foreground">
-              <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-copper/80" />
-              <span>{siteConfig.address}</span>
+            <div className="space-y-2 text-xs text-muted-foreground">
+              {siteConfig.locations.map((location) => (
+                <div key={location.id} className="flex items-start gap-2">
+                  <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-copper/80" />
+                  <div>
+                    <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-copper/70">
+                      {location.label}
+                    </p>
+                    <p>{location.address}</p>
+                  </div>
+                </div>
+              ))}
             </div>
             <ButtonLink
               href={siteConfig.phoneHref}

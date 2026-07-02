@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { SectionLink } from "@/components/ui/section-link";
 import { navLinks, siteConfig } from "@/lib/content";
 import { LogoFull } from "@/components/brand/logo";
 
@@ -28,12 +28,12 @@ export function Footer() {
             <ul className="mt-4 space-y-2">
               {navLinks.map((link) => (
                 <li key={link.href}>
-                  <Link
+                  <SectionLink
                     href={link.href}
                     className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                   >
                     {link.label}
-                  </Link>
+                  </SectionLink>
                 </li>
               ))}
             </ul>
@@ -43,8 +43,22 @@ export function Footer() {
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
               Επικοινωνία
             </p>
-            <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
-              <li>{siteConfig.address}</li>
+            <ul className="mt-4 space-y-4 text-sm text-muted-foreground">
+              {siteConfig.locations.map((location) => (
+                <li key={location.id}>
+                  <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-copper/70">
+                    {location.label}
+                  </p>
+                  <a
+                    href={location.mapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-1 block hover:text-foreground"
+                  >
+                    {location.address}
+                  </a>
+                </li>
+              ))}
               <li>
                 <a href={siteConfig.phoneHref} className="hover:text-foreground">
                   Τηλ.: {siteConfig.phone}
@@ -72,7 +86,9 @@ export function Footer() {
             νόμιμους κατόχους τους.
           </p>
           <div className="flex flex-col gap-2 font-mono text-[10px] uppercase tracking-[0.12em] sm:flex-row sm:items-center sm:justify-between">
-            <p>Καστοριάς 2 · Αθήνα 104 41 · Ελλάδα</p>
+            <p>
+              {siteConfig.locations.map((l) => l.address).join(" · ")}
+            </p>
             <p>
               Κριτικές πελατών από{" "}
               <a

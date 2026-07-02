@@ -5,6 +5,7 @@ import { useGSAP } from "@gsap/react";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { gsap } from "@/components/motion/animation-provider";
 import { ButtonLink } from "@/components/ui/button-link";
+import { SectionLink } from "@/components/ui/section-link";
 import { ViberButton } from "@/components/contact/viber-button";
 import { Marquee } from "@/components/motion/marquee";
 import { HeroHeadline, LoadReveal } from "@/components/motion/split-text";
@@ -104,14 +105,12 @@ export function Hero() {
               <ArrowUpRight className="h-3.5 w-3.5" />
             </ButtonLink>
             <ViberButton size="lg" label="Viber" className="magnetic-btn w-full rounded-none sm:w-auto" />
-            <ButtonLink
+            <SectionLink
               href="#υπηρεσιες"
-              variant="outline"
-              size="lg"
               className="magnetic-btn w-full gap-2 rounded-none border-border/60 bg-transparent px-6 font-mono text-[10px] uppercase tracking-[0.14em] backdrop-blur-sm sm:w-auto sm:px-8 sm:text-[11px]"
             >
               Υπηρεσίες
-            </ButtonLink>
+            </SectionLink>
           </LoadReveal>
         </div>
 

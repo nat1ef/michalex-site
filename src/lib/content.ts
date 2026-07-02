@@ -20,6 +20,22 @@ export const siteConfig = {
     "viber://chat?number=306907493500&text=%CE%9A%CE%B1%CE%BB%CE%B7%CF%83%CF%80%CE%AD%CF%81%CE%B1%2C%20%CE%B8%CE%B1%20%CE%AE%CE%B8%CE%B5%CE%BB%CE%B1%20%CE%BD%CE%B1%20%CF%81%CF%89%CF%84%CEAE%CF%83%CF%89%20%CF%83%CF%87%CE%B5%CF%84%CE%B9%CE%BA%CE%AC%20%CE%BC%CE%B5%20%CE%BC%CE%B7%CF%87%CE%B1%CE%BD%CE%BF%CF%85%CF%81%CE%B3%CE%B9%CE%BA%CE%AE%20%CE%B5%CF%81%CE%B3%CE%B1%CF%83%CE%AF%CE%B1.",
   address: "Καστοριάς 2, Αθήνα 104 41",
   mapsUrl: "https://maps.google.com/?q=Καστοριάς+2,+Αθήνα+104+41",
+  locations: [
+    {
+      id: "main",
+      label: "Έδρα",
+      address: "Καστοριάς 2, Αθήνα 104 41",
+      mapsUrl: "https://maps.google.com/?q=Καστοριάς+2,+Αθήνα+104+41",
+      embedQuery: "Καστοριάς+2,+Αθήνα+104+41",
+    },
+    {
+      id: "branch",
+      label: "Υποκατάστημα",
+      address: "Αλικαρνασσού 102, Αθήνα 104 41",
+      mapsUrl: "https://maps.google.com/?q=Αλικαρνασσού+102,+Αθήνα+104+41",
+      embedQuery: "Αλικαρνασσού+102,+Αθήνα+104+41",
+    },
+  ] as const,
   hours: {
     weekdays: "Δευτέρα – Παρασκευή: 07:30 – 16:00",
     saturday: "Σάββατο: Κλειστά",

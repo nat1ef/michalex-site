@@ -90,6 +90,9 @@
   body {
     @apply bg-background text-foreground;
   }
+  [id] {
+    scroll-margin-top: 5rem;
+  }
   html.custom-cursor-active,
   html.custom-cursor-active body {
     cursor: none;

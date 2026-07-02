@@ -100,13 +100,22 @@ export function BentoFacility() {
 
           <div
             data-bento-cell
-            className="col-span-2 row-span-1 flex flex-col justify-between border border-copper/30 bg-copper/5 p-6 sm:col-span-2 lg:col-span-2"
+            className="col-span-2 row-span-1 flex flex-col justify-between gap-4 border border-copper/30 bg-copper/5 p-6 sm:col-span-2 lg:col-span-2"
           >
-            <p className="telemetry-label">ΚΑΣΤΟΡΙΑΣ 2</p>
-            <p className="text-2xl font-semibold tracking-tight sm:text-3xl">
-              {siteConfig.address}
-            </p>
-            <p className="mt-2 text-sm text-muted-foreground">{siteConfig.hours.weekdays}</p>
+            <p className="telemetry-label">ΤΟΠΟΘΕΣΙΕΣ</p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {siteConfig.locations.map((location) => (
+                <div key={location.id}>
+                  <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-copper/80">
+                    {location.label}
+                  </p>
+                  <p className="mt-1 text-lg font-semibold tracking-tight sm:text-xl">
+                    {location.address}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <p className="text-sm text-muted-foreground">{siteConfig.hours.weekdays}</p>
           </div>
         </div>
       </div>
