@@ -43,13 +43,13 @@ export const metadata: Metadata = {
     description: siteConfig.description,
     locale: "el_GR",
     type: "website",
-    images: [{ url: "/images/gears-1.jpg", width: 1200, height: 800, alt: siteConfig.name }],
+    images: [{ url: "/images/workshop-gear-hobbing.jpg", width: 1200, height: 800, alt: siteConfig.name }],
   },
   twitter: {
     card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
-    images: ["/images/gears-1.jpg"],
+    images: ["/images/workshop-gear-hobbing.jpg"],
   },
   robots: { index: true, follow: true },
 };

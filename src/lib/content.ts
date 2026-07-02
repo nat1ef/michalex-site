@@ -3,8 +3,8 @@ export const siteConfig = {
   tagline: "Μηχανουργείο — Κατασκεύες ειδών μετάδοσης κίνησης και μηχανολογικών εξαρτημάτων",
   description:
     "Εργαστήριο κατασκευής μηχανημάτων στην Αθήνα. Δεκαετίες εμπειρίας σε τόρνο, φρέζα και custom μηχανουργικές κατασκευές.",
-  heroVideo: "/videos/hero-bg-hd.mp4",
-  heroPoster: "/images/gears-1.jpg",
+  heroVideo: "/videos/workshop-hero.mp4",
+  heroPoster: "/images/workshop-gear-hobbing.jpg",
   googleReviewsUrl:
     "https://www.google.com/maps/search/?api=1&query=Καστοριάς+2,+Αθήνα+104+41",
   siteUrl: "https://michalex.gr",
@@ -106,8 +106,8 @@ export const processChapters = [
     title: "Άξονες & κυλινδρική ακρίβεια",
     description:
       "Κόψιμο, τόρνευση και finish άξονων κάθε διαμέτρου — από μονάδες μέχρι σειρές, με έλεγχο διαστάσεων και tolerances.",
-    image: "/images/sparks-1.jpg",
-    imageAlt: "Κατεργασία μετάλλου — σπινθήρες τόρνου",
+    image: "/images/workshop-turned-part.jpg",
+    imageAlt: "Κατεργασία άξονα — τόρνευση ακριβείας",
   },
   {
     id: "freza",
@@ -115,8 +115,8 @@ export const processChapters = [
     title: "Φρεζάρισμα & μηχανολογικά εξαρτήματα",
     description:
       "Custom κατασκευές κατά σχέδιο ή δείγμα — πρωτότυπο, μικρές και μεγάλες σειρές με επαναληψιμότητα.",
-    image: "/images/tools-1.jpg",
-    imageAlt: "Εργαλεία και μηχανουργικός εξοπλισμός",
+    image: "/images/workshop-shafts.jpg",
+    imageAlt: "Κατεργασμένοι άξονες και γρανάζια στο εργαστήριο",
   },
   {
     id: "metadosi",
@@ -124,8 +124,8 @@ export const processChapters = [
     title: "Γρανάζια & μετάδοση κίνησης",
     description:
       "Κατασκευή και επισκευή γραναζιών, συμπλεκτών και μηχανισμών μετάδοσης — η ειδικότητα του εργαστηρίου.",
-    image: "/images/gears-1.jpg",
-    imageAlt: "Γρανάζια μετάδοσης κίνησης",
+    image: "/images/workshop-gear-cutting.jpg",
+    imageAlt: "Κοπή γραναζιών — κατεργασία μετάδοσης κίνησης",
   },
 ] as const;
 
@@ -133,8 +133,8 @@ export const facilityBento = [
   {
     id: "video-main",
     type: "video" as const,
-    src: "/videos/hero-bg-hd.mp4",
-    poster: "/images/gears-1.jpg",
+    src: "/videos/workshop-process.mp4",
+    poster: "/images/workshop-gear-hobbing.jpg",
     code: "LIVE / FEED",
     label: "Κατεργασία σε εξέλιξη",
     span: "col-span-2 row-span-2 min-h-[320px] sm:min-h-[420px]",
@@ -142,8 +142,8 @@ export const facilityBento = [
   {
     id: "gears",
     type: "image" as const,
-    src: "/images/gears-1.jpg",
-    alt: "Γρανάζια — λεπτομέρεια κατεργασίας",
+    src: "/images/workshop-gear-hobbing.jpg",
+    alt: "Κοπή γραναζιού στο τόρνο — λεπτομέρεια κατεργασίας",
     code: "SYS / GR",
     label: "Γρανάζια",
     span: "col-span-1 row-span-1",
@@ -151,8 +151,8 @@ export const facilityBento = [
   {
     id: "sparks",
     type: "image" as const,
-    src: "/images/sparks-1.jpg",
-    alt: "Σπινθήρες κατεργασίας μετάλλου",
+    src: "/images/workshop-turned-part.jpg",
+    alt: "Κατεργασμένος άξονας — τόρνευση",
     code: "SYS / TR",
     label: "Τόρνος",
     span: "col-span-1 row-span-1",
@@ -160,19 +160,19 @@ export const facilityBento = [
   {
     id: "tools",
     type: "image" as const,
-    src: "/images/tools-1.jpg",
-    alt: "Εργαλεία μηχανουργείου",
+    src: "/images/workshop-stock.jpg",
+    alt: "Ακατέργαστο υλικό και εργαστήριο",
     code: "SYS / TL",
     label: "Εργαλεία",
     span: "col-span-2 row-span-1 sm:col-span-1",
   },
   {
-    id: "mesh",
-    type: "mesh" as const,
-    code: "DATA / QC",
-    label: "Ποιοτικός έλεγχος",
-    className:
-      "bg-[radial-gradient(circle_at_30%_20%,oklch(0.72_0.145_55/0.25),transparent_50%),linear-gradient(135deg,oklch(0.12_0.01_250),oklch(0.08_0.008_250))]",
+    id: "transmission",
+    type: "image" as const,
+    src: "/images/workshop-transmission.jpg",
+    alt: "Μηχανισμός μετάδοσης — γρανάζια και άξονες",
+    code: "SYS / MT",
+    label: "Μετάδοση",
     span: "col-span-2 row-span-1 sm:col-span-1",
   },
 ] as const;

@@ -101,21 +101,21 @@ export function Hero() {
             </p>
           </LoadReveal>
 
-          <LoadReveal delay={0.7} className="mt-12 flex flex-wrap items-center gap-3">
+          <LoadReveal delay={0.7} className="mt-10 flex flex-wrap items-center gap-2.5 sm:mt-12 sm:gap-3">
             <ButtonLink
               href={siteConfig.phoneHref}
               size="lg"
-              className="magnetic-btn gap-2 rounded-none px-8 font-mono text-[11px] uppercase tracking-[0.14em]"
+              className="magnetic-btn w-full gap-2 rounded-none px-6 font-mono text-[10px] uppercase tracking-[0.14em] sm:w-auto sm:px-8 sm:text-[11px]"
             >
               Κλήση
               <ArrowUpRight className="h-3.5 w-3.5" />
             </ButtonLink>
-            <ViberButton size="lg" label="Viber" className="magnetic-btn rounded-none" />
+            <ViberButton size="lg" label="Viber" className="magnetic-btn w-full rounded-none sm:w-auto" />
             <ButtonLink
               href="#υπηρεσιες"
               variant="outline"
               size="lg"
-              className="magnetic-btn gap-2 rounded-none border-border/60 bg-transparent px-8 font-mono text-[11px] uppercase tracking-[0.14em] backdrop-blur-sm"
+              className="magnetic-btn w-full gap-2 rounded-none border-border/60 bg-transparent px-6 font-mono text-[10px] uppercase tracking-[0.14em] backdrop-blur-sm sm:w-auto sm:px-8 sm:text-[11px]"
             >
               Υπηρεσίες
             </ButtonLink>

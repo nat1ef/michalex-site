@@ -56,13 +56,13 @@ export function BentoFacility() {
 
         <div
           ref={gridRef}
-          className="mt-14 grid auto-rows-[minmax(180px,auto)] grid-flow-dense grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3 lg:mt-20"
+          className="mt-10 grid auto-rows-[minmax(160px,auto)] grid-flow-dense grid-cols-2 gap-2 sm:mt-14 sm:auto-rows-[minmax(180px,auto)] sm:grid-cols-4 sm:gap-3 lg:mt-20"
         >
           {facilityBento.map((cell) => (
             <div
               key={cell.id}
               data-bento-cell
-              className={`group relative overflow-hidden border border-border/40 bg-card/20 ${cell.span} ${cell.type === "image" || cell.type === "video" ? "min-h-[180px]" : ""}`}
+              className={`group relative min-h-[160px] overflow-hidden border border-border/40 bg-card/20 sm:min-h-[180px] ${cell.span}`}
             >
               {cell.type === "video" ? (
                 <video
@@ -75,7 +75,7 @@ export function BentoFacility() {
                 >
                   <source src={cell.src} type="video/mp4" />
                 </video>
-              ) : cell.type === "image" ? (
+              ) : (
                 <Image
                   src={cell.src}
                   alt={cell.alt}
@@ -83,8 +83,6 @@ export function BentoFacility() {
                   className="object-cover grayscale contrast-125 transition-transform duration-700 group-hover:scale-105"
                   sizes="(max-width: 768px) 50vw, 25vw"
                 />
-              ) : (
-                <div className={`absolute inset-0 ${cell.className}`} />
               )}
 
               <div className="grain-overlay absolute inset-0 z-10 opacity-30" />

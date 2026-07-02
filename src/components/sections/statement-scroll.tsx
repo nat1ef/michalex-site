@@ -37,11 +37,8 @@ export function StatementScroll() {
       ref={sectionRef}
       id="δηλωση"
       data-section="statement-scroll"
-      className="relative overflow-hidden border-y-2 border-copper/40 bg-foreground/[0.03] py-20 sm:py-28"
+      className="relative overflow-hidden border-y border-border/40 bg-foreground/[0.03] py-14 sm:py-24"
     >
-      <p className="section-shell telemetry-label mb-6 text-copper">
-        [ ΝΕΟ · STRUCTURAL REDESIGN ]
-      </p>
       <div
         ref={trackRef}
         className="flex w-max whitespace-nowrap will-change-transform"

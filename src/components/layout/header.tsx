@@ -2,19 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowUpRight, Menu, Phone } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
+import { ArrowUpRight } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button-link";
-import { ViberButton } from "@/components/contact/viber-button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import { navLinks, siteConfig } from "@/lib/content";
 import { LogoFull, LogoMark } from "@/components/brand/logo";
+import { MobileNav } from "@/components/layout/mobile-nav";
 import { cn } from "@/lib/utils";
 
 const sectionIds = navLinks.map((l) => l.href.replace("#", ""));
@@ -51,6 +43,13 @@ export function Header() {
     return () => observers.forEach((o) => o.disconnect());
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   return (
     <header
       className={cn(
@@ -60,8 +59,11 @@ export function Header() {
           : "bg-transparent"
       )}
     >
-      <div className="section-shell flex h-[4.5rem] items-center justify-between">
-        <Link href="#αρχικη" className="group inline-flex items-center transition-opacity hover:opacity-90">
+      <div className="section-shell flex h-16 items-center justify-between sm:h-[4.5rem]">
+        <Link
+          href="#αρχικη"
+          className="group inline-flex items-center transition-opacity hover:opacity-90"
+        >
           <LogoMark className="h-9 w-9 sm:hidden" />
           <LogoFull className="hidden sm:flex" />
         </Link>
@@ -75,7 +77,9 @@ export function Header() {
                 href={link.href}
                 className={cn(
                   "relative font-mono text-[10px] uppercase tracking-[0.18em] transition-colors",
-                  active === id ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                  active === id
+                    ? "text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
                 )}
               >
                 {link.label}
@@ -87,7 +91,7 @@ export function Header() {
           })}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <ButtonLink
             href={siteConfig.phoneHref}
             variant="ghost"
@@ -98,41 +102,7 @@ export function Header() {
             <ArrowUpRight className="h-3 w-3" />
           </ButtonLink>
 
-          <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger
-              className={cn(
-                buttonVariants({ variant: "outline", size: "icon" }),
-                "lg:hidden"
-              )}
-            >
-              <Menu className="h-4 w-4" />
-              <span className="sr-only">Μενού</span>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] border-border/50 bg-background">
-              <SheetHeader>
-                <SheetTitle className="font-mono text-xs uppercase tracking-[0.2em]">
-                  Μενού
-                </SheetTitle>
-              </SheetHeader>
-              <nav className="mt-10 flex flex-col gap-1">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setOpen(false)}
-                    className="border-b border-border/30 py-4 font-mono text-xs uppercase tracking-[0.15em] transition-colors hover:text-foreground/70"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-                <ButtonLink href={siteConfig.phoneHref} className="mt-6 gap-2">
-                  <Phone className="h-4 w-4" />
-                  Κλήση
-                </ButtonLink>
-                <ViberButton fullWidth label="Viber" className="mt-3" />
-              </nav>
-            </SheetContent>
-          </Sheet>
+          <MobileNav open={open} onOpenChange={setOpen} active={active} />
         </div>
       </div>
     </header>
