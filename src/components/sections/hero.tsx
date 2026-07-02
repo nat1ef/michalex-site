@@ -93,7 +93,7 @@ export function Hero() {
         src={siteConfig.heroVideo}
         poster={siteConfig.heroPoster}
         loopStart={siteConfig.heroLoopStart}
-        crossfade={0.65}
+        crossfade={0.85}
         priority
         parallax
       />

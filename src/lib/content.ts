@@ -5,10 +5,10 @@ export const siteConfig = {
     "Εργαστήριο κατασκευής μηχανημάτων στην Αθήνα. Δεκαετίες εμπειρίας σε τόρνο, φρέζα και custom μηχανουργικές κατασκευές.",
   heroVideo: "/videos/workshop-hero.mp4",
   heroPoster: "/images/workshop-gear-hobbing.jpg",
-  heroLoopStart: 1.0,
+  heroLoopStart: 2.4,
   googleReviewsUrl:
     "https://www.google.com/maps/search/?api=1&query=Καστοριάς+2,+Αθήνα+104+41",
-  siteUrl: "https://michalex.gr",
+  siteUrl: "https://michalex-site.pages.dev",
   phone: "210 522 2541",
   phoneHref: "tel:+302105222541",
   phoneInternational: "302105222541",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger } from "@/components/motion/animation-provider";
 import { cn } from "@/lib/utils";
@@ -34,6 +34,37 @@ async function tryPlay(video: HTMLVideoElement) {
   }
 }
 
+function canUseLoopPoint(video: HTMLVideoElement, loopStart: number, crossfade: number) {
+  return Boolean(video.duration && loopStart < video.duration - crossfade - 0.5);
+}
+
+function seekToLoopStart(video: HTMLVideoElement, loopStart: number, crossfade: number) {
+  if (!canUseLoopPoint(video, loopStart, crossfade)) return;
+  if (Math.abs(video.currentTime - loopStart) < 0.05) return;
+  video.currentTime = loopStart;
+}
+
+async function prepareAtLoopStart(
+  video: HTMLVideoElement,
+  loopStart: number,
+  crossfade: number
+) {
+  if (video.readyState < 1) {
+    await new Promise<void>((resolve) => {
+      video.addEventListener("loadedmetadata", () => resolve(), { once: true });
+    });
+  }
+
+  if (!canUseLoopPoint(video, loopStart, crossfade)) return;
+
+  if (Math.abs(video.currentTime - loopStart) < 0.05) return;
+
+  await new Promise<void>((resolve) => {
+    video.addEventListener("seeked", () => resolve(), { once: true });
+    video.currentTime = loopStart;
+  });
+}
+
 export function VideoBackground({
   src,
   poster,
@@ -49,11 +80,7 @@ export function VideoBackground({
   const videoBRef = useRef<HTMLVideoElement>(null);
   const activeRef = useRef<0 | 1>(0);
   const swappingRef = useRef(false);
-  const [useSimpleLoop] = useState(
-    () =>
-      typeof window !== "undefined" &&
-      window.matchMedia("(max-width: 767px)").matches
-  );
+  const srcWithFragment = `${src}#t=${loopStart}`;
 
   useEffect(() => {
     const videoA = videoARef.current;
@@ -63,21 +90,11 @@ export function VideoBackground({
     const videos = [videoA, videoB];
     videos.forEach(armInlinePlayback);
 
-    const seekStart = (video: HTMLVideoElement) => {
-      if (video.duration && loopStart < video.duration - crossfade - 0.5) {
-        video.currentTime = loopStart;
-      }
-    };
-
-    const onMeta = (video: HTMLVideoElement) => () => seekStart(video);
-    videos.forEach((video) => {
-      if (video.readyState >= 1) seekStart(video);
-      else video.addEventListener("loadedmetadata", onMeta(video), { once: true });
-    });
-
     const startPlayback = async () => {
+      await prepareAtLoopStart(videoA, loopStart, crossfade);
       await tryPlay(videoA);
-      if (!useSimpleLoop) await tryPlay(videoB).catch(() => undefined);
+      await prepareAtLoopStart(videoB, loopStart, crossfade);
+      videoB.pause();
     };
 
     void startPlayback();
@@ -103,66 +120,48 @@ export function VideoBackground({
       observer.observe(videoA);
     }
 
-    const onEnded = () => {
-      seekStart(videoA);
-      void tryPlay(videoA);
+    const swapAtLoop = (current: HTMLVideoElement, next: HTMLVideoElement) => {
+      if (swappingRef.current || !current.duration) return;
+      if (current.duration - current.currentTime > crossfade) return;
+
+      swappingRef.current = true;
+      seekToLoopStart(next, loopStart, crossfade);
+      void tryPlay(next);
+
+      gsap.to(current, { opacity: 0, duration: crossfade, ease: "power1.inOut" });
+      gsap.to(next, {
+        opacity: 1,
+        duration: crossfade,
+        ease: "power1.inOut",
+        onComplete: () => {
+          current.pause();
+          swappingRef.current = false;
+        },
+      });
+
+      activeRef.current = activeRef.current === 0 ? 1 : 0;
     };
 
-    if (useSimpleLoop) {
-      videoA.loop = true;
-      videoB.style.display = "none";
-      videoA.addEventListener("ended", onEnded);
-    } else {
-      const swapAtLoop = (current: HTMLVideoElement, next: HTMLVideoElement) => {
-        if (swappingRef.current || !current.duration) return;
-        if (current.duration - current.currentTime > crossfade) return;
+    const onTimeUpdateA = () => {
+      if (activeRef.current !== 0) return;
+      swapAtLoop(videoA, videoB);
+    };
+    const onTimeUpdateB = () => {
+      if (activeRef.current !== 1) return;
+      swapAtLoop(videoB, videoA);
+    };
 
-        swappingRef.current = true;
-        seekStart(next);
-        void tryPlay(next);
-
-        gsap.to(current, { opacity: 0, duration: crossfade, ease: "power1.inOut" });
-        gsap.to(next, {
-          opacity: 1,
-          duration: crossfade,
-          ease: "power1.inOut",
-          onComplete: () => {
-            current.pause();
-            swappingRef.current = false;
-          },
-        });
-
-        activeRef.current = activeRef.current === 0 ? 1 : 0;
-      };
-
-      const onTimeUpdateA = () => {
-        if (activeRef.current !== 0) return;
-        swapAtLoop(videoA, videoB);
-      };
-      const onTimeUpdateB = () => {
-        if (activeRef.current !== 1) return;
-        swapAtLoop(videoB, videoA);
-      };
-
-      videoA.addEventListener("timeupdate", onTimeUpdateA);
-      videoB.addEventListener("timeupdate", onTimeUpdateB);
-
-      return () => {
-        observer?.disconnect();
-        document.removeEventListener("touchstart", unlock);
-        document.removeEventListener("click", unlock);
-        videoA.removeEventListener("timeupdate", onTimeUpdateA);
-        videoB.removeEventListener("timeupdate", onTimeUpdateB);
-      };
-    }
+    videoA.addEventListener("timeupdate", onTimeUpdateA);
+    videoB.addEventListener("timeupdate", onTimeUpdateB);
 
     return () => {
       observer?.disconnect();
       document.removeEventListener("touchstart", unlock);
       document.removeEventListener("click", unlock);
-      videoA.removeEventListener("ended", onEnded);
+      videoA.removeEventListener("timeupdate", onTimeUpdateA);
+      videoB.removeEventListener("timeupdate", onTimeUpdateB);
     };
-  }, [src, loopStart, crossfade, priority, useSimpleLoop]);
+  }, [src, loopStart, crossfade, priority]);
 
   useGSAP(
     () => {
@@ -200,14 +199,13 @@ export function VideoBackground({
       <div ref={videoWrapRef} className="absolute inset-0 scale-[1.03] will-change-transform">
         <video
           ref={videoARef}
-          autoPlay
           muted
           playsInline
           preload="auto"
           poster={poster}
           className={cn(videoClass, "opacity-100")}
         >
-          <source src={src} type="video/mp4" />
+          <source src={srcWithFragment} type="video/mp4" />
         </video>
         <video
           ref={videoBRef}
@@ -216,9 +214,9 @@ export function VideoBackground({
           preload="auto"
           poster={poster}
           className={cn(videoClass, "opacity-0")}
-          aria-hidden={useSimpleLoop}
+          aria-hidden
         >
-          <source src={src} type="video/mp4" />
+          <source src={srcWithFragment} type="video/mp4" />
         </video>
       </div>
 

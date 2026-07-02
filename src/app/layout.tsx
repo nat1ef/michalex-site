@@ -41,15 +41,25 @@ export const metadata: Metadata = {
   openGraph: {
     title: siteConfig.name,
     description: siteConfig.description,
+    url: siteConfig.siteUrl,
+    siteName: siteConfig.name,
     locale: "el_GR",
     type: "website",
-    images: [{ url: "/images/workshop-gear-hobbing.jpg", width: 1200, height: 800, alt: siteConfig.name }],
+    images: [
+      {
+        url: "/images/og-share.jpg",
+        width: 1200,
+        height: 630,
+        alt: `${siteConfig.name} — Μηχανουργείο Αθήνα`,
+        type: "image/jpeg",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
-    images: ["/images/workshop-gear-hobbing.jpg"],
+    images: ["/images/og-share.jpg"],
   },
   robots: { index: true, follow: true },
 };
