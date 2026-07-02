@@ -75,6 +75,10 @@ export default function RootLayout({
       className={`dark ${ibmPlexSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
+        <meta
+          property="og:image:secure_url"
+          content={`${siteConfig.siteUrl}${siteConfig.ogShareImage}`}
+        />
         <link
           rel="image_src"
           href={`${siteConfig.siteUrl}${siteConfig.ogShareImage}`}

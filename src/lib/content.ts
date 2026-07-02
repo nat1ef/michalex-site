@@ -6,7 +6,7 @@ export const siteConfig = {
   heroVideo: "/videos/workshop-hero-loop.mp4?v=4",
   heroPoster: "/images/hero-loop-poster.jpg?v=4",
   heroLoopStart: 0,
-  ogShareImage: "/images/og-share.jpg?v=3",
+  ogShareImage: "/images/share-preview.jpg",
   googleReviewsUrl:
     "https://www.google.com/maps/search/?api=1&query=Καστοριάς+2,+Αθήνα+104+41",
   siteUrl: "https://michalex-site.pages.dev",
