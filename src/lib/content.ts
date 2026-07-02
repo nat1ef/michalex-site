@@ -3,8 +3,8 @@ export const siteConfig = {
   tagline: "Μηχανουργείο — Κατασκεύες ειδών μετάδοσης κίνησης και μηχανολογικών εξαρτημάτων",
   description:
     "Εργαστήριο κατασκευής μηχανημάτων στην Αθήνα. Δεκαετίες εμπειρίας σε τόρνο, φρέζα και custom μηχανουργικές κατασκευές.",
-  heroVideo: "/videos/workshop-hero-loop.mp4",
-  heroPoster: "/images/hero-loop-poster.jpg",
+  heroVideo: "/videos/workshop-hero-loop.mp4?v=4",
+  heroPoster: "/images/hero-loop-poster.jpg?v=4",
   heroLoopStart: 0,
   ogShareImage: "/images/og-share.jpg?v=3",
   googleReviewsUrl:

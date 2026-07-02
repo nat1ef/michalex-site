@@ -81,13 +81,45 @@ export function VideoBackground({
   const activeRef = useRef<0 | 1>(0);
   const swappingRef = useRef(false);
   const [isVideoReady, setIsVideoReady] = useState(false);
+  const useNativeLoop = loopStart <= 0;
   const srcWithFragment =
-    loopStart > 0 ? `${src}#t=${loopStart}` : src;
+    !useNativeLoop && loopStart > 0 ? `${src}#t=${loopStart}` : src;
 
   useEffect(() => {
     const videoA = videoARef.current;
+    if (!videoA) return;
+
+    if (useNativeLoop) {
+      armInlinePlayback(videoA);
+      videoA.loop = true;
+
+      const startPlayback = async () => {
+        setIsVideoReady(false);
+        if (videoA.readyState < 2) {
+          await new Promise<void>((resolve) => {
+            videoA.addEventListener("canplay", () => resolve(), { once: true });
+          });
+        }
+        await tryPlay(videoA);
+        setIsVideoReady(true);
+      };
+
+      void startPlayback();
+
+      const unlock = () => {
+        void startPlayback();
+      };
+      document.addEventListener("touchstart", unlock, { once: true, passive: true });
+      document.addEventListener("click", unlock, { once: true });
+
+      return () => {
+        document.removeEventListener("touchstart", unlock);
+        document.removeEventListener("click", unlock);
+      };
+    }
+
     const videoB = videoBRef.current;
-    if (!videoA || !videoB) return;
+    if (!videoB) return;
 
     const videos = [videoA, videoB];
     videos.forEach(armInlinePlayback);
@@ -165,7 +197,7 @@ export function VideoBackground({
       videoA.removeEventListener("timeupdate", onTimeUpdateA);
       videoB.removeEventListener("timeupdate", onTimeUpdateB);
     };
-  }, [src, loopStart, crossfade, priority]);
+  }, [src, loopStart, crossfade, priority, useNativeLoop]);
 
   useGSAP(
     () => {
@@ -224,6 +256,7 @@ export function VideoBackground({
         >
           <source src={srcWithFragment} type="video/mp4" />
         </video>
+        {useNativeLoop ? null : (
         <video
           ref={videoBRef}
           muted
@@ -235,6 +268,7 @@ export function VideoBackground({
         >
           <source src={srcWithFragment} type="video/mp4" />
         </video>
+        )}
       </div>
 
       <div className="absolute inset-0 bg-black/15" />
