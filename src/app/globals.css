@@ -1,26 +1,335 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: "IBM Plex Sans", "IBM Plex Sans Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
+  --font-heading: "IBM Plex Sans", "IBM Plex Sans Fallback", ui-sans-serif, system-ui, sans-serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-steel: var(--steel);
+  --color-copper: var(--copper);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --background: oklch(0.07 0.008 250);
+  --foreground: oklch(0.97 0.004 250);
+  --card: oklch(0.1 0.01 250);
+  --card-foreground: oklch(0.97 0.004 250);
+  --popover: oklch(0.1 0.01 250);
+  --popover-foreground: oklch(0.97 0.004 250);
+  --primary: oklch(0.97 0.004 250);
+  --primary-foreground: oklch(0.08 0.01 250);
+  --secondary: oklch(0.14 0.012 250);
+  --secondary-foreground: oklch(0.92 0.004 250);
+  --muted: oklch(0.14 0.012 250);
+  --muted-foreground: oklch(0.58 0.015 250);
+  --accent: oklch(0.16 0.014 250);
+  --accent-foreground: oklch(0.97 0.004 250);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 10%);
+  --ring: oklch(0.72 0.145 55);
+  --steel: oklch(0.55 0.04 250);
+  --copper: oklch(0.72 0.145 55);
+  --chart-1: oklch(0.72 0.145 55);
+  --radius: 0.375rem;
+  --sidebar: oklch(0.1 0.01 250);
+  --sidebar-foreground: oklch(0.97 0.004 250);
+  --sidebar-primary: oklch(0.97 0.004 250);
+  --sidebar-primary-foreground: oklch(0.08 0.01 250);
+  --sidebar-accent: oklch(0.14 0.012 250);
+  --sidebar-accent-foreground: oklch(0.97 0.004 250);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-ring: oklch(0.72 0.145 55);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html.custom-cursor-active,
+  html.custom-cursor-active body {
+    cursor: none;
+  }
+  html.custom-cursor-active a,
+  html.custom-cursor-active button {
+    cursor: none;
+  }
+  html {
+    @apply font-sans scroll-smooth;
+  }
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .text-gradient-copper {
+    background: linear-gradient(
+      135deg,
+      oklch(0.82 0.12 55) 0%,
+      oklch(0.72 0.145 55) 50%,
+      oklch(0.62 0.16 45) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .display-hero {
+    font-size: clamp(3rem, 9vw, 7rem);
+    line-height: 0.9;
+    letter-spacing: -0.045em;
+  }
+
+  .telemetry-label {
+    @apply font-mono text-[9px] uppercase tracking-[0.32em] text-muted-foreground;
+  }
+
+  .section-cinematic {
+    @apply py-32 sm:py-40 lg:py-48;
+  }
+
+  .scanlines {
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      oklch(0 0 0 / 0.35) 2px,
+      oklch(0 0 0 / 0.35) 4px
+    );
+  }
+
+  .statement-scroll {
+    font-size: clamp(2.5rem, 8vw, 6rem);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+
+  .cinematic-vignette {
+    background: radial-gradient(
+      ellipse 85% 75% at 50% 50%,
+      transparent 35%,
+      oklch(0.04 0.01 250 / 0.65) 100%
+    );
+  }
+
+  .grain-overlay {
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.035;
+  }
+
+  .section-shell {
+    @apply mx-auto max-w-[88rem] px-5 sm:px-8 lg:px-12;
+  }
+
+  .ambient-grid {
+    background-image:
+      linear-gradient(to right, oklch(1 0 0 / 4%) 1px, transparent 1px),
+      linear-gradient(to bottom, oklch(1 0 0 / 4%) 1px, transparent 1px);
+    background-size: 64px 64px;
+    animation: grid-drift 48s linear infinite;
+  }
+
+  .ambient-particles {
+    background-image:
+      radial-gradient(circle at 20% 30%, oklch(0.72 0.145 55 / 12%) 0 1px, transparent 2px),
+      radial-gradient(circle at 70% 60%, oklch(0.97 0.004 250 / 8%) 0 1px, transparent 2px),
+      radial-gradient(circle at 45% 80%, oklch(0.72 0.145 55 / 10%) 0 1.5px, transparent 3px),
+      radial-gradient(circle at 85% 25%, oklch(0.97 0.004 250 / 6%) 0 1px, transparent 2px);
+    background-size: 280px 280px, 320px 320px, 240px 240px, 360px 360px;
+    animation: particle-drift 60s linear infinite;
+  }
+
+  .animate-orbit-slow {
+    animation: orbit-slow 90s linear infinite;
+  }
+
+  .animate-orbit-reverse {
+    animation: orbit-reverse 120s linear infinite;
+  }
+
+  .animate-drift {
+    animation: drift 22s ease-in-out infinite alternate;
+  }
+
+  .animate-drift-reverse {
+    animation: drift-reverse 26s ease-in-out infinite alternate;
+  }
+
+  .animate-spin-slow {
+    animation: spin-slow 40s linear infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .motion-safe\:animate-\[ken-burns_28s_ease-in-out_infinite_alternate\],
+  .motion-safe\:animate-\[ken-burns_24s_ease-in-out_infinite_alternate\],
+  .animate-marquee,
+  .animate-marquee-reverse,
+  .animate-orbit-slow,
+  .animate-orbit-reverse,
+  .animate-drift,
+  .animate-drift-reverse,
+  .animate-spin-slow,
+  .ambient-grid,
+  .ambient-particles,
+  .scanlines {
+    animation: none !important;
+  }
+}
+
+@keyframes ken-burns {
+  from {
+    transform: scale(1.06) translate(0, 0);
+  }
+  to {
+    transform: scale(1.12) translate(-1%, -0.5%);
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-reverse {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+
+.animate-marquee-reverse {
+  animation: marquee-reverse 40s linear infinite;
+}
+
+@keyframes grid-drift {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(64px, 64px);
+  }
+}
+
+@keyframes particle-drift {
+  from {
+    background-position: 0 0, 0 0, 0 0, 0 0;
+  }
+  to {
+    background-position: 280px 140px, -160px 320px, 120px -240px, -200px 180px;
+  }
+}
+
+@keyframes orbit-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes orbit-reverse {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  to {
+    transform: translate(24px, -18px) rotate(8deg);
+  }
+}
+
+@keyframes drift-reverse {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(-20px, 14px);
+  }
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.magnetic-btn {
+  will-change: transform;
 }

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 208 40" fill="none">
+  <path d="M5 11V5h6" stroke="#e8e8ea" stroke-opacity="0.25" stroke-width="1"/>
+  <path d="M35 29v6h-6" stroke="#e8e8ea" stroke-opacity="0.25" stroke-width="1"/>
+  <path d="M7.5 28.5 11.2 14h2.4l3.7 14.5h-2.2l-.8-2.6H10.5l-.8 2.6H7.5Zm3.8-4.4h3.5L13 17.8l-1.7 6.3Z" fill="#e8e8ea"/>
+  <path d="M21.2 14 27.2 28.5h-2.2L23.2 19.2 19.2 28.5h-2.2l6-14.5h2.2Z" fill="#e8e8ea"/>
+  <path d="M8 32.5h24" stroke="#c47a2a" stroke-width="2" stroke-linecap="square"/>
+  <circle cx="32" cy="32.5" r="1.25" fill="#c47a2a"/>
+  <text x="48" y="18" font-family="IBM Plex Sans, Arial, sans-serif" font-size="13.5" font-weight="600" letter-spacing="0.14em" fill="#e8e8ea">????????????</text>
+  <text x="48" y="32" font-family="IBM Plex Sans, Arial, sans-serif" font-size="7.5" font-weight="400" letter-spacing="0.28em" fill="#888890">????????????</text>
+</svg>

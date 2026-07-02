@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+﻿This is a [Next.js](https://nextjs.org) marketing site for Michalex machine shop (TypeScript, Tailwind CSS, GSAP, Three.js).
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+```
 
-## Learn More
+Production output is written to `out/` (static export for Cloudflare Pages).
 
-To learn more about Next.js, take a look at the following resources:
+## Deploy on Cloudflare Pages
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This project uses **Next.js static export** (`output: "export"`), which is the simplest fit for Cloudflare Pages: no Node server, no Workers adapter, and full support for client-side GSAP and Three.js in the browser.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 1. Push to GitHub
+
+Create a repository and push this project (see root `README` workflow if you use the included scripts).
+
+### 2. Connect Cloudflare Pages
+
+1. In [Cloudflare Dashboard](https://dash.cloudflare.com/) go to **Workers & Pages** → **Create** → **Pages** → **Connect to Git**.
+2. Select the GitHub repository.
+3. Configure the build:
+
+| Setting | Value |
+| --- | --- |
+| **Framework preset** | `None` (or **Next.js (Static HTML Export)** if shown) |
+| **Build command** | `npm run build` |
+| **Build output directory** | `out` |
+| **Root directory** | `/` (repository root) |
+
+4. **Environment variables** (optional):
+
+| Variable | Value | Notes |
+| --- | --- | --- |
+| `NODE_VERSION` | `20` | Matches `.nvmrc`; omit if the dashboard already uses Node 20+ |
+
+No secrets are required for the current site; contact links and content live in `src/lib/content.ts`.
+
+5. Save and deploy. Cloudflare runs `npm ci` / `npm install`, then `npm run build`, and serves the `out` folder on the CDN.
+
+### Custom domain
+
+After the first deploy, add your domain under **Pages project → Custom domains** (e.g. `michalex.gr`) and follow DNS instructions.
+
+### Alternative: full Next.js on Workers (OpenNext)
+
+If you later add SSR, Route Handlers, or `next/image` optimization on the edge, migrate to [@opennextjs/cloudflare](https://opennext.js.org/cloudflare/get-started) instead of static export. The legacy `@cloudflare/next-on-pages` package is deprecated in favor of OpenNext.
 
 ## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+You can still deploy on Vercel with the default Next.js preset; remove `output: "export"` from `next.config.ts` if you want Vercel image optimization and server features.
