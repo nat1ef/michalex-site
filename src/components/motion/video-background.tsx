@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger } from "@/components/motion/animation-provider";
 import { cn } from "@/lib/utils";
@@ -10,17 +10,36 @@ type VideoBackgroundProps = {
   poster?: string;
   className?: string;
   parallax?: boolean;
-  /** Skip shaky intro frames before loop segment starts */
+  /** Hero / above-fold: keep playing, retry autoplay on mobile */
+  priority?: boolean;
   loopStart?: number;
-  /** Crossfade duration at loop seam (seconds) */
   crossfade?: number;
 };
+
+function armInlinePlayback(video: HTMLVideoElement) {
+  video.muted = true;
+  video.defaultMuted = true;
+  video.playsInline = true;
+  video.setAttribute("playsinline", "");
+  video.setAttribute("webkit-playsinline", "true");
+}
+
+async function tryPlay(video: HTMLVideoElement) {
+  armInlinePlayback(video);
+  try {
+    await video.play();
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 export function VideoBackground({
   src,
   poster,
   className,
   parallax = true,
+  priority = false,
   loopStart = 0.6,
   crossfade = 0.55,
 }: VideoBackgroundProps) {
@@ -30,6 +49,11 @@ export function VideoBackground({
   const videoBRef = useRef<HTMLVideoElement>(null);
   const activeRef = useRef<0 | 1>(0);
   const swappingRef = useRef(false);
+  const [useSimpleLoop] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(max-width: 767px)").matches
+  );
 
   useEffect(() => {
     const videoA = videoARef.current;
@@ -37,74 +61,108 @@ export function VideoBackground({
     if (!videoA || !videoB) return;
 
     const videos = [videoA, videoB];
+    videos.forEach(armInlinePlayback);
 
-    const prime = (video: HTMLVideoElement) => {
-      const applyStart = () => {
-        if (video.duration && loopStart < video.duration - crossfade - 0.5) {
-          video.currentTime = loopStart;
-        }
-      };
-      if (video.readyState >= 1) applyStart();
-      else video.addEventListener("loadedmetadata", applyStart, { once: true });
+    const seekStart = (video: HTMLVideoElement) => {
+      if (video.duration && loopStart < video.duration - crossfade - 0.5) {
+        video.currentTime = loopStart;
+      }
     };
 
-    videos.forEach(prime);
+    const onMeta = (video: HTMLVideoElement) => () => seekStart(video);
+    videos.forEach((video) => {
+      if (video.readyState >= 1) seekStart(video);
+      else video.addEventListener("loadedmetadata", onMeta(video), { once: true });
+    });
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          videos.forEach((v) => v.play().catch(() => undefined));
-        } else {
-          videos.forEach((v) => v.pause());
-        }
-      },
-      { threshold: 0.15 }
-    );
+    const startPlayback = async () => {
+      await tryPlay(videoA);
+      if (!useSimpleLoop) await tryPlay(videoB).catch(() => undefined);
+    };
 
-    observer.observe(videoA);
+    void startPlayback();
 
-    const swapAtLoop = (current: HTMLVideoElement, next: HTMLVideoElement) => {
-      if (swappingRef.current || !current.duration) return;
-      if (current.duration - current.currentTime > crossfade) return;
+    const unlock = () => {
+      void startPlayback();
+    };
+    document.addEventListener("touchstart", unlock, { once: true, passive: true });
+    document.addEventListener("click", unlock, { once: true });
 
-      swappingRef.current = true;
-      next.currentTime = loopStart;
-      next.play().catch(() => undefined);
-
-      gsap.to(current, { opacity: 0, duration: crossfade, ease: "power1.inOut" });
-      gsap.to(next, {
-        opacity: 1,
-        duration: crossfade,
-        ease: "power1.inOut",
-        onComplete: () => {
-          current.pause();
-          swappingRef.current = false;
+    let observer: IntersectionObserver | undefined;
+    if (!priority) {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            videos.forEach((v) => void tryPlay(v));
+          } else {
+            videos.forEach((v) => v.pause());
+          }
         },
-      });
+        { threshold: 0.08 }
+      );
+      observer.observe(videoA);
+    }
 
-      activeRef.current = activeRef.current === 0 ? 1 : 0;
+    const onEnded = () => {
+      seekStart(videoA);
+      void tryPlay(videoA);
     };
 
-    const onTimeUpdateA = () => {
-      if (activeRef.current !== 0) return;
-      swapAtLoop(videoA, videoB);
-    };
-    const onTimeUpdateB = () => {
-      if (activeRef.current !== 1) return;
-      swapAtLoop(videoB, videoA);
-    };
+    if (useSimpleLoop) {
+      videoA.loop = true;
+      videoB.style.display = "none";
+      videoA.addEventListener("ended", onEnded);
+    } else {
+      const swapAtLoop = (current: HTMLVideoElement, next: HTMLVideoElement) => {
+        if (swappingRef.current || !current.duration) return;
+        if (current.duration - current.currentTime > crossfade) return;
 
-    videoA.addEventListener("timeupdate", onTimeUpdateA);
-    videoB.addEventListener("timeupdate", onTimeUpdateB);
+        swappingRef.current = true;
+        seekStart(next);
+        void tryPlay(next);
 
-    videoA.play().catch(() => undefined);
+        gsap.to(current, { opacity: 0, duration: crossfade, ease: "power1.inOut" });
+        gsap.to(next, {
+          opacity: 1,
+          duration: crossfade,
+          ease: "power1.inOut",
+          onComplete: () => {
+            current.pause();
+            swappingRef.current = false;
+          },
+        });
+
+        activeRef.current = activeRef.current === 0 ? 1 : 0;
+      };
+
+      const onTimeUpdateA = () => {
+        if (activeRef.current !== 0) return;
+        swapAtLoop(videoA, videoB);
+      };
+      const onTimeUpdateB = () => {
+        if (activeRef.current !== 1) return;
+        swapAtLoop(videoB, videoA);
+      };
+
+      videoA.addEventListener("timeupdate", onTimeUpdateA);
+      videoB.addEventListener("timeupdate", onTimeUpdateB);
+
+      return () => {
+        observer?.disconnect();
+        document.removeEventListener("touchstart", unlock);
+        document.removeEventListener("click", unlock);
+        videoA.removeEventListener("timeupdate", onTimeUpdateA);
+        videoB.removeEventListener("timeupdate", onTimeUpdateB);
+      };
+    }
 
     return () => {
-      observer.disconnect();
-      videoA.removeEventListener("timeupdate", onTimeUpdateA);
-      videoB.removeEventListener("timeupdate", onTimeUpdateB);
+      observer?.disconnect();
+      document.removeEventListener("touchstart", unlock);
+      document.removeEventListener("click", unlock);
+      videoA.removeEventListener("ended", onEnded);
     };
-  }, [src, loopStart, crossfade]);
+  }, [src, loopStart, crossfade, priority, useSimpleLoop]);
 
   useGSAP(
     () => {
@@ -117,7 +175,7 @@ export function VideoBackground({
       const isMobile = window.innerWidth < 768;
 
       gsap.to(videoWrap, {
-        yPercent: isMobile ? 10 : 14,
+        yPercent: isMobile ? 8 : 12,
         ease: "none",
         scrollTrigger: {
           trigger: container,
@@ -158,6 +216,7 @@ export function VideoBackground({
           preload="auto"
           poster={poster}
           className={cn(videoClass, "opacity-0")}
+          aria-hidden={useSimpleLoop}
         >
           <source src={src} type="video/mp4" />
         </video>

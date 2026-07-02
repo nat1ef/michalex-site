@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/components/motion/animation-provider";
@@ -8,6 +8,37 @@ import { SectionLabel } from "@/components/ui/section-label";
 import { SplitText } from "@/components/motion/split-text";
 import { facilityBento, siteConfig } from "@/lib/content";
 import { sectionMeta } from "@/lib/sections";
+
+function BentoVideo({ src, poster }: { src: string; poster: string }) {
+  const ref = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = ref.current;
+    if (!video) return;
+    video.muted = true;
+    video.setAttribute("playsinline", "");
+    video.setAttribute("webkit-playsinline", "true");
+    const play = () => video.play().catch(() => undefined);
+    void play();
+    document.addEventListener("touchstart", play, { once: true, passive: true });
+    return () => document.removeEventListener("touchstart", play);
+  }, [src]);
+
+  return (
+    <video
+      ref={ref}
+      autoPlay
+      loop
+      muted
+      playsInline
+      poster={poster}
+      preload="auto"
+      className="absolute inset-0 h-full w-full object-cover brightness-105 saturate-[0.9] contrast-110 transition-transform duration-700 group-hover:scale-105"
+    >
+      <source src={src} type="video/mp4" />
+    </video>
+  );
+}
 
 export function BentoFacility() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -65,17 +96,7 @@ export function BentoFacility() {
               className={`group relative min-h-[160px] overflow-hidden border border-border/40 bg-card/20 sm:min-h-[180px] ${cell.span}`}
             >
               {cell.type === "video" ? (
-                <video
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  poster={cell.poster}
-                  preload="metadata"
-                  className="absolute inset-0 h-full w-full object-cover brightness-105 saturate-[0.9] contrast-110 transition-transform duration-700 group-hover:scale-105"
-                >
-                  <source src={cell.src} type="video/mp4" />
-                </video>
+                <BentoVideo src={cell.src} poster={cell.poster} />
               ) : (
                 <Image
                   src={cell.src}
