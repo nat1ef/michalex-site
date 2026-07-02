@@ -4,8 +4,8 @@ import { Clock, MapPin, Navigation, Phone } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button-link";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion/fade-in";
 import { SectionLabel } from "@/components/ui/section-label";
+import { ViberTextLink } from "@/components/contact/viber-text-link";
 import { siteConfig } from "@/lib/content";
-import { openViberChat } from "@/lib/viber";
 import { sectionMeta } from "@/lib/sections";
 
 export function Contact() {
@@ -128,16 +128,7 @@ export function Contact() {
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
                 Viber
               </p>
-              <a
-                href={siteConfig.viberHref}
-                onClick={(e) => {
-                  e.preventDefault();
-                  openViberChat();
-                }}
-                className="mt-2 block text-sm text-[#7360F2] hover:underline"
-              >
-                690 749 3500
-              </a>
+              <ViberTextLink className="mt-2 block text-sm">690 749 3500</ViberTextLink>
             </div>
             <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">

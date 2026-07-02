@@ -3,7 +3,6 @@
 import { cn } from "@/lib/utils";
 import { openViberChat } from "@/lib/viber";
 import { ViberIcon } from "@/components/icons/viber-icon";
-import { siteConfig } from "@/lib/content";
 
 type ViberButtonProps = {
   className?: string;
@@ -33,14 +32,11 @@ export function ViberButton({
   fullWidth = false,
 }: ViberButtonProps) {
   return (
-    <a
-      href={siteConfig.viberHref}
-      onClick={(e) => {
-        e.preventDefault();
-        openViberChat();
-      }}
+    <button
+      type="button"
+      onClick={() => openViberChat()}
       className={cn(
-        "inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent font-medium whitespace-nowrap transition-all outline-none select-none",
+        "inline-flex shrink-0 cursor-pointer items-center justify-center rounded-lg border border-transparent font-medium whitespace-nowrap transition-all outline-none select-none",
         "bg-[#7360F2] text-white hover:bg-[#6654e0] active:translate-y-px",
         "focus-visible:ring-3 focus-visible:ring-[#7360F2]/40",
         sizeClasses[size],
@@ -48,10 +44,9 @@ export function ViberButton({
         className
       )}
       aria-label={`${label} — Viber 690 749 3500`}
-      rel="noopener noreferrer"
     >
       <ViberIcon className={iconSizes[size]} />
       {showLabel && label}
-    </a>
+    </button>
   );
 }

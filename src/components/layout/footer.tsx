@@ -1,4 +1,5 @@
 import { SectionLink } from "@/components/ui/section-link";
+import { ViberTextLink } from "@/components/contact/viber-text-link";
 import { navLinks, siteConfig } from "@/lib/content";
 import { LogoFull } from "@/components/brand/logo";
 
@@ -65,9 +66,7 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href={siteConfig.viberHref} className="text-[#7360F2] hover:underline">
-                  Viber: 690 749 3500
-                </a>
+                <ViberTextLink>Viber: 690 749 3500</ViberTextLink>
               </li>
               <li className="text-xs">{siteConfig.hours.weekdays}</li>
             </ul>

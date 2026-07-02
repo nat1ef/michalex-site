@@ -43,22 +43,22 @@ export function VideoBackground({
 
   useGSAP(
     () => {
-      if (!parallax) return;
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      if (window.innerWidth < 768) return;
       const container = containerRef.current;
       const videoWrap = videoWrapRef.current;
       if (!container || !videoWrap) return;
 
+      const isMobile = window.innerWidth < 768;
+
       gsap.to(videoWrap, {
-        yPercent: 22,
-        scale: 1.15,
+        yPercent: isMobile ? 18 : 22,
+        scale: isMobile ? 1.1 : 1.15,
         ease: "none",
         scrollTrigger: {
           trigger: container,
           start: "top top",
           end: "bottom top",
-          scrub: 1.5,
+          scrub: 1.4,
         },
       });
     },

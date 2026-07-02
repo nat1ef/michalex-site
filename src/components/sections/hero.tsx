@@ -54,6 +54,29 @@ export function Hero() {
           .to(scrollCue, { opacity: 0, y: 20, ease: "power2.in" }, 0);
       });
 
+      mm.add("(max-width: 767px)", () => {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: "+=110%",
+            pin: true,
+            scrub: 1.1,
+            anticipatePin: 1,
+          },
+        });
+
+        tl.to(content, {
+          y: -90,
+          opacity: 0,
+          scale: 0.94,
+          ease: "power2.in",
+        })
+          .to(overlay, { opacity: 0.65, ease: "power2.in" }, 0)
+          .to(marquee, { y: 40, opacity: 0, ease: "power2.in" }, 0.1)
+          .to(scrollCue, { opacity: 0, y: 16, ease: "power2.in" }, 0);
+      });
+
       return () => mm.revert();
     },
     { scope: sectionRef }

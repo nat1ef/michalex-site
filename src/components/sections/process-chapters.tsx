@@ -7,6 +7,73 @@ import { gsap, ScrollTrigger } from "@/components/motion/animation-provider";
 import { processChapters } from "@/lib/content";
 import { ScrubText } from "@/components/motion/scrub-text";
 
+function setupChapterScroll(
+  chapters: HTMLElement[],
+  config: { pinEnd: string; innerEnd: string; mediaEnd: string }
+) {
+  chapters.forEach((chapter, i) => {
+    const inner = chapter.querySelector("[data-chapter-inner]");
+    const media = chapter.querySelector("[data-chapter-media]");
+    if (!inner || !media) return;
+
+    ScrollTrigger.create({
+      trigger: chapter,
+      start: "top top",
+      end: config.pinEnd,
+      pin: true,
+      pinSpacing: true,
+      scrub: 1,
+      anticipatePin: 1,
+    });
+
+    gsap.fromTo(
+      inner,
+      { y: 80, opacity: 0.2 },
+      {
+        y: 0,
+        opacity: 1,
+        ease: "none",
+        scrollTrigger: {
+          trigger: chapter,
+          start: "top top",
+          end: config.innerEnd,
+          scrub: 1.1,
+        },
+      }
+    );
+
+    gsap.fromTo(
+      media,
+      { scale: 1.15, filter: "brightness(0.45)" },
+      {
+        scale: 1,
+        filter: "brightness(0.8)",
+        ease: "none",
+        scrollTrigger: {
+          trigger: chapter,
+          start: "top top",
+          end: config.mediaEnd,
+          scrub: 1.2,
+        },
+      }
+    );
+
+    if (i < chapters.length - 1) {
+      gsap.to(chapter, {
+        opacity: 0.2,
+        scale: 0.97,
+        ease: "none",
+        scrollTrigger: {
+          trigger: chapter,
+          start: "bottom bottom",
+          end: "bottom top",
+          scrub: 1,
+        },
+      });
+    }
+  });
+}
+
 export function ProcessChapters() {
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -20,97 +87,18 @@ export function ProcessChapters() {
       const mm = gsap.matchMedia();
 
       mm.add("(min-width: 768px)", () => {
-        chapters.forEach((chapter, i) => {
-          const inner = chapter.querySelector("[data-chapter-inner]");
-          const media = chapter.querySelector("[data-chapter-media]");
-          if (!inner || !media) return;
-
-          ScrollTrigger.create({
-            trigger: chapter,
-            start: "top top",
-            end: "+=100%",
-            pin: true,
-            pinSpacing: true,
-            scrub: 1,
-            anticipatePin: 1,
-          });
-
-          gsap.fromTo(
-            inner,
-            { y: 80, opacity: 0.2 },
-            {
-              y: 0,
-              opacity: 1,
-              ease: "none",
-              scrollTrigger: {
-                trigger: chapter,
-                start: "top top",
-                end: "+=60%",
-                scrub: 1.2,
-              },
-            }
-          );
-
-          gsap.fromTo(
-            media,
-            { scale: 1.2, filter: "brightness(0.4)" },
-            {
-              scale: 1,
-              filter: "brightness(0.75)",
-              ease: "none",
-              scrollTrigger: {
-                trigger: chapter,
-                start: "top top",
-                end: "+=80%",
-                scrub: 1.5,
-              },
-            }
-          );
-
-          if (i < chapters.length - 1) {
-            gsap.to(chapter, {
-              opacity: 0.15,
-              scale: 0.96,
-              ease: "none",
-              scrollTrigger: {
-                trigger: chapter,
-                start: "bottom bottom",
-                end: "bottom top",
-                scrub: 1,
-              },
-            });
-          }
+        setupChapterScroll(chapters, {
+          pinEnd: "+=100%",
+          innerEnd: "+=60%",
+          mediaEnd: "+=80%",
         });
       });
 
       mm.add("(max-width: 767px)", () => {
-        chapters.forEach((chapter) => {
-          const inner = chapter.querySelector("[data-chapter-inner]");
-          const media = chapter.querySelector("[data-chapter-media]");
-          if (!inner || !media) return;
-
-          gsap.from(inner, {
-            y: 40,
-            opacity: 0,
-            duration: 0.8,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: chapter,
-              start: "top 85%",
-              toggleActions: "play none none reverse",
-            },
-          });
-
-          gsap.from(media, {
-            scale: 1.08,
-            duration: 1,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: chapter,
-              start: "top 90%",
-              toggleActions: "play none none reverse",
-            },
-          });
+        setupChapterScroll(chapters, {
+          pinEnd: "+=85%",
+          innerEnd: "+=55%",
+          mediaEnd: "+=70%",
         });
       });
 
@@ -125,7 +113,7 @@ export function ProcessChapters() {
         <article
           key={chapter.id}
           data-chapter
-          className="relative flex min-h-[88svh] items-end overflow-hidden sm:min-h-[100svh]"
+          className="relative flex min-h-[100svh] items-end overflow-hidden"
         >
           <div data-chapter-media className="absolute inset-0">
             <Image
