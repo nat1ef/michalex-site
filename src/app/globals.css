@@ -145,6 +145,15 @@
     text-transform: uppercase;
   }
 
+  .display-hero-compact {
+    font-family: var(--font-display-var), var(--font-body), sans-serif;
+    font-size: clamp(1.9rem, 5.6vw, 4.4rem);
+    font-weight: 700;
+    line-height: 0.96;
+    letter-spacing: -0.005em;
+    text-transform: uppercase;
+  }
+
   .display-chapter {
     font-family: var(--font-display-var), var(--font-body), sans-serif;
     font-size: clamp(2.6rem, 7.5vw, 6.5rem);
