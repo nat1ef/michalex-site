@@ -2,6 +2,7 @@
 
 import { forwardRef, useRef, type Ref, type RefObject } from "react";
 import * as THREE from "three";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 
 export const TEETH_COUNT = 22;
 
@@ -12,11 +13,37 @@ export type HeroGear3DHandle = {
 };
 
 const CORE_R = 1.55;
-const TOOTH_W = 0.26;
+const TOOTH_BASE_W = 0.34;
+const TOOTH_TIP_W = 0.2;
 const TOOTH_H = 0.62;
-const TOOTH_D = 0.62;
+const TOOTH_D = 0.58;
 const CORE_DEPTH = 0.6;
 const HUB_R = 0.42;
+
+// A fixed 3/4 tilt so the gear reads as a solid object with real depth
+// instead of a flat disc facing the camera dead-on.
+const BASE_TILT_X = -0.48;
+const BASE_TILT_Y = 0.6;
+
+function toothGeometry(): THREE.ExtrudeGeometry {
+  const shape = new THREE.Shape();
+  shape.moveTo(-TOOTH_BASE_W / 2, 0);
+  shape.lineTo(-TOOTH_TIP_W / 2, TOOTH_H);
+  shape.lineTo(TOOTH_TIP_W / 2, TOOTH_H);
+  shape.lineTo(TOOTH_BASE_W / 2, 0);
+  shape.closePath();
+
+  const geometry = new THREE.ExtrudeGeometry(shape, {
+    depth: TOOTH_D,
+    bevelEnabled: true,
+    bevelThickness: 0.028,
+    bevelSize: 0.024,
+    bevelSegments: 2,
+    steps: 1,
+  });
+  geometry.translate(0, 0, -TOOTH_D / 2);
+  return geometry;
+}
 
 function buildScene(container: HTMLDivElement): {
   renderer: THREE.WebGLRenderer;
@@ -29,54 +56,67 @@ function buildScene(container: HTMLDivElement): {
 } {
   const scene = new THREE.Scene();
 
-  const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
-  camera.position.set(0.9, 0.55, 6.2);
+  const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
+  camera.position.set(0, 0.15, 6.6);
   camera.lookAt(0, 0, 0);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setClearColor(0x000000, 0);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
   container.appendChild(renderer.domElement);
 
-  // Lights — a cool ambient fill, a warm key light, and a copper rim light
-  // so the metal actually reads as metal instead of a flat silhouette.
-  scene.add(new THREE.AmbientLight(0x8891a8, 0.55));
+  // A studio-style environment so metalness/roughness actually have
+  // something to reflect — without this, metals just look flat and dark.
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  const envTexture = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  scene.environment = envTexture;
+  pmrem.dispose();
 
-  const key = new THREE.DirectionalLight(0xfff3e2, 2.1);
+  // Lights — a warm key, a copper rim to catch the edges, and a cool fill.
+  scene.add(new THREE.AmbientLight(0x8891a8, 0.25));
+
+  const key = new THREE.DirectionalLight(0xfff3e2, 2.4);
   key.position.set(3.2, 4, 4.5);
   scene.add(key);
 
-  const rim = new THREE.DirectionalLight(0xc98a4a, 1.1);
-  rim.position.set(-3.5, -1.5, 2.5);
+  const rim = new THREE.DirectionalLight(0xd9924f, 1.4);
+  rim.position.set(-3.5, -1.2, 2.8);
   scene.add(rim);
 
-  const fill = new THREE.DirectionalLight(0x7f9dce, 0.5);
+  const fill = new THREE.DirectionalLight(0x7f9dce, 0.6);
   fill.position.set(-2, 3, -3);
   scene.add(fill);
 
   const steelMat = new THREE.MeshStandardMaterial({
-    color: 0x9aa1ac,
-    metalness: 0.92,
-    roughness: 0.32,
+    color: 0xacb2bc,
+    metalness: 0.95,
+    roughness: 0.24,
   });
   const darkMat = new THREE.MeshStandardMaterial({
     color: 0x53585f,
     metalness: 0.85,
-    roughness: 0.42,
+    roughness: 0.38,
   });
   const copperMat = new THREE.MeshStandardMaterial({
     color: 0xc9793a,
-    metalness: 0.75,
-    roughness: 0.3,
+    metalness: 0.8,
+    roughness: 0.26,
     emissive: 0x6a2f0c,
     emissiveIntensity: 0.25,
   });
 
+  // Everything sits inside a tilt group so the gear and cutter stay aligned
+  // under the same fixed 3/4 perspective.
+  const tiltGroup = new THREE.Group();
+  scene.add(tiltGroup);
+
   const gearGroup = new THREE.Group();
-  scene.add(gearGroup);
+  tiltGroup.add(gearGroup);
 
   // Blank cylinder core
   const core = new THREE.Mesh(
-    new THREE.CylinderGeometry(CORE_R, CORE_R, CORE_DEPTH, 56),
+    new THREE.CylinderGeometry(CORE_R, CORE_R, CORE_DEPTH, 64),
     steelMat
   );
   core.rotation.x = Math.PI / 2;
@@ -100,12 +140,14 @@ function buildScene(container: HTMLDivElement): {
 
   const bore = new THREE.Mesh(
     new THREE.CylinderGeometry(HUB_R * 0.42, HUB_R * 0.42, CORE_DEPTH + 0.08, 24),
-    new THREE.MeshStandardMaterial({ color: 0x111214, metalness: 0.4, roughness: 0.6 })
+    new THREE.MeshStandardMaterial({ color: 0x111214, metalness: 0.4, roughness: 0.55 })
   );
   bore.rotation.x = Math.PI / 2;
   gearGroup.add(bore);
 
-  // Teeth — each is its own group so we can scale it from the base outward
+  // Teeth — a real trapezoidal, bevelled tooth profile (not a plain box),
+  // each in its own group so it can be scaled from the base outward.
+  const sharedToothGeometry = toothGeometry();
   const teeth: THREE.Group[] = [];
   for (let i = 0; i < TEETH_COUNT; i++) {
     const angle = (i / TEETH_COUNT) * Math.PI * 2;
@@ -114,11 +156,7 @@ function buildScene(container: HTMLDivElement): {
     toothGroup.rotation.z = angle - Math.PI / 2;
     toothGroup.scale.y = 0;
 
-    const tooth = new THREE.Mesh(
-      new THREE.BoxGeometry(TOOTH_W, TOOTH_H, TOOTH_D),
-      steelMat
-    );
-    tooth.position.y = TOOTH_H / 2;
+    const tooth = new THREE.Mesh(sharedToothGeometry, steelMat);
     toothGroup.add(tooth);
 
     gearGroup.add(toothGroup);
@@ -126,7 +164,7 @@ function buildScene(container: HTMLDivElement): {
   }
 
   // Cutting tool — a small copper cutter sweeping around the gear. Placed
-  // along +X to start aligned with tooth[0] (angle 0 in the loop below), so
+  // along +X to start aligned with tooth[0] (angle 0 in the loop above), so
   // the sweep and the tooth stagger move in lockstep.
   const cutter = new THREE.Group();
   const cutterRod = new THREE.Mesh(
@@ -147,7 +185,7 @@ function buildScene(container: HTMLDivElement): {
   cutter.add(sparkLight);
   cutter.userData.sparkLight = sparkLight;
 
-  scene.add(cutter);
+  tiltGroup.add(cutter);
 
   let raf = 0;
   let running = true;
@@ -156,7 +194,8 @@ function buildScene(container: HTMLDivElement): {
   const render = () => {
     if (!running) return;
     idleT += 0.012;
-    gearGroup.rotation.x = Math.sin(idleT * 0.6) * 0.045;
+    tiltGroup.rotation.x = BASE_TILT_X + Math.sin(idleT * 0.6) * 0.035;
+    tiltGroup.rotation.y = BASE_TILT_Y + Math.cos(idleT * 0.45) * 0.03;
     renderer.render(scene, camera);
     raf = requestAnimationFrame(render);
   };
@@ -190,8 +229,10 @@ function buildScene(container: HTMLDivElement): {
     cancelAnimationFrame(raf);
     ro.disconnect();
     io.disconnect();
+    envTexture.dispose();
+    sharedToothGeometry.dispose();
     scene.traverse((obj) => {
-      if (obj instanceof THREE.Mesh) {
+      if (obj instanceof THREE.Mesh && obj.geometry !== sharedToothGeometry) {
         obj.geometry.dispose();
       }
     });
