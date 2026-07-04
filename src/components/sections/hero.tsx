@@ -152,14 +152,15 @@ export function Hero() {
       id="αρχικη"
       className="relative flex min-h-[100svh] flex-col overflow-hidden"
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_90%_70%_at_50%_38%,oklch(0.72_0.145_55/0.07),transparent_55%)]" />
-      <div className="ambient-grid pointer-events-none absolute inset-0 opacity-[0.045]" />
+      {/* Fullscreen 3D scene — the hero's main subject, not a small icon */}
+      <div className="absolute inset-0 z-0">
+        <HeroGear3D ref={gearRef} />
+      </div>
+
+      <div className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(ellipse_90%_70%_at_50%_38%,oklch(0.72_0.145_55/0.06),transparent_55%)]" />
+      <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-t from-background via-background/25 to-transparent" />
 
       <div className="relative z-10 flex flex-1 flex-col items-center justify-center pt-[4.5rem]">
-        <div className="relative h-[min(62vw,26rem)] w-[min(62vw,26rem)] sm:h-[min(46vw,30rem)] sm:w-[min(46vw,30rem)]">
-          <HeroGear3D ref={gearRef} />
-        </div>
-
         <h1
           ref={titleRef}
           aria-label="Μηχανουργείο Αλεξανδράκης"

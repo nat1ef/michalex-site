@@ -3,6 +3,12 @@
 import { forwardRef, useRef, type Ref, type RefObject } from "react";
 import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
+import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
+import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
+import { VignetteShader } from "three/examples/jsm/shaders/VignetteShader.js";
 
 export const TEETH_COUNT = 22;
 
@@ -19,11 +25,12 @@ const TOOTH_H = 0.62;
 const TOOTH_D = 0.58;
 const CORE_DEPTH = 0.6;
 const HUB_R = 0.42;
+const SPARK_COUNT = 22;
 
 // A fixed 3/4 tilt so the gear reads as a solid object with real depth
 // instead of a flat disc facing the camera dead-on.
-const BASE_TILT_X = -0.48;
-const BASE_TILT_Y = 0.6;
+const BASE_TILT_X = -0.46;
+const BASE_TILT_Y = 0.62;
 
 function toothGeometry(): THREE.ExtrudeGeometry {
   const shape = new THREE.Shape();
@@ -45,6 +52,36 @@ function toothGeometry(): THREE.ExtrudeGeometry {
   return geometry;
 }
 
+/** Concentric lathe-turning marks — real machined stock looks like this. */
+function turnedFaceTexture(): THREE.CanvasTexture {
+  const size = 512;
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d")!;
+  const cx = size / 2;
+  const cy = size / 2;
+
+  ctx.fillStyle = "#b7bcc4";
+  ctx.fillRect(0, 0, size, size);
+
+  const maxR = size * 0.5;
+  for (let r = maxR; r > 4; r -= 1.6) {
+    const shade = 168 + Math.round(Math.sin(r * 0.9) * 10 + (Math.random() - 0.5) * 6);
+    ctx.strokeStyle = `rgb(${shade},${shade + 3},${shade + 6})`;
+    ctx.lineWidth = 1 + Math.random() * 0.6;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.wrapS = THREE.ClampToEdgeWrapping;
+  texture.wrapT = THREE.ClampToEdgeWrapping;
+  return texture;
+}
+
 function buildScene(container: HTMLDivElement): {
   renderer: THREE.WebGLRenderer;
   scene: THREE.Scene;
@@ -56,42 +93,50 @@ function buildScene(container: HTMLDivElement): {
 } {
   const scene = new THREE.Scene();
 
-  const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
-  camera.position.set(0, 0.15, 6.6);
+  const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 100);
+  camera.position.set(0, 0.1, 8);
   camera.lookAt(0, 0, 0);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setClearColor(0x000000, 0);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMappingExposure = 1.1;
   container.appendChild(renderer.domElement);
 
   // A studio-style environment so metalness/roughness actually have
   // something to reflect — without this, metals just look flat and dark.
   const pmrem = new THREE.PMREMGenerator(renderer);
-  const envTexture = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  const envTexture = pmrem.fromScene(new RoomEnvironment(), 0.03).texture;
   scene.environment = envTexture;
   pmrem.dispose();
 
-  // Lights — a warm key, a copper rim to catch the edges, and a cool fill.
-  scene.add(new THREE.AmbientLight(0x8891a8, 0.25));
+  // Lights — high-contrast key + copper rim so edges and teeth catch real
+  // highlights, low ambient so the metal doesn't wash out flat.
+  scene.add(new THREE.AmbientLight(0x707a90, 0.16));
 
-  const key = new THREE.DirectionalLight(0xfff3e2, 2.4);
-  key.position.set(3.2, 4, 4.5);
+  const key = new THREE.DirectionalLight(0xfff3e2, 3.1);
+  key.position.set(3.4, 4.2, 4.8);
   scene.add(key);
 
-  const rim = new THREE.DirectionalLight(0xd9924f, 1.4);
-  rim.position.set(-3.5, -1.2, 2.8);
+  const rim = new THREE.DirectionalLight(0xe0964f, 1.9);
+  rim.position.set(-3.8, -1, 2.4);
   scene.add(rim);
 
-  const fill = new THREE.DirectionalLight(0x7f9dce, 0.6);
-  fill.position.set(-2, 3, -3);
+  const fill = new THREE.DirectionalLight(0x7f9dce, 0.35);
+  fill.position.set(-2, 2.6, -3.2);
   scene.add(fill);
 
+  const faceTexture = turnedFaceTexture();
   const steelMat = new THREE.MeshStandardMaterial({
-    color: 0xacb2bc,
+    color: 0xaeb4bd,
     metalness: 0.95,
-    roughness: 0.24,
+    roughness: 0.22,
+  });
+  const facedMat = new THREE.MeshStandardMaterial({
+    color: 0xc3c8d0,
+    map: faceTexture,
+    metalness: 0.92,
+    roughness: 0.3,
   });
   const darkMat = new THREE.MeshStandardMaterial({
     color: 0x53585f,
@@ -101,9 +146,9 @@ function buildScene(container: HTMLDivElement): {
   const copperMat = new THREE.MeshStandardMaterial({
     color: 0xc9793a,
     metalness: 0.8,
-    roughness: 0.26,
-    emissive: 0x6a2f0c,
-    emissiveIntensity: 0.25,
+    roughness: 0.24,
+    emissive: 0xb35a1e,
+    emissiveIntensity: 0.55,
   });
 
   // Everything sits inside a tilt group so the gear and cutter stay aligned
@@ -114,17 +159,18 @@ function buildScene(container: HTMLDivElement): {
   const gearGroup = new THREE.Group();
   tiltGroup.add(gearGroup);
 
-  // Blank cylinder core
+  // Blank cylinder core — front/back caps get real turned-metal texture,
+  // the rim stays a clean brushed-steel side.
   const core = new THREE.Mesh(
-    new THREE.CylinderGeometry(CORE_R, CORE_R, CORE_DEPTH, 64),
-    steelMat
+    new THREE.CylinderGeometry(CORE_R, CORE_R, CORE_DEPTH, 96, 1, false),
+    [steelMat, facedMat, facedMat]
   );
   core.rotation.x = Math.PI / 2;
   gearGroup.add(core);
 
   // Recessed face ring detail
   const groove = new THREE.Mesh(
-    new THREE.TorusGeometry(CORE_R - 0.22, 0.012, 8, 64),
+    new THREE.TorusGeometry(CORE_R - 0.22, 0.012, 8, 96),
     darkMat
   );
   groove.position.z = CORE_DEPTH / 2 + 0.001;
@@ -132,7 +178,7 @@ function buildScene(container: HTMLDivElement): {
 
   // Center hub + shaft bore
   const hub = new THREE.Mesh(
-    new THREE.CylinderGeometry(HUB_R, HUB_R, CORE_DEPTH + 0.04, 32),
+    new THREE.CylinderGeometry(HUB_R, HUB_R, CORE_DEPTH + 0.04, 40),
     darkMat
   );
   hub.rotation.x = Math.PI / 2;
@@ -180,12 +226,43 @@ function buildScene(container: HTMLDivElement): {
   cutterTip.position.x = CORE_R + 0.14;
   cutter.add(cutterTip);
 
-  const sparkLight = new THREE.PointLight(0xffa04d, 0, 2.2);
-  sparkLight.position.x = CORE_R + 0.1;
-  cutter.add(sparkLight);
-  cutter.userData.sparkLight = sparkLight;
+  // Spark particles bursting from the cutting point — the copper material's
+  // emissive glow (boosted by the bloom pass) carries the "hot metal" look,
+  // so no separate point light is needed here.
+  const sparkGeo = new THREE.BufferGeometry();
+  const sparkBase = new Float32Array(SPARK_COUNT * 3);
+  const sparkSeed = new Float32Array(SPARK_COUNT);
+  for (let i = 0; i < SPARK_COUNT; i++) {
+    sparkBase[i * 3] = CORE_R + 0.1 + Math.random() * 0.35;
+    sparkBase[i * 3 + 1] = (Math.random() - 0.5) * 0.3;
+    sparkBase[i * 3 + 2] = (Math.random() - 0.5) * 0.3;
+    sparkSeed[i] = Math.random() * Math.PI * 2;
+  }
+  sparkGeo.setAttribute("position", new THREE.BufferAttribute(sparkBase, 3));
+  const sparkMat = new THREE.PointsMaterial({
+    color: 0xffb15e,
+    size: 0.05,
+    transparent: true,
+    opacity: 0,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+  });
+  const sparks = new THREE.Points(sparkGeo, sparkMat);
+  cutter.add(sparks);
 
   tiltGroup.add(cutter);
+
+  // Post-processing — bloom so the copper highlights and sparks actually
+  // glow, a soft vignette to focus attention on the gear.
+  const composer = new EffectComposer(renderer);
+  composer.addPass(new RenderPass(scene, camera));
+  const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.55, 0.6, 0.82);
+  composer.addPass(bloom);
+  const vignettePass = new ShaderPass(VignetteShader);
+  vignettePass.uniforms.darkness.value = 1.15;
+  vignettePass.uniforms.offset.value = 1.05;
+  composer.addPass(vignettePass);
+  composer.addPass(new OutputPass());
 
   let raf = 0;
   let running = true;
@@ -196,7 +273,19 @@ function buildScene(container: HTMLDivElement): {
     idleT += 0.012;
     tiltGroup.rotation.x = BASE_TILT_X + Math.sin(idleT * 0.6) * 0.035;
     tiltGroup.rotation.y = BASE_TILT_Y + Math.cos(idleT * 0.45) * 0.03;
-    renderer.render(scene, camera);
+
+    if (cutter.scale.x > 0.01) {
+      sparkMat.opacity = 0.55 + Math.sin(idleT * 9) * 0.25;
+      const positions = sparkGeo.attributes.position as THREE.BufferAttribute;
+      for (let i = 0; i < SPARK_COUNT; i++) {
+        const t = (idleT * 2 + sparkSeed[i]) % 1.4;
+        positions.setX(i, sparkBase[i * 3] + t * 0.55);
+        positions.setY(i, sparkBase[i * 3 + 1] + Math.sin(sparkSeed[i] + idleT * 3) * 0.12);
+      }
+      positions.needsUpdate = true;
+    }
+
+    composer.render();
     raf = requestAnimationFrame(render);
   };
   raf = requestAnimationFrame(render);
@@ -206,13 +295,28 @@ function buildScene(container: HTMLDivElement): {
     if (!paused && !raf) raf = requestAnimationFrame(render);
   };
 
+  // The gear's own bounding radius (core + teeth), used to keep it framed
+  // consistently regardless of viewport shape — on a narrow phone the
+  // camera backs up so the circular silhouette doesn't clip left/right.
+  const GEAR_RADIUS = CORE_R + TOOTH_H + 0.15;
+  const FILL_FACTOR = 0.8;
+
   const resize = () => {
     const { clientWidth, clientHeight } = container;
     if (!clientWidth || !clientHeight) return;
-    camera.aspect = clientWidth / clientHeight;
+    const aspect = clientWidth / clientHeight;
+    camera.aspect = aspect;
+
+    const halfVFovTan = Math.tan((camera.fov * Math.PI) / 360);
+    const limitingAspect = Math.min(1, aspect);
+    camera.position.z = GEAR_RADIUS / (FILL_FACTOR * halfVFovTan * limitingAspect);
     camera.updateProjectionMatrix();
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    const pr = Math.min(window.devicePixelRatio, 2);
+    renderer.setPixelRatio(pr);
     renderer.setSize(clientWidth, clientHeight);
+    composer.setPixelRatio(pr);
+    composer.setSize(clientWidth, clientHeight);
   };
   resize();
 
@@ -230,15 +334,20 @@ function buildScene(container: HTMLDivElement): {
     ro.disconnect();
     io.disconnect();
     envTexture.dispose();
+    faceTexture.dispose();
     sharedToothGeometry.dispose();
+    sparkGeo.dispose();
+    sparkMat.dispose();
     scene.traverse((obj) => {
       if (obj instanceof THREE.Mesh && obj.geometry !== sharedToothGeometry) {
         obj.geometry.dispose();
       }
     });
     steelMat.dispose();
+    facedMat.dispose();
     darkMat.dispose();
     copperMat.dispose();
+    composer.dispose();
     renderer.dispose();
     container.removeChild(renderer.domElement);
   };
