@@ -25,6 +25,10 @@ const iconMap = {
   factory: Factory,
 } as const;
 
+const CARD_STICKY_BASE = 96;
+const CARD_STICKY_STEP = 14;
+const stickyTop = (index: number) => CARD_STICKY_BASE + index * CARD_STICKY_STEP;
+
 export function Services() {
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -36,23 +40,30 @@ export function Services() {
 
       const cards = gsap.utils.toArray<HTMLElement>("[data-deck-card]", section);
 
-      // As the next card arrives, the previous one recedes — but only in the
-      // last short stretch right before handoff, so it stays readable while
-      // it's still the card in focus.
+      // The next card only actually starts covering this one once it reaches
+      // its own sticky resting position — that's the real handoff moment.
+      // Anchor the dim to that exact point (in absolute viewport pixels, not
+      // a percentage) so it fires as the next card arrives, not while it's
+      // still approaching from below.
       cards.forEach((card, i) => {
         if (i === cards.length - 1) return;
         const next = cards[i + 1];
-        gsap.to(card, {
-          scale: 0.97,
-          filter: "brightness(0.75)",
-          ease: "none",
-          scrollTrigger: {
-            trigger: next,
-            start: "top 35%",
-            end: "top top+=40",
-            scrub: true,
-          },
-        });
+        const handoff = stickyTop(i + 1);
+        gsap.fromTo(
+          card,
+          { scale: 1, filter: "brightness(1)" },
+          {
+            scale: 0.97,
+            filter: "brightness(0.75)",
+            ease: "none",
+            scrollTrigger: {
+              trigger: next,
+              start: `top ${handoff + 120}`,
+              end: `top ${handoff}`,
+              scrub: true,
+            },
+          }
+        );
       });
     },
     { scope: sectionRef }
@@ -87,7 +98,7 @@ export function Services() {
                 key={service.title}
                 data-deck-card
                 className="sticky will-change-transform"
-                style={{ top: `${96 + i * 14}px` }}
+                style={{ top: `${stickyTop(i)}px` }}
               >
                 <article className="grid overflow-hidden border border-border/50 bg-card shadow-[0_-18px_50px_-30px_rgba(0,0,0,0.9)] lg:grid-cols-[1.1fr_1fr]">
                   <div className="flex flex-col justify-between p-8 sm:p-12">

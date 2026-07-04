@@ -32,7 +32,7 @@ export default function Home() {
           <CustomCursor />
           <Header />
           <FooterReveal>
-            <main className="flex-1 overflow-x-hidden">
+            <main className="flex-1">
               <Hero />
               <StatementScroll />
               <ProcessChapters />
