@@ -36,18 +36,20 @@ export function Services() {
 
       const cards = gsap.utils.toArray<HTMLElement>("[data-deck-card]", section);
 
-      // As the next card slides over, the previous one sinks back and dims
+      // As the next card arrives, the previous one recedes — but only in the
+      // last short stretch right before handoff, so it stays readable while
+      // it's still the card in focus.
       cards.forEach((card, i) => {
         if (i === cards.length - 1) return;
         const next = cards[i + 1];
         gsap.to(card, {
-          scale: 0.94,
-          filter: "brightness(0.55)",
+          scale: 0.97,
+          filter: "brightness(0.75)",
           ease: "none",
           scrollTrigger: {
             trigger: next,
-            start: "top bottom",
-            end: "top top+=96",
+            start: "top 35%",
+            end: "top top+=40",
             scrub: true,
           },
         });
