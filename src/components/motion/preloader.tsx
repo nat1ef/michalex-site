@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "@/components/motion/animation-provider";
-import { LogoFull, LogoMark } from "@/components/brand/logo";
+import { LogoFull } from "@/components/brand/logo";
 
 type PreloaderProps = {
   onComplete: () => void;
@@ -31,7 +31,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
       onComplete();
     }, 4500);
 
-    const minDelay = new Promise<void>((r) => setTimeout(r, 1200));
+    const minDelay = new Promise<void>((r) => setTimeout(r, 1300));
     const assetsReady = new Promise<void>((resolve) => {
       const done = () => resolve();
       const video = document.querySelector<HTMLVideoElement>("video");
@@ -49,15 +49,15 @@ export function Preloader({ onComplete }: PreloaderProps) {
     });
 
     const counterTween = gsap.to(progress, {
-      value: 100,
-      duration: 1.6,
+      value: 1,
+      duration: 1.7,
       ease: "power2.inOut",
       onUpdate: () => {
         if (counterRef.current) {
-          counterRef.current.textContent = String(Math.round(progress.value)).padStart(3, "0");
+          counterRef.current.textContent = progress.value.toFixed(3);
         }
         if (barRef.current) {
-          barRef.current.style.transform = `scaleX(${progress.value / 100})`;
+          barRef.current.style.transform = `scaleX(${progress.value})`;
         }
       },
     });
@@ -65,7 +65,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
     Promise.all([minDelay, assetsReady]).then(() => {
       clearTimeout(forceDone);
       counterTween.kill();
-      if (counterRef.current) counterRef.current.textContent = "100";
+      if (counterRef.current) counterRef.current.textContent = "1.000";
       if (barRef.current) barRef.current.style.transform = "scaleX(1)";
 
       const tl = gsap.timeline({
@@ -78,13 +78,10 @@ export function Preloader({ onComplete }: PreloaderProps) {
 
       tl.to(rootRef.current, {
         yPercent: -100,
-        duration: 0.9,
+        duration: 0.85,
         ease: "power4.inOut",
-      }).to(
-        rootRef.current,
-        { opacity: 0, duration: 0.2 },
-        "-=0.15"
-      );
+        delay: 0.15,
+      });
     });
 
     return () => {
@@ -103,21 +100,32 @@ export function Preloader({ onComplete }: PreloaderProps) {
       aria-hidden
     >
       <div className="grain-overlay absolute inset-0 opacity-50" />
-      <div className="relative flex flex-col items-center gap-6">
-        <LogoMark className="h-[4.5rem] w-[4.5rem] sm:h-24 sm:w-24 [&_span]:text-2xl sm:[&_span]:text-3xl" />
-        <LogoFull className="hidden sm:flex" />
-        <div className="flex items-baseline gap-2 font-mono text-xs text-muted-foreground">
-          <span ref={counterRef}>000</span>
-          <span className="text-foreground/30">%</span>
+
+      <div className="relative flex flex-col items-center">
+        <p className="telemetry-label mb-10">
+          <span className="text-copper/80">[</span> ΒΑΘΜΟΝΟΜΗΣΗ{" "}
+          <span className="text-copper/80">]</span>
+        </p>
+
+        <div className="display-number flex items-baseline gap-3 text-[clamp(4rem,14vw,8rem)] text-foreground">
+          <span ref={counterRef}>0.000</span>
+          <span className="font-mono text-base text-copper sm:text-lg">mm</span>
+        </div>
+
+        <div className="mt-10 h-px w-56 overflow-hidden bg-border/40 sm:w-72">
+          <div
+            ref={barRef}
+            className="h-full origin-left bg-copper"
+            style={{ transform: "scaleX(0)" }}
+          />
+        </div>
+
+        <div className="mt-10">
+          <LogoFull />
         </div>
       </div>
-      <div className="absolute inset-x-0 bottom-0 h-px bg-border/40">
-        <div
-          ref={barRef}
-          className="h-full origin-left bg-gradient-to-r from-copper/60 via-foreground to-copper/60"
-          style={{ transform: "scaleX(0)" }}
-        />
-      </div>
+
+      <div className="absolute inset-x-0 bottom-0 h-px bg-copper/30" />
     </div>
   );
 }

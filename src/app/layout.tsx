@@ -1,19 +1,27 @@
 import type { Metadata } from "next";
-import { Geist_Mono, IBM_Plex_Sans } from "next/font/google";
+import {
+  Commissioner,
+  JetBrains_Mono,
+  Sofia_Sans_Condensed,
+} from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { LocalBusinessJsonLd } from "@/components/seo/json-ld";
 import { siteConfig } from "@/lib/content";
 import "./globals.css";
 
-const ibmPlexSans = IBM_Plex_Sans({
-  variable: "--font-sans",
+const commissioner = Commissioner({
+  variable: "--font-body",
   subsets: ["latin", "greek"],
-  weight: ["400", "500", "600", "700"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const sofiaCondensed = Sofia_Sans_Condensed({
+  variable: "--font-display-var",
+  subsets: ["latin", "greek"],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-mono-var",
+  subsets: ["latin", "greek"],
 });
 
 export const metadata: Metadata = {
@@ -72,7 +80,7 @@ export default function RootLayout({
   return (
     <html
       lang="el"
-      className={`dark ${ibmPlexSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`dark ${commissioner.variable} ${sofiaCondensed.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <head>
         <meta

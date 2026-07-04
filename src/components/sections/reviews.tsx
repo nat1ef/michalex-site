@@ -1,13 +1,9 @@
 "use client";
 
-import { useRef } from "react";
 import { Star } from "lucide-react";
-import { useGSAP } from "@gsap/react";
-import { gsap } from "@/components/motion/animation-provider";
-import { SectionLabel } from "@/components/ui/section-label";
-import { SplitText, RevealBlock } from "@/components/motion/split-text";
+import { CountUp } from "@/components/motion/count-up";
+import { FadeIn } from "@/components/motion/fade-in";
 import { siteConfig, reviews } from "@/lib/content";
-import { sectionMeta } from "@/lib/sections";
 
 function StarRow({ rating }: { rating: number }) {
   return (
@@ -15,95 +11,83 @@ function StarRow({ rating }: { rating: number }) {
       {Array.from({ length: 5 }).map((_, i) => (
         <Star
           key={i}
-          className={`h-4 w-4 ${i < rating ? "fill-copper text-copper" : "text-border"}`}
+          className={`h-3.5 w-3.5 ${i < rating ? "fill-copper text-copper" : "text-border"}`}
         />
       ))}
     </div>
   );
 }
 
-export function Reviews() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
-  const meta = sectionMeta.reviews;
-
-  useGSAP(
-    () => {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      const cards = gridRef.current?.querySelectorAll("[data-review-card]");
-      if (!cards?.length) return;
-
-      gsap.from(cards, {
-        y: 36,
-        opacity: 0,
-        duration: 0.7,
-        stagger: 0.08,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: gridRef.current,
-          start: "top 88%",
-          toggleActions: "play none none reverse",
-        },
-      });
-    },
-    { scope: sectionRef }
-  );
-
+function ReviewCard({ review }: { review: (typeof reviews)[number] }) {
   return (
-    <section
-      ref={sectionRef}
-      id="κριτικες"
-      className="section-cinematic border-t border-border/30"
-    >
-      <div className="section-shell">
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <SectionLabel index={meta.index} title={meta.title} />
-            <SplitText
-              as="h2"
-              className="mt-6 max-w-2xl text-3xl font-semibold tracking-[-0.03em] sm:text-4xl lg:text-5xl"
-            >
-              Εμπιστοσύνη που χτίζεται με δουλειά
-            </SplitText>
-          </div>
-          <RevealBlock>
-            <a
-              href={siteConfig.googleReviewsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-sm border border-copper/30 bg-copper/10 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.15em] text-foreground transition-colors hover:bg-copper/15"
-            >
-              <Star className="h-3.5 w-3.5 fill-copper text-copper" />
-              {siteConfig.rating}/5 · {siteConfig.reviewCount} κριτικές Google
-            </a>
-          </RevealBlock>
-        </div>
+    <blockquote className="mx-2.5 flex w-[min(80vw,360px)] shrink-0 flex-col justify-between border border-border/50 bg-card/80 p-6 backdrop-blur-sm">
+      <div>
+        <StarRow rating={review.rating} />
+        <p className="mt-4 text-sm leading-relaxed text-foreground/85">
+          &ldquo;{review.text}&rdquo;
+        </p>
+      </div>
+      <footer className="mt-6 border-t border-border/40 pt-4">
+        <p className="font-medium text-foreground">{review.author}</p>
+        <p className="telemetry-label mt-1 text-muted-foreground">
+          {review.source}
+        </p>
+      </footer>
+    </blockquote>
+  );
+}
 
-        <div
-          ref={gridRef}
-          className="mt-12 grid gap-4 sm:mt-16 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-        >
-          {reviews.map((review, i) => (
-            <blockquote
-              key={review.author}
-              data-review-card
-              className="flex min-h-[220px] flex-col justify-between border border-border/50 bg-card/80 p-6 backdrop-blur-sm sm:p-7"
-            >
-              <div>
-                <StarRow rating={review.rating} />
-                <p className="mt-4 text-base leading-relaxed text-foreground/85">
-                  &ldquo;{review.text}&rdquo;
-                </p>
-              </div>
-              <footer className="mt-6 border-t border-border/40 pt-4">
-                <p className="font-medium text-foreground">{review.author}</p>
-                <p className="telemetry-label mt-1 text-muted-foreground">
-                  {String(i + 1).padStart(2, "0")} · {review.source}
-                </p>
-              </footer>
-            </blockquote>
-          ))}
+function ReviewMarqueeRow({ reverse = false, speed }: { reverse?: boolean; speed: number }) {
+  const items = [...reviews, ...reviews];
+  return (
+    <div className="marquee-pausable overflow-hidden py-2.5">
+      <div
+        className={`flex w-max ${reverse ? "animate-marquee-reverse" : "animate-marquee"}`}
+        style={{ animationDuration: `${speed}s` }}
+      >
+        {items.map((review, i) => (
+          <ReviewCard key={`${review.author}-${i}`} review={review} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function Reviews() {
+  return (
+    <section id="κριτικες" className="relative overflow-hidden border-t border-border/30 py-24 sm:py-32">
+      <div className="section-shell">
+        <div className="flex flex-col gap-10 sm:flex-row sm:items-end sm:justify-between">
+          <FadeIn>
+            <p className="telemetry-label">
+              <span className="text-copper/80">[</span> ΚΡΙΤΙΚΕΣ{" "}
+              <span className="text-copper/80">]</span>
+            </p>
+            <h2 className="display-title mt-6">Το λένε οι πελάτες</h2>
+          </FadeIn>
+
+          <FadeIn delay={0.1} className="flex items-end gap-5">
+            <p className="display-number text-[clamp(4.5rem,10vw,8rem)] text-foreground">
+              <CountUp value={String(siteConfig.rating)} />
+            </p>
+            <div className="mb-2 flex flex-col gap-2">
+              <StarRow rating={5} />
+              <a
+                href={siteConfig.googleReviewsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:text-foreground"
+              >
+                {siteConfig.reviewCount}+ κριτικές · Google Maps
+              </a>
+            </div>
+          </FadeIn>
         </div>
+      </div>
+
+      <div className="mt-14 space-y-1 sm:mt-20">
+        <ReviewMarqueeRow speed={52} />
+        <ReviewMarqueeRow reverse speed={64} />
       </div>
     </section>
   );

@@ -14,6 +14,7 @@ type VideoBackgroundProps = {
   priority?: boolean;
   loopStart?: number;
   crossfade?: number;
+  overlay?: "strong" | "soft" | "none";
 };
 
 function armInlinePlayback(video: HTMLVideoElement) {
@@ -73,6 +74,7 @@ export function VideoBackground({
   priority = false,
   loopStart = 0.6,
   crossfade = 0.55,
+  overlay = "strong",
 }: VideoBackgroundProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoWrapRef = useRef<HTMLDivElement>(null);
@@ -271,9 +273,16 @@ export function VideoBackground({
         )}
       </div>
 
-      <div className="absolute inset-0 bg-black/15" />
-      <div className="absolute inset-0 bg-gradient-to-r from-background from-10% via-background/55 via-40% to-transparent to-100%" />
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/10 to-background/35" />
+      {overlay !== "none" && <div className="absolute inset-0 bg-black/15" />}
+      {overlay === "strong" && (
+        <>
+          <div className="absolute inset-0 bg-gradient-to-r from-background from-10% via-background/55 via-40% to-transparent to-100%" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/10 to-background/35" />
+        </>
+      )}
+      {overlay === "soft" && (
+        <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-background/15 to-background/30" />
+      )}
     </div>
   );
 }

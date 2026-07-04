@@ -102,6 +102,12 @@ export function Footer() {
           </div>
         </div>
       </div>
+
+      <div className="select-none overflow-hidden border-t border-border/30 pb-6 pt-10 sm:pb-10">
+        <p className="display-hero text-outline-copper text-center text-[clamp(2.6rem,13vw,11rem)] leading-none">
+          ΑΛΕΞΑΝΔΡΑΚΗΣ
+        </p>
+      </div>
     </footer>
   );
 }

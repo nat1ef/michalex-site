@@ -4,36 +4,39 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/components/motion/animation-provider";
-import { SectionLabel } from "@/components/ui/section-label";
-import { SplitText } from "@/components/motion/split-text";
-import { facilityBento, siteConfig } from "@/lib/content";
-import { sectionMeta } from "@/lib/sections";
+import { facilityBento } from "@/lib/content";
+import { cn } from "@/lib/utils";
 
-function BentoVideo({ src, poster }: { src: string; poster: string }) {
-  const ref = useRef<HTMLVideoElement>(null);
+function VideoTile({ src, poster }: { src: string; poster: string }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    const video = ref.current;
+    const video = videoRef.current;
     if (!video) return;
-    video.muted = true;
-    video.setAttribute("playsinline", "");
-    video.setAttribute("webkit-playsinline", "true");
-    const play = () => video.play().catch(() => undefined);
-    void play();
-    document.addEventListener("touchstart", play, { once: true, passive: true });
-    return () => document.removeEventListener("touchstart", play);
-  }, [src]);
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          void video.play().catch(() => undefined);
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.15 }
+    );
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <video
-      ref={ref}
-      autoPlay
-      loop
+      ref={videoRef}
       muted
       playsInline
+      loop
+      preload="metadata"
       poster={poster}
-      preload="auto"
-      className="absolute inset-0 h-full w-full object-cover brightness-105 saturate-[0.9] contrast-110 transition-transform duration-700 group-hover:scale-105"
+      className="absolute inset-0 h-full w-full object-cover"
     >
       <source src={src} type="video/mp4" />
     </video>
@@ -42,29 +45,51 @@ function BentoVideo({ src, poster }: { src: string; poster: string }) {
 
 export function BentoFacility() {
   const sectionRef = useRef<HTMLElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
-  const meta = sectionMeta.facility;
 
   useGSAP(
     () => {
+      const section = sectionRef.current;
+      if (!section) return;
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      const cells = gridRef.current?.querySelectorAll("[data-bento-cell]");
-      if (!cells?.length) return;
 
-      cells.forEach((cell, i) => {
-        gsap.from(cell, {
-          y: 100,
-          opacity: 0,
-          scale: 0.92,
-          duration: 1.2,
-          delay: i * 0.06,
-          ease: "power4.out",
-          scrollTrigger: {
-            trigger: cell,
-            start: "top 92%",
-            toggleActions: "play none none reverse",
-          },
-        });
+      const tiles = gsap.utils.toArray<HTMLElement>("[data-tile]", section);
+
+      tiles.forEach((tile, i) => {
+        const media = tile.querySelector("[data-tile-media]");
+
+        gsap.fromTo(
+          tile,
+          { clipPath: "inset(100% 0% 0% 0%)" },
+          {
+            clipPath: "inset(0% 0% 0% 0%)",
+            duration: 1.1,
+            delay: (i % 3) * 0.12,
+            ease: "power4.inOut",
+            scrollTrigger: {
+              trigger: tile,
+              start: "top 88%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+
+        if (media) {
+          gsap.fromTo(
+            media,
+            { scale: 1.22 },
+            {
+              scale: 1,
+              duration: 1.5,
+              delay: (i % 3) * 0.12,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: tile,
+                start: "top 88%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
       });
     },
     { scope: sectionRef }
@@ -73,71 +98,80 @@ export function BentoFacility() {
   return (
     <section
       ref={sectionRef}
-      id="εργαστηριο"
-      className="section-cinematic border-t border-border/30"
+      className="relative border-t border-border/30 py-24 sm:py-32"
     >
       <div className="section-shell">
-        <SectionLabel index={meta.index} title={meta.title} />
-        <SplitText
-          as="h2"
-          className="mt-6 max-w-4xl text-3xl font-semibold tracking-[-0.04em] sm:text-5xl lg:text-6xl"
-        >
-          Το εργαστήριο ως σύστημα ακρίβειας
-        </SplitText>
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <p className="telemetry-label">
+              <span className="text-copper/80">[</span> ΤΟ ΕΡΓΑΣΤΗΡΙΟ{" "}
+              <span className="text-copper/80">]</span>
+            </p>
+            <h2 className="display-title mt-6">Μέσα στο μηχανουργείο</h2>
+          </div>
+          <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
+            Πραγματικές δουλειές, όχι στοκ φωτογραφίες — ό,τι βλέπεις εδώ
+            κατασκευάστηκε στον πάγκο μας.
+          </p>
+        </div>
 
-        <div
-          ref={gridRef}
-          className="mt-10 grid auto-rows-[minmax(160px,auto)] grid-flow-dense grid-cols-2 gap-2 sm:mt-14 sm:auto-rows-[minmax(180px,auto)] sm:grid-cols-4 sm:gap-3 lg:mt-20"
-        >
-          {facilityBento.map((cell) => (
+        <div className="mt-14 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+          {facilityBento.map((tile) => (
             <div
-              key={cell.id}
-              data-bento-cell
-              className={`group relative min-h-[160px] overflow-hidden border border-border/40 bg-card/20 sm:min-h-[180px] ${cell.span}`}
+              key={tile.id}
+              data-tile
+              className={cn(
+                "group relative overflow-hidden border border-border/40 bg-card",
+                tile.span
+              )}
             >
-              {cell.type === "video" ? (
-                <BentoVideo src={cell.src} poster={cell.poster} />
+              {tile.type === "video" ? (
+                <div data-tile-media className="absolute inset-0 will-change-transform">
+                  <VideoTile src={tile.src} poster={tile.poster} />
+                </div>
               ) : (
-                <Image
-                  src={cell.src}
-                  alt={cell.alt}
-                  fill
-                  className="object-cover brightness-105 saturate-[0.9] contrast-110 transition-transform duration-700 group-hover:scale-105"
-                  sizes="(max-width: 768px) 50vw, 25vw"
-                />
+                <div
+                  data-tile-media
+                  className="absolute inset-0 will-change-transform transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+                >
+                  <Image
+                    src={tile.src}
+                    alt={tile.alt}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 640px) 50vw, 25vw"
+                  />
+                </div>
               )}
 
-              <div className="grain-overlay absolute inset-0 z-10 opacity-30" />
-              <div className="absolute inset-0 z-20 bg-gradient-to-t from-background/80 via-background/15 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-transparent to-transparent" />
 
-              <div className="relative z-30 flex h-full min-h-[180px] flex-col justify-end p-5 sm:p-6">
-                <p className="telemetry-label text-copper/90">{cell.code}</p>
-                <p className="mt-2 text-sm font-medium tracking-tight sm:text-base">
-                  {cell.label}
-                </p>
+              <div className="absolute inset-x-0 bottom-0 flex items-center justify-between p-4">
+                <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-foreground/90">
+                  {tile.label}
+                </span>
+                <span
+                  className={cn(
+                    "font-mono text-[9px] uppercase tracking-[0.2em]",
+                    tile.type === "video" ? "text-copper" : "text-muted-foreground"
+                  )}
+                >
+                  {tile.type === "video" && (
+                    <span className="mr-1.5 inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-copper align-middle" />
+                  )}
+                  {tile.code}
+                </span>
               </div>
+
+              {/* Aspect placeholders to give the grid its shape */}
+              <div
+                className={cn(
+                  "invisible",
+                  tile.id === "video-main" ? "aspect-[4/3]" : "aspect-[4/3]"
+                )}
+              />
             </div>
           ))}
-
-          <div
-            data-bento-cell
-            className="col-span-2 row-span-1 flex flex-col justify-between gap-4 border border-copper/30 bg-copper/5 p-6 sm:col-span-2 lg:col-span-2"
-          >
-            <p className="telemetry-label">ΤΟΠΟΘΕΣΙΕΣ</p>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {siteConfig.locations.map((location) => (
-                <div key={location.id}>
-                  <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-copper/80">
-                    {location.label}
-                  </p>
-                  <p className="mt-1 text-lg font-semibold tracking-tight sm:text-xl">
-                    {location.address}
-                  </p>
-                </div>
-              ))}
-            </div>
-            <p className="text-sm text-muted-foreground">{siteConfig.hours.weekdays}</p>
-          </div>
         </div>
       </div>
     </section>

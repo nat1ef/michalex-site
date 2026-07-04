@@ -19,13 +19,18 @@ export function CountUp({
     () => {
       const el = ref.current;
       if (!el) return;
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
       const numeric = parseFloat(value.replace(/[^0-9.]/g, ""));
       if (Number.isNaN(numeric)) return;
 
-      const obj = { val: 0 };
       const hasDecimal = value.includes(".");
+
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        el.textContent = hasDecimal ? numeric.toFixed(1) : Math.round(numeric).toString();
+        return;
+      }
+
+      const obj = { val: 0 };
 
       gsap.to(obj, {
         val: numeric,

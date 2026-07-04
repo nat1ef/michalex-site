@@ -3,20 +3,19 @@
 import { Clock, MapPin, Navigation, Phone } from "lucide-react";
 import { ButtonLink } from "@/components/ui/button-link";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion/fade-in";
-import { SectionLabel } from "@/components/ui/section-label";
 import { ViberTextLink } from "@/components/contact/viber-text-link";
 import { siteConfig } from "@/lib/content";
-import { sectionMeta } from "@/lib/sections";
 
 export function Contact() {
-  const meta = sectionMeta.contact;
-
   return (
     <section id="επικοινωνια" className="border-t border-border/30 py-24 sm:py-32 lg:py-40">
       <div className="section-shell">
         <FadeIn className="max-w-3xl">
-          <SectionLabel index={meta.index} title={meta.title} />
-          <h2 className="mt-6 text-3xl font-semibold tracking-tight sm:text-4xl lg:text-[2.75rem]">
+          <p className="telemetry-label">
+            <span className="text-copper/80">[</span> ΕΠΙΚΟΙΝΩΝΙΑ{" "}
+            <span className="text-copper/80">]</span>
+          </p>
+          <h2 className="display-title mt-6">
             Ελάτε στο εργαστήριο ή επικοινωνήστε άμεσα
           </h2>
           <p className="mt-6 text-base leading-relaxed text-muted-foreground lg:text-lg">

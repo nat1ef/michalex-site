@@ -3,103 +3,207 @@
 import { useRef } from "react";
 import Image from "next/image";
 import { useGSAP } from "@gsap/react";
-import { gsap, ScrollTrigger } from "@/components/motion/animation-provider";
+import { gsap } from "@/components/motion/animation-provider";
 import { processChapters } from "@/lib/content";
-import { ScrubText } from "@/components/motion/scrub-text";
 
-function setupChapterScroll(
-  chapters: HTMLElement[],
-  config: { pinEnd: string; innerEnd: string; mediaEnd: string }
-) {
-  chapters.forEach((chapter, i) => {
-    const inner = chapter.querySelector("[data-chapter-inner]");
-    const media = chapter.querySelector("[data-chapter-media]");
-    if (!inner || !media) return;
+function ChapterPanel({
+  chapter,
+  index,
+}: {
+  chapter: (typeof processChapters)[number];
+  index: number;
+}) {
+  return (
+    <article
+      data-panel
+      className="relative flex w-full shrink-0 items-center overflow-hidden max-lg:min-h-[100svh] max-lg:py-20 lg:h-full lg:w-screen"
+    >
+      {/* Giant chapter number behind content */}
+      <span
+        aria-hidden
+        className="display-number text-outline pointer-events-none absolute -top-4 right-4 select-none text-[clamp(9rem,28vw,24rem)] opacity-70 sm:right-10 lg:-top-6"
+      >
+        0{index + 1}
+      </span>
 
-    ScrollTrigger.create({
-      trigger: chapter,
-      start: "top top",
-      end: config.pinEnd,
-      pin: true,
-      pinSpacing: true,
-      scrub: 1,
-      anticipatePin: 1,
-    });
+      <div className="section-shell grid w-full items-center gap-10 py-10 lg:grid-cols-[1fr_1.15fr] lg:gap-16 lg:py-24">
+        <div className="relative z-10 max-w-xl">
+          <p className="telemetry-label">
+            <span className="text-copper">{chapter.code}</span> / {chapter.label}
+          </p>
+          <h3 className="display-chapter mt-6">{chapter.label}</h3>
+          <p className="mt-4 text-xl font-medium text-foreground/90 sm:text-2xl">
+            {chapter.title}
+          </p>
+          <p className="mt-5 max-w-md text-base leading-relaxed text-muted-foreground sm:text-lg">
+            {chapter.description}
+          </p>
+        </div>
 
-    gsap.fromTo(
-      inner,
-      { y: 80, opacity: 0.2 },
-      {
-        y: 0,
-        opacity: 1,
-        ease: "none",
-        scrollTrigger: {
-          trigger: chapter,
-          start: "top top",
-          end: config.innerEnd,
-          scrub: 1.1,
-        },
-      }
-    );
+        <div className="relative">
+          <div className="relative overflow-hidden border border-border/40">
+            <div data-parallax-img className="will-change-transform">
+              <Image
+                src={chapter.image}
+                alt={chapter.imageAlt}
+                width={1600}
+                height={1200}
+                className="aspect-[4/3] w-full scale-[1.18] object-cover"
+              />
+            </div>
+            <div className="absolute left-4 top-4 font-mono text-[10px] uppercase tracking-[0.22em] text-foreground/90">
+              <span className="mr-2 inline-block h-1.5 w-1.5 rounded-full bg-copper" />
+              {chapter.code} / {chapter.label}
+            </div>
+          </div>
 
-    gsap.fromTo(
-      media,
-      { scale: 1.15, filter: "brightness(0.45)" },
-      {
-        scale: 1,
-        filter: "brightness(0.8)",
-        ease: "none",
-        scrollTrigger: {
-          trigger: chapter,
-          start: "top top",
-          end: config.mediaEnd,
-          scrub: 1.2,
-        },
-      }
-    );
-
-    if (i < chapters.length - 1) {
-      gsap.to(chapter, {
-        opacity: 0.2,
-        scale: 0.97,
-        ease: "none",
-        scrollTrigger: {
-          trigger: chapter,
-          start: "bottom bottom",
-          end: "bottom top",
-          scrub: 1,
-        },
-      });
-    }
-  });
+          {/* Floating detail shot */}
+          <div
+            data-detail-img
+            className="absolute -bottom-10 -left-6 hidden w-44 overflow-hidden border border-copper/40 bg-background shadow-[0_24px_60px_-24px_rgba(0,0,0,0.8)] will-change-transform sm:block lg:w-56"
+          >
+            <Image
+              src={chapter.detailImage}
+              alt={chapter.detailAlt}
+              width={800}
+              height={800}
+              className="aspect-square w-full object-cover"
+            />
+          </div>
+        </div>
+      </div>
+    </article>
+  );
 }
 
 export function ProcessChapters() {
   const sectionRef = useRef<HTMLElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const railRef = useRef<HTMLDivElement>(null);
+  const counterRef = useRef<HTMLSpanElement>(null);
 
   useGSAP(
     () => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       const section = sectionRef.current;
-      if (!section) return;
+      const track = trackRef.current;
+      if (!section || !track) return;
 
-      const chapters = gsap.utils.toArray<HTMLElement>("[data-chapter]", section);
       const mm = gsap.matchMedia();
 
-      mm.add("(min-width: 768px)", () => {
-        setupChapterScroll(chapters, {
-          pinEnd: "+=100%",
-          innerEnd: "+=60%",
-          mediaEnd: "+=80%",
+      mm.add("(min-width: 1024px)", () => {
+        const panels = gsap.utils.toArray<HTMLElement>("[data-panel]", track);
+        const total = panels.length;
+        const scrollLength = () => `+=${(total - 1) * 100}%`;
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: scrollLength,
+            pin: true,
+            scrub: 1,
+            anticipatePin: 1,
+            onUpdate: (self) => {
+              if (counterRef.current) {
+                const active = Math.min(
+                  total,
+                  Math.round(self.progress * (total - 1)) + 1
+                );
+                counterRef.current.textContent = `0${active}`;
+              }
+            },
+          },
         });
+
+        tl.to(track, {
+          xPercent: -100 * ((total - 1) / total),
+          ease: "none",
+        });
+
+        // Inner image parallax against the horizontal motion
+        panels.forEach((panel) => {
+          const img = panel.querySelector("[data-parallax-img]");
+          const detail = panel.querySelector("[data-detail-img]");
+          if (img) {
+            gsap.fromTo(
+              img,
+              { xPercent: -7 },
+              {
+                xPercent: 7,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: section,
+                  start: "top top",
+                  end: scrollLength,
+                  scrub: 1,
+                },
+              }
+            );
+          }
+          if (detail) {
+            gsap.fromTo(
+              detail,
+              { yPercent: 14 },
+              {
+                yPercent: -8,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: section,
+                  start: "top top",
+                  end: scrollLength,
+                  scrub: 1.4,
+                },
+              }
+            );
+          }
+        });
+
+        if (railRef.current) {
+          gsap.fromTo(
+            railRef.current,
+            { scaleX: 0 },
+            {
+              scaleX: 1,
+              ease: "none",
+              scrollTrigger: {
+                trigger: section,
+                start: "top top",
+                end: scrollLength,
+                scrub: 0.5,
+              },
+            }
+          );
+        }
+
+        return () => {
+          tl.scrollTrigger?.kill();
+          tl.kill();
+        };
       });
 
-      mm.add("(max-width: 767px)", () => {
-        setupChapterScroll(chapters, {
-          pinEnd: "+=85%",
-          innerEnd: "+=55%",
-          mediaEnd: "+=70%",
-        });
+      // Mobile / tablet: vertical flow with simple reveals
+      mm.add("(max-width: 1023px)", () => {
+        const panels = gsap.utils.toArray<HTMLElement>("[data-panel]", track);
+        const tweens = panels.map((panel) =>
+          gsap.from(panel.querySelectorAll("h3, p, [data-parallax-img]"), {
+            y: 46,
+            opacity: 0,
+            duration: 0.9,
+            stagger: 0.08,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: panel,
+              start: "top 78%",
+              toggleActions: "play none none reverse",
+            },
+          })
+        );
+        return () =>
+          tweens.forEach((t) => {
+            t.scrollTrigger?.kill();
+            t.kill();
+          });
       });
 
       return () => mm.revert();
@@ -108,40 +212,43 @@ export function ProcessChapters() {
   );
 
   return (
-    <section ref={sectionRef} id="διαδικασια" className="relative">
-      {processChapters.map((chapter, i) => (
-        <article
-          key={chapter.id}
-          data-chapter
-          className="relative flex min-h-[100svh] items-end overflow-hidden"
-        >
-          <div data-chapter-media className="absolute inset-0">
-            <Image
-              src={chapter.image}
-              alt={chapter.imageAlt}
-              fill
-              className="object-cover object-center brightness-105 saturate-[0.85] contrast-110"
-              sizes="100vw"
-              loading="lazy"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/55 to-background/20" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_80%_20%,oklch(0.72_0.145_55/0.12),transparent)]" />
-          </div>
+    <section
+      ref={sectionRef}
+      id="εργαστηριο"
+      className="relative overflow-hidden border-t border-border/30 bg-card/20"
+    >
+      <div className="pointer-events-none absolute left-0 top-10 z-20 w-full">
+        <div className="section-shell flex items-center justify-between">
+          <p className="telemetry-label">
+            <span className="text-copper/80">[</span> Η ΔΙΑΔΙΚΑΣΙΑ{" "}
+            <span className="text-copper/80">]</span>
+          </p>
+          <p className="hidden font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground lg:block">
+            <span ref={counterRef} className="text-copper">
+              01
+            </span>{" "}
+            / 0{processChapters.length}
+          </p>
+        </div>
+      </div>
 
-          <div
-            data-chapter-inner
-            className="section-shell relative z-10 w-full pb-20 pt-32 sm:pb-28"
-          >
-            <p className="telemetry-label text-copper">{chapter.code}</p>
-            <h2 className="mt-4 max-w-4xl text-3xl font-semibold tracking-[-0.04em] sm:mt-6 sm:text-6xl lg:text-7xl">
-              {chapter.title}
-            </h2>
-            <ScrubText className="mt-8 max-w-2xl text-lg text-muted-foreground sm:text-xl">
-              {chapter.description}
-            </ScrubText>
+      <div
+        ref={trackRef}
+        className="flex max-lg:flex-col lg:h-screen lg:w-max lg:flex-nowrap"
+      >
+        {processChapters.map((chapter, i) => (
+          <ChapterPanel key={chapter.id} chapter={chapter} index={i} />
+        ))}
+      </div>
+
+      {/* Progress rail */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-8 z-20 hidden lg:block">
+        <div className="section-shell">
+          <div className="h-px w-full bg-border/40">
+            <div ref={railRef} className="h-full origin-left bg-copper" />
           </div>
-        </article>
-      ))}
+        </div>
+      </div>
     </section>
   );
 }

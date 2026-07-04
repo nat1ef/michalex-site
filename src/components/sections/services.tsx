@@ -1,82 +1,54 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import {
   Cog,
-  Disc,
+  Disc3,
   Factory,
   Ruler,
-  Settings,
+  Settings2,
   Wrench,
-  type LucideIcon,
+  ArrowUpRight,
 } from "lucide-react";
-import { gsap, ScrollTrigger } from "@/components/motion/animation-provider";
-import { SectionLabel } from "@/components/ui/section-label";
-import { DrawLine, SplitText, RevealBlock } from "@/components/motion/split-text";
-import { ScrubText } from "@/components/motion/scrub-text";
-import { services } from "@/lib/content";
-import { sectionMeta } from "@/lib/sections";
+import { gsap } from "@/components/motion/animation-provider";
+import { ButtonLink } from "@/components/ui/button-link";
+import { services, siteConfig } from "@/lib/content";
 
-const iconMap: Record<(typeof services)[number]["icon"], LucideIcon> = {
+const iconMap = {
   cog: Cog,
   wrench: Wrench,
-  disc: Disc,
-  settings: Settings,
+  disc: Disc3,
+  settings: Settings2,
   ruler: Ruler,
   factory: Factory,
-};
+} as const;
 
 export function Services() {
   const sectionRef = useRef<HTMLElement>(null);
-  const pinRef = useRef<HTMLDivElement>(null);
-  const listRef = useRef<HTMLDivElement>(null);
-  const meta = sectionMeta.services;
 
   useGSAP(
     () => {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       const section = sectionRef.current;
-      const pin = pinRef.current;
-      const list = listRef.current;
-      if (!section || !pin || !list) return;
+      if (!section) return;
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-      const mm = gsap.matchMedia();
+      const cards = gsap.utils.toArray<HTMLElement>("[data-deck-card]", section);
 
-      mm.add("(min-width: 1024px)", () => {
-        ScrollTrigger.create({
-          trigger: section,
-          start: "top top",
-          end: () => `+=${list.offsetHeight - pin.offsetHeight}`,
-          pin: pin,
-          pinSpacing: false,
-          scrub: true,
-        });
-      });
-
-      const rows = list.querySelectorAll("[data-service-row]");
-      rows.forEach((row, i) => {
-        gsap.from(row, {
-          x: -120,
-          opacity: 0,
-          duration: 1.1,
-          ease: "power4.out",
-          scrollTrigger: {
-            trigger: row,
-            start: "top 92%",
-            toggleActions: "play none none reverse",
-          },
-          delay: i * 0.04,
-        });
-
-        gsap.to(row.querySelector("[data-service-title]"), {
-          x: 12,
+      // As the next card slides over, the previous one sinks back and dims
+      cards.forEach((card, i) => {
+        if (i === cards.length - 1) return;
+        const next = cards[i + 1];
+        gsap.to(card, {
+          scale: 0.94,
+          filter: "brightness(0.55)",
           ease: "none",
           scrollTrigger: {
-            trigger: row,
+            trigger: next,
             start: "top bottom",
-            end: "bottom top",
-            scrub: 1.5,
+            end: "top top+=96",
+            scrub: true,
           },
         });
       });
@@ -88,65 +60,78 @@ export function Services() {
     <section
       ref={sectionRef}
       id="υπηρεσιες"
-      className="section-cinematic border-t border-border/30"
+      className="relative border-t border-border/30 py-24 sm:py-32"
     >
       <div className="section-shell">
-        <div className="flex flex-col gap-16 lg:flex-row lg:gap-20">
-          <div ref={pinRef} className="lg:w-[38%] lg:shrink-0 lg:pt-8">
-            <SectionLabel index={meta.index} title={meta.title} />
-            <SplitText
-              as="h2"
-              className="mt-6 text-3xl font-semibold leading-[1.02] tracking-[-0.03em] sm:text-4xl lg:text-[3.25rem]"
-            >
-              Τεχνική εμπειρία σε κάθε κατεργασία
-            </SplitText>
-            <RevealBlock className="mt-8 hidden lg:block">
-              <ScrubText className="text-lg leading-relaxed text-muted-foreground">
-                Από είδη μετάδοσης κίνησης μέχρι custom μηχανολογικά εξαρτήματα —
-                κάθε έργο αντιμετωπίζεται ως μοναδική μηχανολογική πρόκληση.
-              </ScrubText>
-            </RevealBlock>
-          </div>
+        <div className="max-w-3xl">
+          <p className="telemetry-label">
+            <span className="text-copper/80">[</span> ΥΠΗΡΕΣΙΕΣ{" "}
+            <span className="text-copper/80">]</span>
+          </p>
+          <h2 className="display-title mt-6">Τι κατασκευάζουμε</h2>
+          <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground lg:text-lg">
+            Έξι βασικές κατηγορίες εργασιών — κάθε μία με τα δικά της κομμάτια,
+            φωτογραφημένα στον πάγκο του εργαστηρίου.
+          </p>
+        </div>
+      </div>
 
-          <div ref={listRef} className="min-w-0 flex-1">
-            <RevealBlock className="mb-10 lg:hidden">
-              <p className="text-base leading-relaxed text-muted-foreground">
-                Από είδη μετάδοσης κίνησης μέχρι custom μηχανολογικά εξαρτήματα —
-                κάθε έργο αντιμετωπίζεται ως μοναδική μηχανολογική πρόκληση.
-              </p>
-            </RevealBlock>
-
-            <DrawLine />
-
-            <div className="divide-y divide-border/20">
-              {services.map((service, i) => {
-                const Icon = iconMap[service.icon];
-                return (
-                  <article
-                    key={service.title}
-                    data-service-row
-                    className="group grid gap-4 py-10 transition-colors duration-500 hover:bg-foreground/[0.04] sm:grid-cols-[4rem_1fr_1.2fr] sm:gap-8 sm:py-14"
-                  >
-                    <div className="flex items-start gap-3 sm:flex-col sm:gap-2">
-                      <p className="font-mono text-xs text-muted-foreground/50">
-                        {String(i + 1).padStart(2, "0")}
+      <div className="section-shell mt-16">
+        <div className="flex flex-col gap-6">
+          {services.map((service, i) => {
+            const Icon = iconMap[service.icon];
+            return (
+              <div
+                key={service.title}
+                data-deck-card
+                className="sticky will-change-transform"
+                style={{ top: `${96 + i * 14}px` }}
+              >
+                <article className="grid overflow-hidden border border-border/50 bg-card shadow-[0_-18px_50px_-30px_rgba(0,0,0,0.9)] lg:grid-cols-[1.1fr_1fr]">
+                  <div className="flex flex-col justify-between p-8 sm:p-12">
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-copper">
+                          {service.code}
+                        </span>
+                        <Icon className="h-6 w-6 text-muted-foreground" strokeWidth={1.5} />
+                      </div>
+                      <h3 className="display-chapter mt-8 text-[clamp(1.8rem,4vw,3.4rem)]">
+                        {service.title}
+                      </h3>
+                      <p className="mt-5 max-w-md text-base leading-relaxed text-muted-foreground">
+                        {service.description}
                       </p>
-                      <Icon className="h-4 w-4 text-copper transition-transform duration-700 group-hover:rotate-180" />
                     </div>
-                    <h3
-                      data-service-title
-                      className="text-xl font-medium tracking-tight sm:text-2xl lg:text-[1.65rem]"
-                    >
-                      {service.title}
-                    </h3>
-                    <p className="text-sm leading-relaxed text-muted-foreground transition-colors duration-500 group-hover:text-foreground/75 sm:text-base">
-                      {service.description}
-                    </p>
-                  </article>
-                );
-              })}
-            </div>
-          </div>
+                    <div className="mt-10">
+                      <ButtonLink
+                        href={siteConfig.phoneHref}
+                        variant="outline"
+                        className="gap-2 rounded-none px-6 font-mono text-[10px] uppercase tracking-[0.14em]"
+                      >
+                        Ρώτησέ μας
+                        <ArrowUpRight className="h-3.5 w-3.5" />
+                      </ButtonLink>
+                    </div>
+                  </div>
+
+                  <div className="relative min-h-[240px] overflow-hidden border-t border-border/40 lg:min-h-[420px] lg:border-l lg:border-t-0">
+                    <Image
+                      src={service.image}
+                      alt={service.imageAlt}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 1024px) 100vw, 45vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-card/60 via-transparent to-transparent lg:bg-gradient-to-r lg:from-card/50" />
+                    <span className="absolute bottom-4 right-4 font-mono text-[9px] uppercase tracking-[0.22em] text-foreground/80">
+                      ΑΠΟ ΤΟΝ ΠΑΓΚΟ ΜΑΣ
+                    </span>
+                  </div>
+                </article>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

@@ -3,8 +3,8 @@ export const siteConfig = {
   tagline: "Μηχανουργείο — Κατασκεύες ειδών μετάδοσης κίνησης και μηχανολογικών εξαρτημάτων",
   description:
     "Εργαστήριο κατασκευής μηχανημάτων στην Αθήνα. Δεκαετίες εμπειρίας σε τόρνο, φρέζα και custom μηχανουργικές κατασκευές.",
-  heroVideo: "/videos/workshop-hero-loop.mp4?v=4",
-  heroPoster: "/images/hero-loop-poster.jpg?v=4",
+  heroVideo: "/videos/hero-hobbing.mp4?v=5",
+  heroPoster: "/images/work/hero-poster.jpg?v=5",
   heroLoopStart: 0,
   ogShareImage: "/images/share-preview.jpg",
   googleReviewsUrl:
@@ -58,39 +58,57 @@ export const navLinks = [
 export const services = [
   {
     icon: "cog" as const,
+    code: "SRV.01",
     title: "Είδη μετάδοσης κίνησης",
     description:
       "Κατασκευή και επισκευή γραναζιών, άξονων, συμπλεκτών και μηχανισμών μετάδοσης κίνησης με ακρίβεια μικρού.",
+    image: "/images/work/gear-pile.jpg",
+    imageAlt: "Γρανάζια κάθε τύπου στο εργαστήριο",
   },
   {
     icon: "wrench" as const,
+    code: "SRV.02",
     title: "Μηχανολογικά εξαρτήματα",
     description:
       "Custom κατασκευές εξαρτημάτων κατά σχέδιο ή δείγμα — από πρωτότυπο μέχρι σειρά.",
+    image: "/images/work/threaded-bushings.jpg",
+    imageAlt: "Σπειρωτά εξαρτήματα κατασκευασμένα κατά σχέδιο",
   },
   {
     icon: "disc" as const,
+    code: "SRV.03",
     title: "Κόψιμο & τόρνευση άξονων",
     description:
       "Ακριβής κατεργασία άξονων κάθε διαμέτρου — κόψιμο, τόρνευση και finish σύμφωνα με τις προδιαγραφές σας.",
+    image: "/images/work/spline-shaft-machine.jpg",
+    imageAlt: "Πολύσφηνος άξονας σε κατεργασία",
   },
   {
     icon: "settings" as const,
+    code: "SRV.04",
     title: "Τόρνος & Φρέζα",
     description:
       "Κλασική και σύγχρονη μηχανουργική κατεργασία — κόψιμο άξονα, τόρνευση, φρεζάρισμα, τρύπημα.",
+    image: "/images/work/brass-flange-lathe.jpg",
+    imageAlt: "Μπρούτζινη φλάντζα στο τσοκ του τόρνου",
   },
   {
     icon: "ruler" as const,
+    code: "SRV.05",
     title: "Μετρήσεις & ποιοτικός έλεγχος",
     description:
       "Ακριβείς διαστάσεις, έλεγχος tolerances και παράδοση που σέβεται τις προδιαγραφές σας.",
+    image: "/images/work/hands-splines.jpg",
+    imageAlt: "Έλεγχος πολύσφηνων αξόνων στο χέρι",
   },
   {
     icon: "factory" as const,
+    code: "SRV.06",
     title: "Επισκευές & ανακατασκευή",
     description:
       "Αναβίωση φθαρμένων ή κατεστραμμένων εξαρτημάτων — οικονομική λύση αντί για αντικατάσταση.",
+    image: "/images/work/gearbox-repair.jpg",
+    imageAlt: "Ανακατασκευή κιβωτίου μετάδοσης",
   },
 ] as const;
 
@@ -155,30 +173,39 @@ export const reviews = [
 export const processChapters = [
   {
     id: "torneusis",
-    code: "CH.01 / ΤΟΡΝΕΥΣΗ",
+    code: "CH.01",
+    label: "ΤΟΡΝΕΥΣΗ",
     title: "Άξονες & κυλινδρική ακρίβεια",
     description:
       "Κόψιμο, τόρνευση και finish άξονων κάθε διαμέτρου — από μονάδες μέχρι σειρές, με έλεγχο διαστάσεων και tolerances.",
-    image: "/images/workshop-turned-part.jpg",
-    imageAlt: "Κατεργασία άξονα — τόρνευση ακριβείας",
+    image: "/images/work/turning-lathe.jpg",
+    imageAlt: "Τόρνευση άξονα με γρέζια — κατεργασία σε εξέλιξη",
+    detailImage: "/images/work/shafts-black.jpg",
+    detailAlt: "Έτοιμοι άξονες και γρανάζι",
   },
   {
     id: "freza",
-    code: "CH.02 / ΦΡΕΖΑ",
+    code: "CH.02",
+    label: "ΦΡΕΖΑ",
     title: "Φρεζάρισμα & μηχανολογικά εξαρτήματα",
     description:
       "Custom κατασκευές κατά σχέδιο ή δείγμα — πρωτότυπο, μικρές και μεγάλες σειρές με επαναληψιμότητα.",
-    image: "/images/workshop-shafts.jpg",
-    imageAlt: "Κατεργασμένοι άξονες και γρανάζια στο εργαστήριο",
+    image: "/images/work/shafts-array.jpg",
+    imageAlt: "Σειρά κατεργασμένων πολύσφηνων αξόνων",
+    detailImage: "/images/work/pinions-black.jpg",
+    detailAlt: "Πηνία και κοπτικά σε μαύρο φόντο",
   },
   {
     id: "metadosi",
-    code: "CH.03 / ΜΕΤΑΔΟΣΗ",
+    code: "CH.03",
+    label: "ΜΕΤΑΔΟΣΗ",
     title: "Γρανάζια & μετάδοση κίνησης",
     description:
       "Κατασκευή και επισκευή γραναζιών, συμπλεκτών και μηχανισμών μετάδοσης — η ειδικότητα του εργαστηρίου.",
-    image: "/images/workshop-gear-cutting.jpg",
-    imageAlt: "Κοπή γραναζιών — κατεργασία μετάδοσης κίνησης",
+    image: "/images/work/gearbox-cluster.jpg",
+    imageAlt: "Συστοιχία γραναζιών κιβωτίου μετάδοσης",
+    detailImage: "/images/work/gears-pair-brass.jpg",
+    detailAlt: "Ατσάλινο και μπρούτζινο γρανάζι",
   },
 ] as const;
 
@@ -186,49 +213,71 @@ export const facilityBento = [
   {
     id: "video-main",
     type: "video" as const,
-    src: "/videos/workshop-process.mp4",
-    poster: "/images/workshop-gear-hobbing.jpg",
+    src: "/videos/process-live.mp4",
+    poster: "/images/work/hobbing-macro.jpg",
     code: "LIVE / FEED",
-    label: "Κατεργασία σε εξέλιξη",
+    label: "Κοπή γραναζιού σε εξέλιξη",
     span: "col-span-2 row-span-2 min-h-[320px] sm:min-h-[420px]",
   },
   {
     id: "gears",
     type: "image" as const,
-    src: "/images/workshop-gear-hobbing.jpg",
-    alt: "Κοπή γραναζιού στο τόρνο — λεπτομέρεια κατεργασίας",
+    src: "/images/work/spur-gear-macro.jpg",
+    alt: "Μετωπικό γρανάζι — λεπτομέρεια δοντιών",
     code: "SYS / GR",
     label: "Γρανάζια",
     span: "col-span-1 row-span-1",
   },
   {
-    id: "sparks",
+    id: "ring",
     type: "image" as const,
-    src: "/images/workshop-turned-part.jpg",
-    alt: "Κατεργασμένος άξονας — τόρνευση",
-    code: "SYS / TR",
-    label: "Τόρνος",
+    src: "/images/work/ring-gear-housing.jpg",
+    alt: "Πλανητική κορώνα σε κέλυφος",
+    code: "SYS / RG",
+    label: "Κορώνες",
     span: "col-span-1 row-span-1",
   },
   {
-    id: "tools",
+    id: "stock",
     type: "image" as const,
-    src: "/images/workshop-stock.jpg",
-    alt: "Ακατέργαστο υλικό και εργαστήριο",
-    code: "SYS / TL",
-    label: "Εργαλεία",
+    src: "/images/work/raw-stock.jpg",
+    alt: "Πρώτη ύλη — ράβδοι χάλυβα",
+    code: "SYS / ST",
+    label: "Πρώτη ύλη",
     span: "col-span-2 row-span-1 sm:col-span-1",
   },
   {
-    id: "transmission",
+    id: "helical",
     type: "image" as const,
-    src: "/images/workshop-transmission.jpg",
-    alt: "Μηχανισμός μετάδοσης — γρανάζια και άξονες",
-    code: "SYS / MT",
-    label: "Μετάδοση",
+    src: "/images/work/helical-gear-shaft.jpg",
+    alt: "Ελικοειδές γρανάζι σε άξονα",
+    code: "SYS / HX",
+    label: "Ελικοειδή",
     span: "col-span-2 row-span-1 sm:col-span-1",
   },
 ] as const;
+
+export const statement = {
+  kicker: "Η ΔΟΥΛΕΙΑ ΜΑΣ",
+  words: [
+    { text: "Ό,τι" },
+    { text: "γυρίζει," },
+    { text: "ό,τι" },
+    { text: "μεταδίδει" },
+    { text: "κίνηση," },
+    { text: "ό,τι" },
+    { text: "χρειάζεται" },
+    { text: "ακρίβεια", accent: true },
+    { text: "—" },
+    { text: "κατασκευάζεται" },
+    { text: "εδώ.", accent: true },
+  ],
+} as const;
+
+export const ctaImage = {
+  src: "/images/work/hobbing-macro.jpg",
+  alt: "Κοπή γραναζιού με μπρούτζινα γρέζια — μακρο λεπτομέρεια",
+} as const;
 
 export const capabilities = [
   "Κόψιμο & τόρνευση άξονων",

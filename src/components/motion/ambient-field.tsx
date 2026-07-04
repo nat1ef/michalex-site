@@ -3,9 +3,62 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "@/components/motion/animation-provider";
 
-/** Continuous CSS/SVG ambient motion — orbits, grid drift, technical marks. */
+function GearRing({
+  teeth,
+  size,
+  className,
+}: {
+  teeth: number;
+  size: number;
+  className?: string;
+}) {
+  const r = size / 2;
+  const toothW = size * 0.014;
+  const toothH = size * 0.045;
+
+  return (
+    <svg viewBox={`0 0 ${size} ${size}`} className={className} fill="none" aria-hidden>
+      <circle
+        cx={r}
+        cy={r}
+        r={r - toothH - 6}
+        stroke="currentColor"
+        strokeWidth="1"
+        className="text-foreground/10"
+      />
+      <circle
+        cx={r}
+        cy={r}
+        r={r - toothH - 28}
+        stroke="currentColor"
+        strokeWidth="0.5"
+        strokeDasharray="3 10"
+        className="text-copper/20"
+      />
+      {Array.from({ length: teeth }).map((_, i) => {
+        const angle = (360 / teeth) * i;
+        return (
+          <rect
+            key={i}
+            x={r - toothW / 2}
+            y={2}
+            width={toothW}
+            height={toothH}
+            fill="currentColor"
+            className="text-foreground/10"
+            transform={`rotate(${angle} ${r} ${r})`}
+          />
+        );
+      })}
+    </svg>
+  );
+}
+
+/** Continuous CSS/SVG ambient motion — scroll-linked gears, orbits, grid drift. */
 export function AmbientField() {
   const layerRef = useRef<HTMLDivElement>(null);
+  const gearARef = useRef<HTMLDivElement>(null);
+  const gearBRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -24,6 +77,31 @@ export function AmbientField() {
           scrub: 1.5,
         },
       });
+
+      if (gearARef.current) {
+        gsap.to(gearARef.current, {
+          rotate: 360,
+          ease: "none",
+          scrollTrigger: {
+            trigger: document.body,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 1,
+          },
+        });
+      }
+      if (gearBRef.current) {
+        gsap.to(gearBRef.current, {
+          rotate: -320,
+          ease: "none",
+          scrollTrigger: {
+            trigger: document.body,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 1,
+          },
+        });
+      }
     }, layerRef);
 
     return () => ctx.revert();
@@ -58,6 +136,20 @@ export function AmbientField() {
             className="text-copper/25 animate-orbit-reverse"
           />
         </svg>
+      </div>
+
+      {/* Meshed gear pair — rotate opposite directions, driven by scroll progress */}
+      <div
+        ref={gearARef}
+        className="absolute -bottom-[12%] -left-[16%] h-[min(85vw,620px)] w-[min(85vw,620px)] opacity-60 md:opacity-80"
+      >
+        <GearRing teeth={22} size={620} className="h-full w-full" />
+      </div>
+      <div
+        ref={gearBRef}
+        className="absolute -bottom-[6%] left-[24%] hidden h-[min(45vw,320px)] w-[min(45vw,320px)] opacity-70 sm:block"
+      >
+        <GearRing teeth={16} size={320} className="h-full w-full" />
       </div>
 
       <div className="ambient-particles absolute inset-0 opacity-40 md:opacity-35" />
