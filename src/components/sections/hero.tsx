@@ -6,17 +6,14 @@ import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { gsap } from "@/components/motion/animation-provider";
 import { ButtonLink } from "@/components/ui/button-link";
 import { ViberButton } from "@/components/contact/viber-button";
+import {
+  HeroGear3D,
+  TEETH_COUNT,
+  type HeroGear3DHandle,
+} from "@/components/motion/hero-gear-3d";
 import { siteConfig } from "@/lib/content";
 
 const TITLE_LINES = ["ΜΗΧΑΝΟΥΡΓΕΙΟ", "ΑΛΕΞΑΝΔΡΑΚΗΣ"];
-
-const TEETH = 24;
-const SIZE = 560;
-const CENTER = SIZE / 2;
-const BLANK_R = 170;
-const TOOTH_W = 15;
-const TOOTH_H = 66;
-const HUB_R = SIZE * 0.09;
 
 function CharLine({ text, accentLast }: { text: string; accentLast?: boolean }) {
   return (
@@ -37,100 +34,9 @@ function CharLine({ text, accentLast }: { text: string; accentLast?: boolean }) 
   );
 }
 
-function HeroGear() {
-  const tick = SIZE * 0.16;
-  return (
-    <svg
-      viewBox={`0 0 ${SIZE} ${SIZE}`}
-      className="h-full w-full overflow-visible"
-      fill="none"
-      aria-hidden
-    >
-      <g data-gear-group>
-        {/* blank cylinder the teeth are cut into */}
-        <circle
-          cx={CENTER}
-          cy={CENTER}
-          r={BLANK_R}
-          stroke="currentColor"
-          strokeWidth="1.5"
-          className="text-foreground/75"
-        />
-        <circle
-          cx={CENTER}
-          cy={CENTER}
-          r={BLANK_R - 24}
-          stroke="currentColor"
-          strokeWidth="0.75"
-          strokeDasharray="3 10"
-          className="text-foreground/25"
-        />
-
-        {/* center hub + crosshair, matching the brand mark's technical-drawing language */}
-        <circle
-          cx={CENTER}
-          cy={CENTER}
-          r={HUB_R}
-          stroke="currentColor"
-          strokeWidth="1.25"
-          className="text-foreground/75"
-        />
-        <path
-          d={`M${CENTER} ${CENTER - tick} V${CENTER - HUB_R} M${CENTER} ${CENTER + HUB_R} V${CENTER + tick} M${CENTER - tick} ${CENTER} H${CENTER - HUB_R} M${CENTER + HUB_R} ${CENTER} H${CENTER + tick}`}
-          stroke="currentColor"
-          strokeWidth="1"
-          className="text-foreground/30"
-        />
-
-        {/* teeth — each grows outward from the blank as the cutter passes it */}
-        {Array.from({ length: TEETH }).map((_, i) => {
-          const angle = (360 / TEETH) * i;
-          return (
-            <g key={i} transform={`rotate(${angle} ${CENTER} ${CENTER})`}>
-              <rect
-                data-tooth
-                x={CENTER - TOOTH_W / 2}
-                y={CENTER - BLANK_R - TOOTH_H}
-                width={TOOTH_W}
-                height={TOOTH_H}
-                fill="currentColor"
-                className="text-foreground/90"
-                style={{ transformBox: "fill-box", transformOrigin: "50% 100%" }}
-              />
-            </g>
-          );
-        })}
-      </g>
-
-      {/* cutting tool — sweeps around, copper spark trailing its tip */}
-      <g data-cutter style={{ transformBox: "fill-box", transformOrigin: "50% 50%" }}>
-        <line
-          x1={CENTER}
-          y1={CENTER - BLANK_R + 10}
-          x2={CENTER}
-          y2={CENTER - SIZE * 0.47}
-          stroke="var(--copper)"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-        />
-        <circle data-spark cx={CENTER} cy={CENTER - SIZE * 0.47} r="5" fill="var(--copper)" />
-        <circle
-          data-spark
-          cx={CENTER}
-          cy={CENTER - SIZE * 0.47}
-          r="9"
-          stroke="var(--copper)"
-          strokeWidth="1"
-          opacity="0.5"
-        />
-      </g>
-    </svg>
-  );
-}
-
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
-  const gearWrapRef = useRef<HTMLDivElement>(null);
+  const gearRef = useRef<HeroGear3DHandle | null>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const kickerRef = useRef<HTMLParagraphElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -140,31 +46,14 @@ export function Hero() {
     () => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       const section = sectionRef.current;
-      const gearWrap = gearWrapRef.current;
       const title = titleRef.current;
-      if (!section || !gearWrap || !title) return;
+      const gear = gearRef.current;
+      if (!section || !title || !gear) return;
 
-      const teeth = gearWrap.querySelectorAll("[data-tooth]");
-      const gearGroup = gearWrap.querySelector("[data-gear-group]");
-      const cutter = gearWrap.querySelector("[data-cutter]");
-      const sparks = gearWrap.querySelectorAll("[data-spark]");
       const chars = title.querySelectorAll("[data-char]");
 
-      gsap.set(teeth, { scaleY: 0 });
       gsap.set(chars, { yPercent: 112, opacity: 0 });
       gsap.set([kickerRef.current, contentRef.current], { opacity: 0, y: 26 });
-
-      // Sparks flicker continuously while the tool is engaged
-      const sparkPulse = gsap.to(sparks, {
-        opacity: 0.25,
-        scale: 1.4,
-        transformOrigin: "50% 50%",
-        duration: 0.35,
-        repeat: -1,
-        yoyo: true,
-        ease: "power1.inOut",
-        stagger: 0.08,
-      });
 
       const mm = gsap.matchMedia();
 
@@ -180,43 +69,62 @@ export function Hero() {
           },
         });
 
-        // Phase 1 — the cutter sweeps around, teeth are cut in one by one
-        tl.to(cutter, { rotate: 355, ease: "none", duration: 0.56 }, 0).to(
-          teeth,
-          { scaleY: 1, ease: "none", stagger: 0.021, duration: 0.14 },
-          0.02
+        // Phase 1 — the cutter sweeps around, teeth are cut in one by one.
+        // The cutter's angular speed is derived from the teeth stagger so
+        // it's pointing at tooth[i] at the exact moment tooth[i] appears —
+        // positive z matches the counter-clockwise order teeth were placed in.
+        const teethStart = 0.02;
+        const teethStagger = 0.021;
+        const teethDuration = 0.14;
+        const sweepSpan = (TEETH_COUNT - 1) * teethStagger;
+        const sweepAngle = (TEETH_COUNT - 1) * ((Math.PI * 2) / TEETH_COUNT);
+
+        tl.to(
+          gear.cutter.rotation,
+          { z: sweepAngle, ease: "none", duration: sweepSpan },
+          teethStart
+        ).to(
+          gear.teeth.map((t) => t.scale),
+          { y: 1, ease: "none", stagger: teethStagger, duration: teethDuration },
+          teethStart
         );
 
         // Phase 2 — finished gear lifts off the blank, spins, and clears the stage
-        tl.to(cutter, { opacity: 0, duration: 0.06 }, 0.56).to(
-          gearGroup,
-          {
-            y: -46,
-            rotate: 220,
-            scale: 0.5,
-            opacity: 0,
-            transformOrigin: "50% 50%",
-            ease: "power2.in",
-            duration: 0.24,
-          },
-          0.58
-        );
+        const teethEnd = teethStart + sweepSpan + teethDuration;
+        const exitStart = teethEnd + 0.02;
+
+        tl.to(gear.cutter.scale, { x: 0, y: 0, z: 0, duration: 0.06 }, teethEnd).to(
+          gear.gearGroup.position,
+          { y: 0.8, ease: "power2.in", duration: 0.24 },
+          exitStart
+        )
+          .to(
+            gear.gearGroup.rotation,
+            { z: Math.PI * 1.4, ease: "power2.in", duration: 0.24 },
+            exitStart
+          )
+          .to(
+            gear.gearGroup.scale,
+            { x: 0.15, y: 0.15, z: 0.15, ease: "power2.in", duration: 0.24 },
+            exitStart
+          );
 
         // Phase 3 — the headline was behind it all along
+        const headlineStart = exitStart + 0.08;
         tl.to(
           chars,
           { yPercent: 0, opacity: 1, stagger: 0.024, ease: "power4.out", duration: 0.3 },
-          0.66
+          headlineStart
         )
           .to(
             kickerRef.current,
             { opacity: 1, y: 0, ease: "power3.out", duration: 0.16 },
-            0.74
+            headlineStart + 0.08
           )
           .to(
             contentRef.current,
             { opacity: 1, y: 0, ease: "power3.out", duration: 0.2 },
-            0.8
+            headlineStart + 0.14
           )
           .to(scrollCueRef.current, { opacity: 0, y: 16, duration: 0.1 }, 0.3);
 
@@ -233,12 +141,9 @@ export function Hero() {
         return () => tl.scrollTrigger?.kill();
       });
 
-      return () => {
-        sparkPulse.kill();
-        mm.revert();
-      };
+      return () => mm.revert();
     },
-    { scope: sectionRef }
+    { scope: sectionRef, dependencies: [] }
   );
 
   return (
@@ -251,11 +156,8 @@ export function Hero() {
       <div className="ambient-grid pointer-events-none absolute inset-0 opacity-[0.045]" />
 
       <div className="relative z-10 flex flex-1 flex-col items-center justify-center pt-[4.5rem]">
-        <div
-          ref={gearWrapRef}
-          className="relative h-[min(62vw,26rem)] w-[min(62vw,26rem)] text-foreground sm:h-[min(46vw,30rem)] sm:w-[min(46vw,30rem)]"
-        >
-          <HeroGear />
+        <div className="relative h-[min(62vw,26rem)] w-[min(62vw,26rem)] sm:h-[min(46vw,30rem)] sm:w-[min(46vw,30rem)]">
+          <HeroGear3D ref={gearRef} />
         </div>
 
         <h1
