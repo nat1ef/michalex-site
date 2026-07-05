@@ -1,0 +1,806 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - paragraph [ref=e4]: ΜΗΧΑΝΟΥΡΓΕΙΟ | ΑΛΕΞΑΝΔΡΑΚΗΣ
+    - paragraph [ref=e5]: ΜΕΤΑΔΟΣΗ ΚΙΝΗΣΗΣ · ΑΘΗΝΑ
+    - paragraph [ref=e7]: 0.000 mm
+  - generic:
+    - generic:
+      - generic:
+        - img
+      - generic:
+        - img
+      - generic:
+        - img
+    - generic:
+      - banner:
+        - generic:
+          - link "ΑΛ ΑΛΕΞΑΝΔΡΑΚΗΣ ΜΗΧΑΝΟΥΡΓΕΙΟ":
+            - /url: "#αρχικη"
+            - generic:
+              - generic:
+                - img
+                - generic: ΑΛ
+              - generic:
+                - generic: ΑΛΕΞΑΝΔΡΑΚΗΣ
+                - generic: ΜΗΧΑΝΟΥΡΓΕΙΟ
+          - navigation:
+            - link "Αρχική":
+              - /url: "#αρχικη"
+              - text: Αρχική
+            - link "Υπηρεσίες":
+              - /url: "#υπηρεσιες"
+            - link "Εργαστήριο":
+              - /url: "#εργαστηριο"
+            - link "Κριτικές":
+              - /url: "#κριτικες"
+            - link "Επικοινωνία":
+              - /url: "#επικοινωνια"
+          - generic:
+            - link "210 522 2541":
+              - /url: tel:+302105222541
+              - text: 210 522 2541
+              - img
+      - generic:
+        - generic:
+          - main:
+            - generic:
+              - generic:
+                - generic:
+                  - generic "Ράβδοι χάλυβα — πρώτη ύλη στο εργαστήριο"
+                - generic:
+                  - generic:
+                    - generic:
+                      - paragraph: "[ ΜΗΧΑΝΟΥΡΓΕΙΟ ΑΛΕΞΑΝΔΡΑΚΗΣ · ΑΘΗΝΑ 104 41 ]"
+                      - heading "Μηχανουργείο Αλεξανδράκης — Το σχέδιό σας, σε ατσάλι" [level=1]:
+                        - generic:
+                          - generic:
+                            - generic: Τ
+                            - generic: ο
+                            - generic: σ
+                            - generic: χ
+                            - generic: έ
+                            - generic: δ
+                            - generic: ι
+                            - generic: ό
+                            - generic: σ
+                            - generic: α
+                            - generic: ς
+                            - generic: ","
+                        - generic:
+                          - emphasis:
+                            - generic:
+                              - generic: σ
+                              - generic: ε
+                              - generic: α
+                              - generic: τ
+                              - generic: σ
+                              - generic: ά
+                              - generic: λ
+                              - generic: ι
+                              - generic: .
+                      - paragraph: Γρανάζια, άξονες και μηχανολογικά εξαρτήματα κατά σχέδιο ή δείγμα. Δεκαετίες εμπειρίας σε τόρνο και φρέζα — από την Καστοριάς 2.
+                      - generic:
+                        - link "Κλήση":
+                          - /url: tel:+302105222541
+                          - text: Κλήση
+                          - img
+                        - button "Viber — Viber 690 749 3500":
+                          - img
+                          - text: Viber
+                - generic:
+                  - paragraph: 01 / 05
+                - generic:
+                  - generic: SCROLL
+                  - img
+            - generic:
+              - generic:
+                - generic:
+                  - paragraph: "[ ΥΠΗΡΕΣΙΕΣ ]"
+                  - heading "Τι κατασκευάζουμε" [level=2]
+                  - paragraph: Έξι βασικές κατηγορίες εργασιών — κάθε μία με τα δικά της κομμάτια, φωτογραφημένα στον πάγκο του εργαστηρίου.
+              - generic:
+                - generic:
+                  - generic:
+                    - article:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: SRV.01
+                            - img
+                          - heading "Είδη μετάδοσης κίνησης" [level=3]
+                          - paragraph: Κατασκευή και επισκευή γραναζιών, άξονων, συμπλεκτών και μηχανισμών μετάδοσης κίνησης με ακρίβεια μικρού.
+                        - generic:
+                          - link "Ρώτησέ μας":
+                            - /url: tel:+302105222541
+                            - text: Ρώτησέ μας
+                            - img
+                      - generic:
+                        - img "Γρανάζια κάθε τύπου στο εργαστήριο"
+                        - generic: ΑΠΟ ΤΟΝ ΠΑΓΚΟ ΜΑΣ
+                  - generic:
+                    - article:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: SRV.02
+                            - img
+                          - heading "Μηχανολογικά εξαρτήματα" [level=3]
+                          - paragraph: Custom κατασκευές εξαρτημάτων κατά σχέδιο ή δείγμα — από πρωτότυπο μέχρι σειρά.
+                        - generic:
+                          - link "Ρώτησέ μας":
+                            - /url: tel:+302105222541
+                            - text: Ρώτησέ μας
+                            - img
+                      - generic:
+                        - img "Σπειρωτά εξαρτήματα κατασκευασμένα κατά σχέδιο"
+                        - generic: ΑΠΟ ΤΟΝ ΠΑΓΚΟ ΜΑΣ
+                  - generic:
+                    - article:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: SRV.03
+                            - img
+                          - heading "Κόψιμο & τόρνευση άξονων" [level=3]
+                          - paragraph: Ακριβής κατεργασία άξονων κάθε διαμέτρου — κόψιμο, τόρνευση και finish σύμφωνα με τις προδιαγραφές σας.
+                        - generic:
+                          - link "Ρώτησέ μας":
+                            - /url: tel:+302105222541
+                            - text: Ρώτησέ μας
+                            - img
+                      - generic:
+                        - img "Πολύσφηνος άξονας σε κατεργασία"
+                        - generic: ΑΠΟ ΤΟΝ ΠΑΓΚΟ ΜΑΣ
+                  - generic:
+                    - article:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: SRV.04
+                            - img
+                          - heading "Τόρνος & Φρέζα" [level=3]
+                          - paragraph: Κλασική και σύγχρονη μηχανουργική κατεργασία — κόψιμο άξονα, τόρνευση, φρεζάρισμα, τρύπημα.
+                        - generic:
+                          - link "Ρώτησέ μας":
+                            - /url: tel:+302105222541
+                            - text: Ρώτησέ μας
+                            - img
+                      - generic:
+                        - img "Μπρούτζινη φλάντζα στο τσοκ του τόρνου"
+                        - generic: ΑΠΟ ΤΟΝ ΠΑΓΚΟ ΜΑΣ
+                  - generic:
+                    - article:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: SRV.05
+                            - img
+                          - heading "Μετρήσεις & ποιοτικός έλεγχος" [level=3]
+                          - paragraph: Ακριβείς διαστάσεις, έλεγχος tolerances και παράδοση που σέβεται τις προδιαγραφές σας.
+                        - generic:
+                          - link "Ρώτησέ μας":
+                            - /url: tel:+302105222541
+                            - text: Ρώτησέ μας
+                            - img
+                      - generic:
+                        - img "Έλεγχος πολύσφηνων αξόνων στο χέρι"
+                        - generic: ΑΠΟ ΤΟΝ ΠΑΓΚΟ ΜΑΣ
+                  - generic:
+                    - article:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic: SRV.06
+                            - img
+                          - heading "Επισκευές & ανακατασκευή" [level=3]
+                          - paragraph: Αναβίωση φθαρμένων ή κατεστραμμένων εξαρτημάτων — οικονομική λύση αντί για αντικατάσταση.
+                        - generic:
+                          - link "Ρώτησέ μας":
+                            - /url: tel:+302105222541
+                            - text: Ρώτησέ μας
+                            - img
+                      - generic:
+                        - img "Ανακατασκευή κιβωτίου μετάδοσης"
+                        - generic: ΑΠΟ ΤΟΝ ΠΑΓΚΟ ΜΑΣ
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - paragraph: "[ ΤΟ ΕΡΓΑΣΤΗΡΙΟ ]"
+                    - heading "Μέσα στο μηχανουργείο" [level=2]
+                  - paragraph: Πραγματικές δουλειές, όχι στοκ φωτογραφίες — ό,τι βλέπεις εδώ κατασκευάστηκε στον πάγκο μας.
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic: Κοπή γραναζιού σε εξέλιξη
+                      - generic: LIVE / FEED
+                  - generic:
+                    - generic:
+                      - img "Μετωπικό γρανάζι — λεπτομέρεια δοντιών"
+                    - generic:
+                      - generic: Γρανάζια
+                      - generic: SYS / GR
+                  - generic:
+                    - generic:
+                      - img "Πλανητική κορώνα σε κέλυφος"
+                    - generic:
+                      - generic: Κορώνες
+                      - generic: SYS / RG
+                  - generic:
+                    - generic:
+                      - img "Πρώτη ύλη — ράβδοι χάλυβα"
+                    - generic:
+                      - generic: Πρώτη ύλη
+                      - generic: SYS / ST
+                  - generic:
+                    - generic:
+                      - img "Ελικοειδές γρανάζι σε άξονα"
+                    - generic:
+                      - generic: Ελικοειδή
+                      - generic: SYS / HX
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - paragraph: "[ ΚΡΙΤΙΚΕΣ ]"
+                    - heading "Το λένε οι πελάτες" [level=2]
+                  - generic:
+                    - paragraph:
+                      - generic: "0"
+                    - generic:
+                      - generic "5 από 5 αστέρια":
+                        - img
+                        - img
+                        - img
+                        - img
+                        - img
+                      - link "21+ κριτικές · Google Maps":
+                        - /url: https://www.google.com/maps/search/?api=1&query=Καστοριάς+2,+Αθήνα+104+41
+              - generic:
+                - generic:
+                  - generic:
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Άνθρωποι με γνώση και εμπειρία που προσφέρουν πολύ περισσότερα από το αναμενόμενο. Δεν συναντάς εύκολα τόσα χρόνια πείρας — ευχαριστούμε.”
+                      - generic:
+                        - paragraph: Michail P.
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Τέλειο μηχανουργείο με υπέροχους και πρόσχαρους τεχνικούς. Φτιάχνουν ό,τι μηχανουργική εργασία χρειαστείς.”
+                      - generic:
+                        - paragraph: Bill Ganos
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Επαγγελματική δουλειά σε κόψιμο άξονα και ακριβή κατεργασία. Γρήγορη εξυπηρέτηση και σωστή τιμολόγηση.”
+                      - generic:
+                        - paragraph: Στεργίου Χ.
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Έφτιαξαν γρανάζι που δεν βρίσκεις έτοιμο πουθενά. Άψογη ποιότητα, σωστές διαστάσεις και παράδοση στην ώρα της.”
+                      - generic:
+                        - paragraph: Νίκος Κ.
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Πολύ καλή δουλειά σε φρεζάρισμα και τόρνευση. Επαγγελματίες με πείρα — τους εμπιστεύομαι χρόνια τώρα.”
+                      - generic:
+                        - paragraph: Dimitris A.
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Επισκευή άξονα σε πολύ καλή τιμή. Εξήγησαν ακριβώς τι χρειαζόταν και το αποτέλεσμα ήταν άριστο.”
+                      - generic:
+                        - paragraph: Γιώργος Μ.
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Μικρό αλλά πολύ οργανωμένο εργαστήριο. Κατασκευή εξαρτήματος κατά σχέδιο χωρίς καθυστερήσεις.”
+                      - generic:
+                        - paragraph: Panagiotis V.
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "4 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Σοβαρή μηχανουργική δουλειά, σωστή συνεννόηση και καθαρό αποτέλεσμα. Το συνιστώ ανεπιφύλακτα.”
+                      - generic:
+                        - paragraph: Ανδρέας Τ.
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Άνθρωποι με γνώση και εμπειρία που προσφέρουν πολύ περισσότερα από το αναμενόμενο. Δεν συναντάς εύκολα τόσα χρόνια πείρας — ευχαριστούμε.”
+                      - generic:
+                        - paragraph: Michail P.
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Τέλειο μηχανουργείο με υπέροχους και πρόσχαρους τεχνικούς. Φτιάχνουν ό,τι μηχανουργική εργασία χρειαστείς.”
+                      - generic:
+                        - paragraph: Bill Ganos
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Επαγγελματική δουλειά σε κόψιμο άξονα και ακριβή κατεργασία. Γρήγορη εξυπηρέτηση και σωστή τιμολόγηση.”
+                      - generic:
+                        - paragraph: Στεργίου Χ.
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Έφτιαξαν γρανάζι που δεν βρίσκεις έτοιμο πουθενά. Άψογη ποιότητα, σωστές διαστάσεις και παράδοση στην ώρα της.”
+                      - generic:
+                        - paragraph: Νίκος Κ.
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Πολύ καλή δουλειά σε φρεζάρισμα και τόρνευση. Επαγγελματίες με πείρα — τους εμπιστεύομαι χρόνια τώρα.”
+                      - generic:
+                        - paragraph: Dimitris A.
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Επισκευή άξονα σε πολύ καλή τιμή. Εξήγησαν ακριβώς τι χρειαζόταν και το αποτέλεσμα ήταν άριστο.”
+                      - generic:
+                        - paragraph: Γιώργος Μ.
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Μικρό αλλά πολύ οργανωμένο εργαστήριο. Κατασκευή εξαρτήματος κατά σχέδιο χωρίς καθυστερήσεις.”
+                      - generic:
+                        - paragraph: Panagiotis V.
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "4 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Σοβαρή μηχανουργική δουλειά, σωστή συνεννόηση και καθαρό αποτέλεσμα. Το συνιστώ ανεπιφύλακτα.”
+                      - generic:
+                        - paragraph: Ανδρέας Τ.
+                        - paragraph: Google
+                - generic:
+                  - generic:
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Άνθρωποι με γνώση και εμπειρία που προσφέρουν πολύ περισσότερα από το αναμενόμενο. Δεν συναντάς εύκολα τόσα χρόνια πείρας — ευχαριστούμε.”
+                      - generic:
+                        - paragraph: Michail P.
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Τέλειο μηχανουργείο με υπέροχους και πρόσχαρους τεχνικούς. Φτιάχνουν ό,τι μηχανουργική εργασία χρειαστείς.”
+                      - generic:
+                        - paragraph: Bill Ganos
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Επαγγελματική δουλειά σε κόψιμο άξονα και ακριβή κατεργασία. Γρήγορη εξυπηρέτηση και σωστή τιμολόγηση.”
+                      - generic:
+                        - paragraph: Στεργίου Χ.
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Έφτιαξαν γρανάζι που δεν βρίσκεις έτοιμο πουθενά. Άψογη ποιότητα, σωστές διαστάσεις και παράδοση στην ώρα της.”
+                      - generic:
+                        - paragraph: Νίκος Κ.
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Πολύ καλή δουλειά σε φρεζάρισμα και τόρνευση. Επαγγελματίες με πείρα — τους εμπιστεύομαι χρόνια τώρα.”
+                      - generic:
+                        - paragraph: Dimitris A.
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Επισκευή άξονα σε πολύ καλή τιμή. Εξήγησαν ακριβώς τι χρειαζόταν και το αποτέλεσμα ήταν άριστο.”
+                      - generic:
+                        - paragraph: Γιώργος Μ.
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Μικρό αλλά πολύ οργανωμένο εργαστήριο. Κατασκευή εξαρτήματος κατά σχέδιο χωρίς καθυστερήσεις.”
+                      - generic:
+                        - paragraph: Panagiotis V.
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "4 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Σοβαρή μηχανουργική δουλειά, σωστή συνεννόηση και καθαρό αποτέλεσμα. Το συνιστώ ανεπιφύλακτα.”
+                      - generic:
+                        - paragraph: Ανδρέας Τ.
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Άνθρωποι με γνώση και εμπειρία που προσφέρουν πολύ περισσότερα από το αναμενόμενο. Δεν συναντάς εύκολα τόσα χρόνια πείρας — ευχαριστούμε.”
+                      - generic:
+                        - paragraph: Michail P.
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Τέλειο μηχανουργείο με υπέροχους και πρόσχαρους τεχνικούς. Φτιάχνουν ό,τι μηχανουργική εργασία χρειαστείς.”
+                      - generic:
+                        - paragraph: Bill Ganos
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Επαγγελματική δουλειά σε κόψιμο άξονα και ακριβή κατεργασία. Γρήγορη εξυπηρέτηση και σωστή τιμολόγηση.”
+                      - generic:
+                        - paragraph: Στεργίου Χ.
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Έφτιαξαν γρανάζι που δεν βρίσκεις έτοιμο πουθενά. Άψογη ποιότητα, σωστές διαστάσεις και παράδοση στην ώρα της.”
+                      - generic:
+                        - paragraph: Νίκος Κ.
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Πολύ καλή δουλειά σε φρεζάρισμα και τόρνευση. Επαγγελματίες με πείρα — τους εμπιστεύομαι χρόνια τώρα.”
+                      - generic:
+                        - paragraph: Dimitris A.
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Επισκευή άξονα σε πολύ καλή τιμή. Εξήγησαν ακριβώς τι χρειαζόταν και το αποτέλεσμα ήταν άριστο.”
+                      - generic:
+                        - paragraph: Γιώργος Μ.
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "5 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Μικρό αλλά πολύ οργανωμένο εργαστήριο. Κατασκευή εξαρτήματος κατά σχέδιο χωρίς καθυστερήσεις.”
+                      - generic:
+                        - paragraph: Panagiotis V.
+                        - paragraph: Google
+                    - blockquote:
+                      - generic:
+                        - generic "4 από 5 αστέρια":
+                          - img
+                          - img
+                          - img
+                          - img
+                          - img
+                        - paragraph: “Σοβαρή μηχανουργική δουλειά, σωστή συνεννόηση και καθαρό αποτέλεσμα. Το συνιστώ ανεπιφύλακτα.”
+                      - generic:
+                        - paragraph: Ανδρέας Τ.
+                        - paragraph: Google
+            - generic:
+              - generic:
+                - generic:
+                  - img "Κοπή γραναζιού με μπρούτζινα γρέζια — μακρο λεπτομέρεια"
+                  - generic:
+                    - generic: ΜΑΚΡΟ · ΚΟΠΗ ΓΡΑΝΑΖΙΟΥ
+                    - generic: 01 / 01
+                  - generic:
+                    - paragraph: "[ ΕΠΙΚΟΙΝΩΝΙΑ ]"
+                    - heading "Έχετε μηχανουργική ανάγκη;" [level=2]
+                    - paragraph: Καλέστε ή στείλτε Viber — θα βρούμε τη σωστή λύση για το έργο σας.
+                    - generic:
+                      - link "210 522 2541":
+                        - /url: tel:+302105222541
+                        - img
+                        - text: 210 522 2541
+                      - button "Viber — Viber 690 749 3500":
+                        - img
+                        - text: Viber
+                      - link "Υπηρεσίες":
+                        - /url: "#υπηρεσιες"
+                        - text: Υπηρεσίες
+                        - img
+            - generic:
+              - generic:
+                - generic:
+                  - paragraph: "[ ΕΠΙΚΟΙΝΩΝΙΑ ]"
+                  - heading "Ελάτε στο εργαστήριο ή επικοινωνήστε άμεσα" [level=2]
+                  - paragraph: Δύο σημεία στην Αθήνα — Καστοριάς 2 (έδρα) και Αλικαρνασσού 102 (υποκατάστημα). Καλέστε ή στείλτε Viber για γρήγορη απάντηση.
+                - generic:
+                  - generic:
+                    - generic:
+                      - img
+                      - paragraph: Έδρα
+                      - heading "Καστοριάς 2, Αθήνα 104 41" [level=3]
+                      - link "Οδηγίες":
+                        - /url: https://maps.google.com/?q=Καστοριάς+2,+Αθήνα+104+41
+                        - img
+                        - text: Οδηγίες
+                  - generic:
+                    - generic:
+                      - img
+                      - paragraph: Υποκατάστημα
+                      - heading "Αλικαρνασσού 102, Αθήνα 104 41" [level=3]
+                      - link "Οδηγίες":
+                        - /url: https://maps.google.com/?q=Αλικαρνασσού+102,+Αθήνα+104+41
+                        - img
+                        - text: Οδηγίες
+                - generic:
+                  - generic:
+                    - generic:
+                      - img
+                      - heading "Τηλεφώνησε" [level=3]
+                      - paragraph: 210 522 2541
+                      - link "Κλήση":
+                        - /url: tel:+302105222541
+                  - generic:
+                    - generic:
+                      - img
+                      - heading "Έδρα" [level=3]
+                      - paragraph: Καστοριάς 2, Αθήνα 104 41
+                      - link "Χάρτης":
+                        - /url: https://maps.google.com/?q=Καστοριάς+2,+Αθήνα+104+41
+                        - img
+                        - text: Χάρτης
+                  - generic:
+                    - generic:
+                      - img
+                      - heading "Ώρες λειτουργίας" [level=3]
+                      - paragraph: "Δευτέρα – Παρασκευή: 07:30 – 16:00 · Σάββατο: Κλειστά"
+                      - link "Ραντεβού":
+                        - /url: tel:+302105222541
+                - generic:
+                  - generic:
+                    - paragraph: Έδρα — Καστοριάς 2, Αθήνα 104 41
+                    - iframe [ref=e9]:
+                      
+                  - generic:
+                    - paragraph: Υποκατάστημα — Αλικαρνασσού 102, Αθήνα 104 41
+                    - iframe [ref=e10]:
+                      
+                - generic:
+                  - generic:
+                    - generic:
+                      - paragraph: Viber
+                      - button "690 749 3500"
+                    - generic:
+                      - paragraph: Τηλέφωνο
+                      - link "210 522 2541":
+                        - /url: tel:+302105222541
+                    - generic:
+                      - paragraph: Ώρες
+                      - paragraph: "Δευτέρα – Παρασκευή: 07:30 – 16:00"
+                      - paragraph: "Σάββατο: Κλειστά"
+        - generic:
+          - contentinfo:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - img
+                      - generic: ΑΛ
+                    - generic:
+                      - generic: ΑΛΕΞΑΝΔΡΑΚΗΣ
+                      - generic: ΜΗΧΑΝΟΥΡΓΕΙΟ
+                  - paragraph: Μηχανουργείο — Κατασκεύες ειδών μετάδοσης κίνησης και μηχανολογικών εξαρτημάτων
+                  - paragraph: Εργαστήριο κατασκευής και επισκευής μηχανολογικών εξαρτημάτων στην Αθήνα. Οι πληροφορίες του ιστότοπου έχουν ενημερωτικό χαρακτήρα και δεν αποτελούν δεσμευτική προσφορά.
+                - generic:
+                  - paragraph: Πλοήγηση
+                  - list:
+                    - listitem:
+                      - link "Αρχική":
+                        - /url: "#αρχικη"
+                    - listitem:
+                      - link "Υπηρεσίες":
+                        - /url: "#υπηρεσιες"
+                    - listitem:
+                      - link "Εργαστήριο":
+                        - /url: "#εργαστηριο"
+                    - listitem:
+                      - link "Κριτικές":
+                        - /url: "#κριτικες"
+                    - listitem:
+                      - link "Επικοινωνία":
+                        - /url: "#επικοινωνια"
+                - generic:
+                  - paragraph: Επικοινωνία
+                  - list:
+                    - listitem:
+                      - paragraph: Έδρα
+                      - link "Καστοριάς 2, Αθήνα 104 41":
+                        - /url: https://maps.google.com/?q=Καστοριάς+2,+Αθήνα+104+41
+                    - listitem:
+                      - paragraph: Υποκατάστημα
+                      - link "Αλικαρνασσού 102, Αθήνα 104 41":
+                        - /url: https://maps.google.com/?q=Αλικαρνασσού+102,+Αθήνα+104+41
+                    - listitem:
+                      - 'link "Τηλ.: 210 522 2541"':
+                        - /url: tel:+302105222541
+                    - listitem:
+                      - 'button "Viber: 690 749 3500"'
+                    - listitem: "Δευτέρα – Παρασκευή: 07:30 – 16:00"
+              - generic:
+                - paragraph: © 2026 Μηχανουργείο Αλεξανδράκης. Με επιφύλαξη παντός δικαιώματος. Όλα τα κείμενα, φωτογραφίες, βίντεο και γραφικά στοιχεία προστατεύονται από πνευματικά δικαιώματα.
+                - paragraph: Απαγορεύεται η αναπαραγωγή, αντιγραφή ή διανομή του περιεχομένου χωρίς προηγούμενη έγγραφη άδεια. Τα εμπορικά σήματα τρίτων ανήκουν στους νόμιμους κατόχους τους.
+                - generic:
+                  - paragraph: Καστοριάς 2, Αθήνα 104 41 · Αλικαρνασσού 102, Αθήνα 104 41
+                  - paragraph:
+                    - text: Κριτικές πελατών από
+                    - link "Google Maps":
+                      - /url: https://www.google.com/maps/search/?api=1&query=Καστοριάς+2,+Αθήνα+104+41
+            - generic:
+              - paragraph: ΑΛΕΞΑΝΔΡΑΚΗΣ
+      - generic:
+        - button "Viber — Viber 690 749 3500":
+          - img
+          - text: Viber
+  - alert [ref=e11]

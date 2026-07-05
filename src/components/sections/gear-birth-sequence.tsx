@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useSyncExternalStore } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 import { useGSAP } from "@gsap/react";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { gsap } from "@/components/motion/animation-provider";
@@ -256,6 +256,32 @@ export function GearBirthSequence() {
     () => false
   );
 
+  // Cloudflare Pages serves assets without HTTP range support, which makes
+  // the <video> unseekable (seekable=[0,0]) and silently breaks scroll
+  // scrubbing. Fetching the file whole and playing it from a blob URL makes
+  // every frame seekable regardless of the host.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    let objectUrl: string | null = null;
+    let cancelled = false;
+    fetch(SEQUENCE_VIDEO)
+      .then((r) => (r.ok ? r.blob() : Promise.reject(new Error(`${r.status}`))))
+      .then((blob) => {
+        if (cancelled) return;
+        objectUrl = URL.createObjectURL(blob);
+        video.src = objectUrl;
+        video.load();
+      })
+      .catch(() => {
+        if (!cancelled && !video.src) video.src = SEQUENCE_VIDEO;
+      });
+    return () => {
+      cancelled = true;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [reduced]);
+
   useGSAP(
     () => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -413,7 +439,6 @@ export function GearBirthSequence() {
       <div className="absolute inset-0 z-0">
         <video
           ref={videoRef}
-          src={SEQUENCE_VIDEO}
           className="h-full w-full object-cover"
           muted
           playsInline
