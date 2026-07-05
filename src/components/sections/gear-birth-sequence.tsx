@@ -6,12 +6,9 @@ import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { gsap } from "@/components/motion/animation-provider";
 import { ButtonLink } from "@/components/ui/button-link";
 import { ViberButton } from "@/components/contact/viber-button";
-import {
-  HeroGear3D,
-  TEETH_COUNT,
-  type HeroGear3DHandle,
-} from "@/components/motion/hero-gear-3d";
 import { gearStages, services, stats, siteConfig } from "@/lib/content";
+
+const SEQUENCE_VIDEO = "/videos/gear-birth.mp4";
 
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
@@ -220,33 +217,6 @@ function StageOverlay({ stage }: { stage: (typeof gearStages)[number] }) {
   );
 }
 
-function StageImage({
-  stage,
-  index,
-}: {
-  stage: (typeof gearStages)[number];
-  index: number;
-}) {
-  return (
-    <div
-      data-stage-img
-      className="absolute inset-0"
-      style={{ opacity: index === 0 ? 1 : 0 }}
-      aria-hidden={index !== 0}
-    >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={stage.image}
-        alt={stage.imageAlt}
-        className="h-full w-full object-cover will-change-transform"
-        loading={index === 0 ? "eager" : "lazy"}
-        fetchPriority={index === 0 ? "high" : "auto"}
-        draggable={false}
-      />
-    </div>
-  );
-}
-
 /** Static fallback for prefers-reduced-motion: plain stacked fullscreen stages. */
 function StaticSequence() {
   return (
@@ -275,7 +245,7 @@ function StaticSequence() {
 
 export function GearBirthSequence() {
   const sectionRef = useRef<HTMLElement>(null);
-  const gearRef = useRef<HeroGear3DHandle | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const counterRef = useRef<HTMLSpanElement>(null);
   const railRef = useRef<HTMLDivElement>(null);
   const scrollCueRef = useRef<HTMLDivElement>(null);
@@ -292,16 +262,13 @@ export function GearBirthSequence() {
       const section = sectionRef.current;
       if (!section) return;
 
-      const imgWraps = gsap.utils.toArray<HTMLElement>("[data-stage-img]", section);
-      const imgs = imgWraps.map((w) => w.querySelector("img"));
       const overlays = gsap.utils.toArray<HTMLElement>(
         "[data-stage-overlay]",
         section
       );
       const total = gearStages.length;
 
-      // Initial state — stage 1 visible, its hero overlay animates in on load.
-      imgWraps.forEach((w, i) => gsap.set(w, { opacity: i === 0 ? 1 : 0 }));
+      // Initial state — the hero overlay animates in on load.
       overlays.forEach((o, i) =>
         gsap.set(o, i === 0 ? { autoAlpha: 1, y: 0 } : { autoAlpha: 0, y: 48 })
       );
@@ -348,21 +315,29 @@ export function GearBirthSequence() {
         });
 
         // Each stage owns 1 unit of the timeline; total duration = `total`.
-        // Slow Ken Burns on every image across its visible window.
-        imgs.forEach((img, i) => {
-          if (!img) return;
-          const from = Math.max(0, i - 0.35);
-          tl.fromTo(
-            img,
-            { scale: 1 },
-            { scale: 1.09, duration: Math.min(1.35, total - from) },
-            from
+        // The scroll scrubs the AI film: timeline progress maps linearly to
+        // video time, so scrolling literally plays the machining forward and
+        // backward like the reference reel.
+        const video = videoRef.current;
+        if (video) {
+          const proxy = { p: 0 };
+          let lastSet = -1;
+          tl.to(
+            proxy,
+            {
+              p: 1,
+              duration: total,
+              onUpdate: () => {
+                if (!video.duration) return;
+                const t = proxy.p * (video.duration - 0.05);
+                // Skip micro-seeks — decoders choke on a seek per pixel.
+                if (Math.abs(t - lastSet) < 1 / 30) return;
+                lastSet = t;
+                video.currentTime = t;
+              },
+            },
+            0
           );
-        });
-
-        // Crossfades between stages.
-        for (let i = 1; i < total; i++) {
-          tl.to(imgWraps[i], { opacity: 1, duration: 0.35 }, i - 0.175);
         }
 
         // Overlays in/out. Stage 1 overlay starts visible and exits early;
@@ -394,71 +369,6 @@ export function GearBirthSequence() {
             2.08
           );
         });
-
-        // ——— 3D gear: machined into existence across the whole journey ———
-        const gear = gearRef.current;
-        if (gear) {
-          const { gearGroup, teeth, cutter, tiltGroup } = gear;
-
-          gsap.set(cutter.scale, { x: 0, y: 0, z: 0 });
-          gsap.set(tiltGroup.scale, { x: 0.5, y: 0.5, z: 0.5 });
-          gsap.set(tiltGroup.position, { x: 2.2, y: -1.25 });
-
-          // Framing per stage — the "camera" pushes in as the part takes shape.
-          tl.to(tiltGroup.scale, { x: 0.56, y: 0.56, z: 0.56, duration: 1 }, 0)
-            .to(tiltGroup.scale, { x: 0.7, y: 0.7, z: 0.7, duration: 1 }, 1)
-            .to(tiltGroup.scale, { x: 0.78, y: 0.78, z: 0.78, duration: 1 }, 2)
-            .to(tiltGroup.scale, { x: 0.86, y: 0.86, z: 0.86, duration: 1 }, 3)
-            .to(tiltGroup.scale, { x: 1.02, y: 1.02, z: 1.02, duration: 1 }, 4);
-
-          // Blocking — the part travels opposite the copy of each stage:
-          // low under the hero headline, right of the services list, centre
-          // for the cut, left of the right-aligned inspection copy, centre
-          // stage for the finale.
-          tl.to(tiltGroup.position, { x: 1.7, y: 0.1, duration: 1 }, 1)
-            .to(tiltGroup.position, { x: 0, y: 0.25, duration: 1 }, 2)
-            .to(tiltGroup.position, { x: -1.7, y: 0.1, duration: 1 }, 3)
-            .to(tiltGroup.position, { x: -2.6, y: -0.5, duration: 1 }, 4);
-
-          // Spin: slow while raw, fast on the lathe, frozen while the cutter
-          // works (so teeth land where the cutter points), then back to a
-          // stately roll for inspection and the finale.
-          tl.to(gearGroup.rotation, { z: 0.5, duration: 1 }, 0)
-            .to(gearGroup.rotation, { z: 3.4, duration: 0.95 }, 1)
-            .to(gearGroup.rotation, { z: 5.6, duration: 2 }, 3);
-
-          // Stage 3 — the cutter sweeps around, teeth are cut in one by one.
-          const cutStart = 2.05;
-          const toothStagger = 0.031;
-          const toothDuration = 0.21;
-          const sweepSpan = (TEETH_COUNT - 1) * toothStagger;
-          const sweepAngle = (TEETH_COUNT - 1) * ((Math.PI * 2) / TEETH_COUNT);
-
-          tl.to(
-            cutter.scale,
-            { x: 1, y: 1, z: 1, duration: 0.08 },
-            cutStart - 0.08
-          )
-            .fromTo(
-              cutter.rotation,
-              // The gear arrives at the cutting stage already rotated 3.4rad
-              // by the lathe spin; the cutter starts from that same offset so
-              // it points at tooth[i] the moment tooth[i] scales in.
-              { z: 3.4 },
-              { z: 3.4 + sweepAngle, duration: sweepSpan },
-              cutStart
-            )
-            .to(
-              teeth.map((t) => t.scale),
-              { y: 1, stagger: toothStagger, duration: toothDuration },
-              cutStart
-            )
-            .to(
-              cutter.scale,
-              { x: 0, y: 0, z: 0, duration: 0.08 },
-              cutStart + sweepSpan + toothDuration
-            );
-        }
 
         // Finale — warm golden light floods the scene, the "sunset" beat.
         tl.to(glowRef.current, { opacity: 1, duration: 0.55 }, 4.25);
@@ -499,22 +409,24 @@ export function GearBirthSequence() {
       id="αρχικη"
       className="relative h-[100svh] overflow-hidden"
     >
-      {/* Stage frames */}
+      {/* The AI film — scroll scrubs it forward and backward */}
       <div className="absolute inset-0 z-0">
-        {gearStages.map((stage, i) => (
-          <StageImage key={stage.id} stage={stage} index={i} />
-        ))}
+        <video
+          ref={videoRef}
+          src={SEQUENCE_VIDEO}
+          className="h-full w-full object-cover"
+          muted
+          playsInline
+          preload="auto"
+          disablePictureInPicture
+          aria-label={gearStages[0].imageAlt}
+        />
       </div>
 
-      {/* Legibility scrims — photos sit back so the 3D part reads as the subject */}
-      <div className="pointer-events-none absolute inset-0 z-[1] bg-background/60" />
-      <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-t from-background via-transparent to-background/65" />
+      {/* Legibility scrims — keep the copy readable over the bright film */}
+      <div className="pointer-events-none absolute inset-0 z-[1] bg-background/35" />
+      <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-t from-background via-transparent to-background/60" />
       <div className="cinematic-vignette pointer-events-none absolute inset-0 z-[1]" />
-
-      {/* The protagonist — a real 3D gear machined into existence on scroll */}
-      <div className="pointer-events-none absolute inset-0 z-[2]">
-        <HeroGear3D ref={gearRef} />
-      </div>
 
       {/* Finale golden-hour wash — the machining is done, the metal glows */}
       <div
