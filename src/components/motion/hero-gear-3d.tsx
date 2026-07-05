@@ -3,12 +3,6 @@
 import { forwardRef, useRef, type Ref, type RefObject } from "react";
 import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
-import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
-import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
-import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
-import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
-import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
-import { VignetteShader } from "three/examples/jsm/shaders/VignetteShader.js";
 
 export const TEETH_COUNT = 22;
 
@@ -16,6 +10,9 @@ export type HeroGear3DHandle = {
   gearGroup: THREE.Group;
   teeth: THREE.Group[];
   cutter: THREE.Group;
+  /** Whole gear+cutter assembly. Safe to tween position/scale; its rotation
+   *  x/y are owned by the idle-wobble render loop. */
+  tiltGroup: THREE.Group;
 };
 
 const CORE_R = 1.55;
@@ -89,6 +86,7 @@ function buildScene(container: HTMLDivElement): {
   gearGroup: THREE.Group;
   teeth: THREE.Group[];
   cutter: THREE.Group;
+  tiltGroup: THREE.Group;
   dispose: () => void;
 } {
   const scene = new THREE.Scene();
@@ -100,7 +98,7 @@ function buildScene(container: HTMLDivElement): {
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setClearColor(0x000000, 0);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.1;
+  renderer.toneMappingExposure = 0.95;
   container.appendChild(renderer.domElement);
 
   // A studio-style environment so metalness/roughness actually have
@@ -128,15 +126,15 @@ function buildScene(container: HTMLDivElement): {
 
   const faceTexture = turnedFaceTexture();
   const steelMat = new THREE.MeshStandardMaterial({
-    color: 0xaeb4bd,
+    color: 0x878e99,
     metalness: 0.95,
-    roughness: 0.22,
+    roughness: 0.28,
   });
   const facedMat = new THREE.MeshStandardMaterial({
-    color: 0xc3c8d0,
+    color: 0x99a0ab,
     map: faceTexture,
     metalness: 0.92,
-    roughness: 0.3,
+    roughness: 0.34,
   });
   const darkMat = new THREE.MeshStandardMaterial({
     color: 0x53585f,
@@ -252,17 +250,10 @@ function buildScene(container: HTMLDivElement): {
 
   tiltGroup.add(cutter);
 
-  // Post-processing — bloom so the copper highlights and sparks actually
-  // glow, a soft vignette to focus attention on the gear.
-  const composer = new EffectComposer(renderer);
-  composer.addPass(new RenderPass(scene, camera));
-  const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), 0.55, 0.6, 0.82);
-  composer.addPass(bloom);
-  const vignettePass = new ShaderPass(VignetteShader);
-  vignettePass.uniforms.darkness.value = 1.15;
-  vignettePass.uniforms.offset.value = 1.05;
-  composer.addPass(vignettePass);
-  composer.addPass(new OutputPass());
+  // No post-processing: the composer passes (bloom/vignette) destroy the
+  // alpha channel, which reads as a white fog when this canvas is layered
+  // over the photo backdrops. The additive spark points and the copper
+  // emissive carry the "hot metal" look on their own.
 
   let raf = 0;
   let running = true;
@@ -285,7 +276,7 @@ function buildScene(container: HTMLDivElement): {
       positions.needsUpdate = true;
     }
 
-    composer.render();
+    renderer.render(scene, camera);
     raf = requestAnimationFrame(render);
   };
   raf = requestAnimationFrame(render);
@@ -315,8 +306,6 @@ function buildScene(container: HTMLDivElement): {
     const pr = Math.min(window.devicePixelRatio, 2);
     renderer.setPixelRatio(pr);
     renderer.setSize(clientWidth, clientHeight);
-    composer.setPixelRatio(pr);
-    composer.setSize(clientWidth, clientHeight);
   };
   resize();
 
@@ -347,12 +336,11 @@ function buildScene(container: HTMLDivElement): {
     facedMat.dispose();
     darkMat.dispose();
     copperMat.dispose();
-    composer.dispose();
     renderer.dispose();
     container.removeChild(renderer.domElement);
   };
 
-  return { renderer, scene, camera, gearGroup, teeth, cutter, dispose };
+  return { renderer, scene, camera, gearGroup, teeth, cutter, tiltGroup, dispose };
 }
 
 function assignRef(ref: Ref<HeroGear3DHandle> | undefined, value: HeroGear3DHandle | null) {
@@ -376,6 +364,7 @@ export const HeroGear3D = forwardRef<HeroGear3DHandle>(function HeroGear3D(_prop
           gearGroup: built.gearGroup,
           teeth: built.teeth,
           cutter: built.cutter,
+          tiltGroup: built.tiltGroup,
         });
       } catch {
         // No WebGL available — leave the handle null so the parent's GSAP
