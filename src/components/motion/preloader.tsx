@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "@/components/motion/animation-provider";
-import { LogoFull } from "@/components/brand/logo";
 
 type PreloaderProps = {
   onComplete: () => void;
@@ -101,18 +100,19 @@ export function Preloader({ onComplete }: PreloaderProps) {
     >
       <div className="grain-overlay absolute inset-0 opacity-50" />
 
-      <div className="relative flex flex-col items-center">
-        <p className="telemetry-label mb-10">
-          <span className="text-copper/80">[</span> ΒΑΘΜΟΝΟΜΗΣΗ{" "}
-          <span className="text-copper/80">]</span>
+      {/* Meridian-style prologue: the name alone, thin and widely tracked,
+          on a black stage. */}
+      <div className="relative flex flex-col items-center px-6 text-center">
+        <p className="font-mono text-[clamp(0.8rem,2.6vw,1.35rem)] font-light uppercase tracking-[0.42em] text-foreground/90">
+          ΜΗΧΑΝΟΥΡΓΕΙΟ <span className="mx-2 text-copper/80 sm:mx-3">|</span>{" "}
+          ΑΛΕΞΑΝΔΡΑΚΗΣ
         </p>
 
-        <div className="display-number flex items-baseline gap-3 text-[clamp(4rem,14vw,8rem)] text-foreground">
-          <span ref={counterRef}>0.000</span>
-          <span className="font-mono text-base text-copper sm:text-lg">mm</span>
-        </div>
+        <p className="telemetry-label mt-6">
+          ΜΕΤΑΔΟΣΗ ΚΙΝΗΣΗΣ · ΑΘΗΝΑ
+        </p>
 
-        <div className="mt-10 h-px w-56 overflow-hidden bg-border/40 sm:w-72">
+        <div className="mt-12 h-px w-56 overflow-hidden bg-border/40 sm:w-80">
           <div
             ref={barRef}
             className="h-full origin-left bg-copper"
@@ -120,9 +120,9 @@ export function Preloader({ onComplete }: PreloaderProps) {
           />
         </div>
 
-        <div className="mt-10">
-          <LogoFull />
-        </div>
+        <p className="mt-5 font-mono text-[9px] uppercase tracking-[0.32em] text-muted-foreground">
+          <span ref={counterRef}>0.000</span> <span className="text-copper">mm</span>
+        </p>
       </div>
 
       <div className="absolute inset-x-0 bottom-0 h-px bg-copper/30" />

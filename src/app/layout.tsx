@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import {
   Commissioner,
   JetBrains_Mono,
+  Noto_Serif_Display,
   Sofia_Sans_Condensed,
 } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -22,6 +23,13 @@ const sofiaCondensed = Sofia_Sans_Condensed({
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono-var",
   subsets: ["latin", "greek"],
+});
+
+const notoSerifDisplay = Noto_Serif_Display({
+  variable: "--font-serif-var",
+  subsets: ["latin", "greek"],
+  style: ["normal", "italic"],
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
@@ -80,7 +88,7 @@ export default function RootLayout({
   return (
     <html
       lang="el"
-      className={`dark ${commissioner.variable} ${sofiaCondensed.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`dark ${commissioner.variable} ${sofiaCondensed.variable} ${jetbrainsMono.variable} ${notoSerifDisplay.variable} h-full antialiased`}
     >
       <head>
         <meta

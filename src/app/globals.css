@@ -162,6 +162,20 @@
     text-transform: uppercase;
   }
 
+  /* Meridian-style editorial serif for the story-sequence titles */
+  .display-serif {
+    font-family: var(--font-serif-var), Georgia, serif;
+    font-size: clamp(2.5rem, 6.8vw, 5.8rem);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: 0.005em;
+  }
+
+  .display-serif em {
+    font-style: italic;
+    font-weight: 400;
+  }
+
   .display-number {
     font-family: var(--font-display-var), var(--font-body), sans-serif;
     font-weight: 700;

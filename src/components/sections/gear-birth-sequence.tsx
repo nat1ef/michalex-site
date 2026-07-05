@@ -13,8 +13,6 @@ import {
 } from "@/components/motion/hero-gear-3d";
 import { gearStages, services, stats, siteConfig } from "@/lib/content";
 
-const TITLE_LINES = ["ΜΗΧΑΝΟΥΡΓΕΙΟ", "ΑΛΕΞΑΝΔΡΑΚΗΣ"];
-
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
 function subscribeReducedMotion(onChange: () => void) {
@@ -49,7 +47,7 @@ function CharLine({ text, accentLast }: { text: string; accentLast?: boolean }) 
             (accentLast && i >= text.length - 1 ? " text-copper" : "")
           }
         >
-          {ch}
+          {ch === " " ? " " : ch}
         </span>
       ))}
     </span>
@@ -66,10 +64,10 @@ function StageKicker({ code, kicker }: { code: string; kicker: string }) {
 
 function StageTitle({ lines }: { lines: readonly string[] }) {
   return (
-    <h2 className="display-chapter mt-5 text-foreground">
-      {lines.map((line) => (
+    <h2 className="display-serif mt-5 text-foreground">
+      {lines.map((line, i) => (
         <span key={line} className="block">
-          {line}
+          {i === lines.length - 1 ? <em className="text-copper">{line}</em> : line}
         </span>
       ))}
     </h2>
@@ -89,19 +87,24 @@ function StageOverlay({ stage }: { stage: (typeof gearStages)[number] }) {
   if (stage.overlay === "hero") {
     return (
       <div className="section-shell flex h-full flex-col items-center justify-center pt-[4.5rem] text-center">
-        <h1
-          aria-label="Μηχανουργείο Αλεξανδράκης"
-          className="display-hero-compact"
-        >
-          {TITLE_LINES.map((line, i) => (
-            <CharLine key={line} text={line} accentLast={i === 1} />
-          ))}
-        </h1>
-        <p className="telemetry-label mt-7">
-          <span className="text-copper/80">[</span> ΜΕΤΑΔΟΣΗ ΚΙΝΗΣΗΣ · ΑΘΗΝΑ 104
-          41 <span className="text-copper/80">]</span>
+        <p className="telemetry-label mb-8">
+          <span className="text-copper/80">[</span> ΜΗΧΑΝΟΥΡΓΕΙΟ ΑΛΕΞΑΝΔΡΑΚΗΣ ·
+          ΑΘΗΝΑ 104 41 <span className="text-copper/80">]</span>
         </p>
-        <p className="mt-5 max-w-xl text-base leading-relaxed text-foreground/85 sm:text-lg">
+        <h1
+          aria-label="Μηχανουργείο Αλεξανδράκης — Το σχέδιό σας, σε ατσάλι"
+          className="display-serif text-[clamp(2.9rem,8vw,7rem)]"
+        >
+          <span className="block overflow-hidden pb-[0.08em] -mb-[0.08em]">
+            <CharLine text="Το σχέδιό σας," />
+          </span>
+          <span className="block overflow-hidden pb-[0.12em] -mb-[0.06em]">
+            <em className="text-copper">
+              <CharLine text="σε ατσάλι." />
+            </em>
+          </span>
+        </h1>
+        <p className="mt-7 max-w-xl text-base leading-relaxed text-foreground/85 sm:text-lg">
           Γρανάζια, άξονες και μηχανολογικά εξαρτήματα κατά σχέδιο ή δείγμα.
           Δεκαετίες εμπειρίας σε τόρνο και φρέζα — από την Καστοριάς 2.
         </p>
@@ -276,6 +279,7 @@ export function GearBirthSequence() {
   const counterRef = useRef<HTMLSpanElement>(null);
   const railRef = useRef<HTMLDivElement>(null);
   const scrollCueRef = useRef<HTMLDivElement>(null);
+  const glowRef = useRef<HTMLDivElement>(null);
   const reduced = useSyncExternalStore(
     subscribeReducedMotion,
     getReducedMotion,
@@ -456,6 +460,9 @@ export function GearBirthSequence() {
             );
         }
 
+        // Finale — warm golden light floods the scene, the "sunset" beat.
+        tl.to(glowRef.current, { opacity: 1, duration: 0.55 }, 4.25);
+
         // Scroll cue fades once the journey starts.
         tl.to(scrollCueRef.current, { opacity: 0, y: 16, duration: 0.12 }, 0.08);
 
@@ -508,6 +515,17 @@ export function GearBirthSequence() {
       <div className="pointer-events-none absolute inset-0 z-[2]">
         <HeroGear3D ref={gearRef} />
       </div>
+
+      {/* Finale golden-hour wash — the machining is done, the metal glows */}
+      <div
+        ref={glowRef}
+        className="pointer-events-none absolute inset-0 z-[3] opacity-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 85% 75% at 30% 55%, oklch(0.72 0.145 55 / 0.32), transparent 62%), linear-gradient(to top, oklch(0.55 0.13 50 / 0.18), transparent 55%)",
+          mixBlendMode: "plus-lighter",
+        }}
+      />
 
       {/* Stage overlays */}
       <div className="absolute inset-0 z-10">
