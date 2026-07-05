@@ -98,6 +98,7 @@ export function BentoFacility() {
   return (
     <section
       ref={sectionRef}
+      id="εργαστηριο"
       className="relative border-t border-border/30 py-24 sm:py-32"
     >
       <div className="section-shell">

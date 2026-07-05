@@ -1,11 +1,8 @@
 import { Header } from "@/components/layout/header";
 import { FooterReveal } from "@/components/layout/footer-reveal";
-import { Hero } from "@/components/sections/hero";
-import { StatementScroll } from "@/components/sections/statement-scroll";
-import { ProcessChapters } from "@/components/sections/process-chapters";
+import { GearBirthSequence } from "@/components/sections/gear-birth-sequence";
 import { BentoFacility } from "@/components/sections/bento-facility";
 import { Services } from "@/components/sections/services";
-import { Metrics } from "@/components/sections/metrics";
 import { Reviews } from "@/components/sections/reviews";
 import { CtaBanner } from "@/components/sections/cta-banner";
 import { Contact } from "@/components/sections/contact";
@@ -33,12 +30,9 @@ export default function Home() {
           <Header />
           <FooterReveal>
             <main className="flex-1">
-              <Hero />
-              <StatementScroll />
-              <ProcessChapters />
-              <BentoFacility />
+              <GearBirthSequence />
               <Services />
-              <Metrics />
+              <BentoFacility />
               <Reviews />
               <CtaBanner />
               <Contact />
