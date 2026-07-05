@@ -47,3 +47,4 @@ next-env.d.ts
 # local media import scratch
 /_media_import/
 
+.playwright-mcp/
