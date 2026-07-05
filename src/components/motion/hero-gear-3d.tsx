@@ -59,12 +59,12 @@ function turnedFaceTexture(): THREE.CanvasTexture {
   const cx = size / 2;
   const cy = size / 2;
 
-  ctx.fillStyle = "#b7bcc4";
+  ctx.fillStyle = "#585d66";
   ctx.fillRect(0, 0, size, size);
 
   const maxR = size * 0.5;
   for (let r = maxR; r > 4; r -= 1.6) {
-    const shade = 168 + Math.round(Math.sin(r * 0.9) * 10 + (Math.random() - 0.5) * 6);
+    const shade = 84 + Math.round(Math.sin(r * 0.9) * 9 + (Math.random() - 0.5) * 6);
     ctx.strokeStyle = `rgb(${shade},${shade + 3},${shade + 6})`;
     ctx.lineWidth = 1 + Math.random() * 0.6;
     ctx.beginPath();
@@ -98,7 +98,7 @@ function buildScene(container: HTMLDivElement): {
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setClearColor(0x000000, 0);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 0.95;
+  renderer.toneMappingExposure = 0.82;
   container.appendChild(renderer.domElement);
 
   // A studio-style environment so metalness/roughness actually have
@@ -110,36 +110,42 @@ function buildScene(container: HTMLDivElement): {
 
   // Lights — high-contrast key + copper rim so edges and teeth catch real
   // highlights, low ambient so the metal doesn't wash out flat.
-  scene.add(new THREE.AmbientLight(0x707a90, 0.16));
+  // Low-key workshop lighting: the part lives mostly in shadow, defined by
+  // a hot copper rim and a dim warm key — bright, even light is what makes
+  // CG metal read as plastic against real photos.
+  scene.add(new THREE.AmbientLight(0x39404e, 0.22));
 
-  const key = new THREE.DirectionalLight(0xfff3e2, 3.1);
-  key.position.set(3.4, 4.2, 4.8);
+  const key = new THREE.DirectionalLight(0xffe3c2, 0.85);
+  key.position.set(3.0, 4.4, 3.6);
   scene.add(key);
 
-  const rim = new THREE.DirectionalLight(0xe0964f, 1.9);
-  rim.position.set(-3.8, -1, 2.4);
+  const rim = new THREE.DirectionalLight(0xd98a45, 2.6);
+  rim.position.set(-4.2, -0.6, 2.0);
   scene.add(rim);
 
-  const fill = new THREE.DirectionalLight(0x7f9dce, 0.35);
+  const fill = new THREE.DirectionalLight(0x66809f, 0.22);
   fill.position.set(-2, 2.6, -3.2);
   scene.add(fill);
 
   const faceTexture = turnedFaceTexture();
   const steelMat = new THREE.MeshStandardMaterial({
-    color: 0x878e99,
-    metalness: 0.95,
-    roughness: 0.28,
+    color: 0x494f58,
+    metalness: 0.92,
+    roughness: 0.4,
+    envMapIntensity: 0.5,
   });
   const facedMat = new THREE.MeshStandardMaterial({
-    color: 0x99a0ab,
+    color: 0x666c76,
     map: faceTexture,
-    metalness: 0.92,
-    roughness: 0.34,
+    metalness: 0.9,
+    roughness: 0.42,
+    envMapIntensity: 0.5,
   });
   const darkMat = new THREE.MeshStandardMaterial({
-    color: 0x53585f,
+    color: 0x33373d,
     metalness: 0.85,
-    roughness: 0.38,
+    roughness: 0.46,
+    envMapIntensity: 0.45,
   });
   const copperMat = new THREE.MeshStandardMaterial({
     color: 0xc9793a,
@@ -153,6 +159,30 @@ function buildScene(container: HTMLDivElement): {
   // under the same fixed 3/4 perspective.
   const tiltGroup = new THREE.Group();
   scene.add(tiltGroup);
+
+  // Soft dark halo behind the part — fakes ambient occlusion against the
+  // photo backdrop so the gear feels planted in the scene, not pasted on.
+  const shadowCanvas = document.createElement("canvas");
+  shadowCanvas.width = 256;
+  shadowCanvas.height = 256;
+  const shadowCtx = shadowCanvas.getContext("2d")!;
+  const grad = shadowCtx.createRadialGradient(128, 128, 20, 128, 128, 128);
+  grad.addColorStop(0, "rgba(0,0,0,0.62)");
+  grad.addColorStop(0.55, "rgba(0,0,0,0.34)");
+  grad.addColorStop(1, "rgba(0,0,0,0)");
+  shadowCtx.fillStyle = grad;
+  shadowCtx.fillRect(0, 0, 256, 256);
+  const shadowTexture = new THREE.CanvasTexture(shadowCanvas);
+  const shadowSprite = new THREE.Sprite(
+    new THREE.SpriteMaterial({
+      map: shadowTexture,
+      transparent: true,
+      depthWrite: false,
+    })
+  );
+  shadowSprite.scale.set(6.4, 6.4, 1);
+  shadowSprite.position.z = -1.4;
+  tiltGroup.add(shadowSprite);
 
   const gearGroup = new THREE.Group();
   tiltGroup.add(gearGroup);
@@ -324,6 +354,8 @@ function buildScene(container: HTMLDivElement): {
     io.disconnect();
     envTexture.dispose();
     faceTexture.dispose();
+    shadowTexture.dispose();
+    shadowSprite.material.dispose();
     sharedToothGeometry.dispose();
     sparkGeo.dispose();
     sparkMat.dispose();
