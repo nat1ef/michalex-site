@@ -1,8 +1,8 @@
 export const siteConfig = {
   name: "Μηχανουργείο Αλεξανδράκης",
-  tagline: "Μηχανουργείο — Κατασκεύες ειδών μετάδοσης κίνησης και μηχανολογικών εξαρτημάτων",
+  tagline: "Γρανάζια & μηχανολογικά εξαρτήματα κατά σχέδιο ή δείγμα",
   description:
-    "Εργαστήριο κατασκευής μηχανημάτων στην Αθήνα. Δεκαετίες εμπειρίας σε τόρνο, φρέζα και custom μηχανουργικές κατασκευές.",
+    "Μηχανουργείο στην Αθήνα με 40+ χρόνια εμπειρίας. Κατασκευή γραναζιών παντός τύπου, εργασίες τόρνου και φρέζας, ειδικές κατασκευές και επισκευές — κατά σχέδιο ή δείγμα.",
   ogShareImage: "/images/share-preview.jpg",
   googleReviewsUrl:
     "https://www.google.com/maps/search/?api=1&query=Καστοριάς+2,+Αθήνα+104+41",
@@ -16,23 +16,23 @@ export const siteConfig = {
   viberHref:
     "https://viber.me/306907493500?text=%CE%9A%CE%B1%CE%BB%CE%B7%CF%83%CF%80%CE%AD%CF%81%CE%B1%2C%20%CE%B8%CE%B1%20%CE%AE%CE%B8%CE%B5%CE%BB%CE%B1%20%CE%BD%CE%B1%20%CF%81%CF%89%CF%84%CE%AE%CF%83%CF%89%20%CF%83%CF%87%CE%B5%CF%84%CE%B9%CE%BA%CE%AC%20%CE%BC%CE%B5%20%CE%BC%CE%B7%CF%87%CE%B1%CE%BD%CE%BF%CF%85%CF%81%CE%B3%CE%B9%CE%BA%CE%AE%20%CE%B5%CF%81%CE%B3%CE%B1%CF%83%CE%AF%CE%B1.",
   viberDeepLink:
-    "viber://chat?number=306907493500&text=%CE%9A%CE%B1%CE%BB%CE%B7%CF%83%CF%80%CE%AD%CF%81%CE%B1%2C%20%CE%B8%CE%B1%20%CE%AE%CE%B8%CE%B5%CE%BB%CE%B1%20%CE%BD%CE%B1%20%CF%81%CF%89%CF%84%CEAE%CF%83%CF%89%20%CF%83%CF%87%CE%B5%CF%84%CE%B9%CE%BA%CE%AC%20%CE%BC%CE%B5%20%CE%BC%CE%B7%CF%87%CE%B1%CE%BD%CE%BF%CF%85%CF%81%CE%B3%CE%B9%CE%BA%CE%AE%20%CE%B5%CF%81%CE%B3%CE%B1%CF%83%CE%AF%CE%B1.",
+    "viber://chat?number=306907493500&text=%CE%9A%CE%B1%CE%BB%CE%B7%CF%83%CF%80%CE%AD%CF%81%CE%B1%2C%20%CE%B8%CE%B1%20%CE%AE%CE%B8%CE%B5%CE%BB%CE%B1%20%CE%BD%CE%B1%20%CF%81%CF%89%CF%84%CE%AE%CF%83%CF%89%20%CF%83%CF%87%CE%B5%CF%84%CE%B9%CE%BA%CE%AC%20%CE%BC%CE%B5%20%CE%BC%CE%B7%CF%87%CE%B1%CE%BD%CE%BF%CF%85%CF%81%CE%B3%CE%B9%CE%BA%CE%AE%20%CE%B5%CF%81%CE%B3%CE%B1%CF%83%CE%AF%CE%B1.",
   address: "Καστοριάς 2, Αθήνα 104 41",
   mapsUrl: "https://maps.google.com/?q=Καστοριάς+2,+Αθήνα+104+41",
+  mapsEmbedUrl:
+    "https://www.google.com/maps?q=Καστοριάς+2,+Αθήνα+104+41&output=embed",
   locations: [
     {
       id: "main",
       label: "Έδρα",
       address: "Καστοριάς 2, Αθήνα 104 41",
       mapsUrl: "https://maps.google.com/?q=Καστοριάς+2,+Αθήνα+104+41",
-      embedQuery: "Καστοριάς+2,+Αθήνα+104+41",
     },
     {
       id: "branch",
       label: "Υποκατάστημα",
       address: "Αλικαρνασσού 102, Αθήνα 104 41",
       mapsUrl: "https://maps.google.com/?q=Αλικαρνασσού+102,+Αθήνα+104+41",
-      embedQuery: "Αλικαρνασσού+102,+Αθήνα+104+41",
     },
   ] as const,
   hours: {
@@ -44,70 +44,182 @@ export const siteConfig = {
   reviewCount: 21,
 } as const;
 
-export const navLinks = [
-  { href: "#αρχικη", label: "Αρχική" },
-  { href: "#υπηρεσιες", label: "Υπηρεσίες" },
-  { href: "#εργαστηριο", label: "Εργαστήριο" },
-  { href: "#κριτικες", label: "Κριτικές" },
-  { href: "#επικοινωνια", label: "Επικοινωνία" },
+export const pageNav = [
+  { href: "/", label: "Αρχική" },
+  { href: "/#υπηρεσιες", label: "Υπηρεσίες" },
+  { href: "/#εργαστηριο", label: "Εργαστήριο" },
+  { href: "/#κριτικες", label: "Κριτικές" },
+  { href: "/epikoinonia", label: "Επικοινωνία" },
 ] as const;
 
-export const services = [
+export type ServiceCategory = {
+  slug: string;
+  eyebrow: string;
+  title: string;
+  shortTitle: string;
+  cardText: string;
+  lead: string;
+  checklist: readonly string[];
+  chips?: readonly string[];
+  images: readonly [
+    { src: string; alt: string },
+    { src: string; alt: string },
+  ];
+  metaTitle: string;
+  metaDescription: string;
+};
+
+export const serviceCategories: readonly ServiceCategory[] = [
   {
-    icon: "cog" as const,
-    code: "SRV.01",
-    title: "Είδη μετάδοσης κίνησης",
-    description:
-      "Κατασκευή και επισκευή γραναζιών, άξονων, συμπλεκτών και μηχανισμών μετάδοσης κίνησης με ακρίβεια μικρού.",
-    image: "/images/work/gear-pile.jpg",
-    imageAlt: "Γρανάζια κάθε τύπου στο εργαστήριο",
+    slug: "granazia",
+    eyebrow: "Η ΕΙΔΙΚΟΤΗΤΑ ΜΑΣ",
+    title: "Γρανάζια παντός τύπου",
+    shortTitle: "Γρανάζια",
+    cardText:
+      "Κατασκευή από σχέδιο ή από το δείγμα σας — ακόμα κι όταν δεν βρίσκεται πουθενά έτοιμο.",
+    lead: "Κατασκευάζουμε γρανάζια κατά σχέδιο ή από το φθαρμένο δείγμα σας — ακόμα κι όταν δεν υπάρχει πουθενά έτοιμο ανταλλακτικό. Κοπή οδοντώσεων με έλεγχο βήματος και συναρμογής πριν την παράδοση.",
+    checklist: [
+      "Ίσια (μετωπικά)",
+      "Ελικοειδή",
+      "Κωνικά",
+      "Κορώνες",
+      "Ατέρμονες",
+      "Πολύσφηνα",
+      "Αντίγραφο από δείγμα",
+      "Μεμονωμένα ή σε σειρά",
+    ],
+    chips: ["Ίσια", "Ελικοειδή", "Κωνικά", "Κορώνες", "Ατέρμονες", "Πολύσφηνα"],
+    images: [
+      {
+        src: "/images/work/gear-pile.jpg",
+        alt: "Γρανάζια κάθε τύπου στο εργαστήριο",
+      },
+      {
+        src: "/images/work/spur-gear-macro.jpg",
+        alt: "Μετωπικό γρανάζι — λεπτομέρεια δοντιών",
+      },
+    ],
+    metaTitle: "Κατασκευή γραναζιών Αθήνα — ίσια, ελικοειδή, κωνικά, κορώνες",
+    metaDescription:
+      "Κατασκευή και επισκευή γραναζιών στην Αθήνα: ίσια, ελικοειδή, κωνικά, κορώνες, ατέρμονες, πολύσφηνα. Κατά σχέδιο ή από δείγμα. Τηλ: 210 522 2541.",
   },
   {
-    icon: "wrench" as const,
-    code: "SRV.02",
-    title: "Μηχανολογικά εξαρτήματα",
-    description:
-      "Custom κατασκευές εξαρτημάτων κατά σχέδιο ή δείγμα — από πρωτότυπο μέχρι σειρά.",
-    image: "/images/work/threaded-bushings.jpg",
-    imageAlt: "Σπειρωτά εξαρτήματα κατασκευασμένα κατά σχέδιο",
+    slug: "tornos",
+    eyebrow: "ΤΟΡΝΟΣ",
+    title: "Εργασίες τόρνου",
+    shortTitle: "Τόρνος",
+    cardText:
+      "Άξονες, δαχτυλίδια, σπειρώματα, πατούρες — τόρνευση κάθε διαμέτρου στις διαστάσεις που χρειάζεστε.",
+    lead: "Τόρνευση με ακρίβεια σε κάθε διάμετρο — από ένα κομμάτι μέχρι σειρά παραγωγής, πάντα στις διαστάσεις και τις ανοχές που ζητάει το σχέδιό σας.",
+    checklist: [
+      "Άξονες κάθε διαμέτρου",
+      "Δαχτυλίδια & αποστάτες",
+      "Σπειρώματα",
+      "Πατούρες & έδρες",
+      "Ειδικές κατασκευές στον τόρνο",
+      "Μεμονωμένα ή σε σειρά",
+    ],
+    images: [
+      {
+        src: "/images/work/turning-lathe.jpg",
+        alt: "Τόρνευση άξονα με γρέζια — κατεργασία σε εξέλιξη",
+      },
+      {
+        src: "/images/work/brass-flange-lathe.jpg",
+        alt: "Μπρούτζινη φλάντζα στο τσοκ του τόρνου",
+      },
+    ],
+    metaTitle: "Εργασίες τόρνου Αθήνα — τόρνευση αξόνων & εξαρτημάτων",
+    metaDescription:
+      "Τόρνευση αξόνων, δαχτυλιδιών και εξαρτημάτων κάθε διαμέτρου στην Αθήνα. Σπειρώματα, πατούρες, ειδικές κατασκευές. Τηλ: 210 522 2541.",
   },
   {
-    icon: "disc" as const,
-    code: "SRV.03",
-    title: "Κόψιμο & τόρνευση άξονων",
-    description:
-      "Ακριβής κατεργασία άξονων κάθε διαμέτρου — κόψιμο, τόρνευση και finish σύμφωνα με τις προδιαγραφές σας.",
-    image: "/images/work/spline-shaft-machine.jpg",
-    imageAlt: "Πολύσφηνος άξονας σε κατεργασία",
+    slug: "freza",
+    eyebrow: "ΦΡΕΖΑ",
+    title: "Εργασίες φρέζας",
+    shortTitle: "Φρέζα",
+    cardText:
+      "Φρεζαρίσματα, σφηνόδρομοι, οδοντώσεις — κατεργασία ακριβείας σε κάθε υλικό.",
+    lead: "Φρεζάρισμα ακριβείας για κάθε μηχανολογική ανάγκη — από σφηνόδρομους και οδοντώσεις μέχρι σύνθετες ειδικές κατασκευές κατά σχέδιο.",
+    checklist: [
+      "Φρεζαρίσματα κάθε τύπου",
+      "Σφηνόδρομοι",
+      "Κοπή οδοντώσεων",
+      "Τρύπημα & κατεργασία επιφανειών",
+      "Ειδικές κατασκευές στη φρέζα",
+      "Κάθε κατεργάσιμο υλικό",
+    ],
+    images: [
+      {
+        src: "/images/work/shafts-array.jpg",
+        alt: "Σειρά κατεργασμένων πολύσφηνων αξόνων",
+      },
+      {
+        src: "/images/work/helical-gear-shaft.jpg",
+        alt: "Ελικοειδές γρανάζι σε άξονα",
+      },
+    ],
+    metaTitle: "Εργασίες φρέζας Αθήνα — φρεζαρίσματα & σφηνόδρομοι",
+    metaDescription:
+      "Φρεζαρίσματα ακριβείας στην Αθήνα: σφηνόδρομοι, οδοντώσεις, ειδικές κατασκευές κατά σχέδιο ή δείγμα. Τηλ: 210 522 2541.",
   },
   {
-    icon: "settings" as const,
-    code: "SRV.04",
-    title: "Τόρνος & Φρέζα",
-    description:
-      "Κλασική και σύγχρονη μηχανουργική κατεργασία — κόψιμο άξονα, τόρνευση, φρεζάρισμα, τρύπημα.",
-    image: "/images/work/brass-flange-lathe.jpg",
-    imageAlt: "Μπρούτζινη φλάντζα στο τσοκ του τόρνου",
-  },
-  {
-    icon: "ruler" as const,
-    code: "SRV.05",
-    title: "Μετρήσεις & ποιοτικός έλεγχος",
-    description:
-      "Ακριβείς διαστάσεις, έλεγχος tolerances και παράδοση που σέβεται τις προδιαγραφές σας.",
-    image: "/images/work/hands-splines.jpg",
-    imageAlt: "Έλεγχος πολύσφηνων αξόνων στο χέρι",
-  },
-  {
-    icon: "factory" as const,
-    code: "SRV.06",
-    title: "Επισκευές & ανακατασκευή",
-    description:
-      "Αναβίωση φθαρμένων ή κατεστραμμένων εξαρτημάτων — οικονομική λύση αντί για αντικατάσταση.",
-    image: "/images/work/gearbox-repair.jpg",
-    imageAlt: "Ανακατασκευή κιβωτίου μετάδοσης",
+    slug: "eidikes-kataskeves",
+    eyebrow: "ΕΙΔΙΚΕΣ ΚΑΤΑΣΚΕΥΕΣ",
+    title: "Ειδικές κατασκευές & επισκευές",
+    shortTitle: "Ειδικές κατασκευές",
+    cardText:
+      "Ό,τι δεν βρίσκεται έτοιμο: αντίγραφο από φθαρμένο κομμάτι, ανακατασκευή, μεμονωμένα ή σε σειρά.",
+    lead: "Όταν το ανταλλακτικό δεν υπάρχει πια στην αγορά, το φτιάχνουμε: αντίγραφο από το φθαρμένο κομμάτι, ανακατασκευή μηχανισμών, ειδικές κατασκευές κατά σχέδιο — οικονομική λύση αντί για αντικατάσταση ολόκληρου μηχανήματος.",
+    checklist: [
+      "Αντίγραφο από φθαρμένο δείγμα",
+      "Ανακατασκευή μηχανισμών",
+      "Κατασκευή κατά σχέδιο",
+      "Επισκευή αξόνων & γραναζιών",
+      "Πρωτότυπα & μικρές σειρές",
+      "Μελέτη μαζί σας πριν την κατασκευή",
+    ],
+    images: [
+      {
+        src: "/images/work/gearbox-repair.jpg",
+        alt: "Ανακατασκευή κιβωτίου μετάδοσης",
+      },
+      {
+        src: "/images/work/ring-gear-housing.jpg",
+        alt: "Πλανητική κορώνα σε κέλυφος",
+      },
+    ],
+    metaTitle: "Ειδικές κατασκευές & επισκευές μηχανημάτων Αθήνα",
+    metaDescription:
+      "Ειδικές μηχανουργικές κατασκευές και επισκευές στην Αθήνα. Αντίγραφο από φθαρμένο κομμάτι, ανακατασκευή, κατασκευή κατά σχέδιο. Τηλ: 210 522 2541.",
   },
 ] as const;
+
+export const workSteps = [
+  {
+    n: "ΒΗΜΑ 1",
+    title: "Στέλνετε ή φέρνετε",
+    text: "Σχέδιο, φωτογραφία στο Viber ή το ίδιο το κομμάτι στο εργαστήριο.",
+  },
+  {
+    n: "ΒΗΜΑ 2",
+    title: "Παίρνετε προσφορά",
+    text: "Τιμή και χρόνος παράδοσης — καθαρά, πριν ξεκινήσει οτιδήποτε.",
+  },
+  {
+    n: "ΒΗΜΑ 3",
+    title: "Παραλαμβάνετε",
+    text: "Ελεγμένο κομμάτι στις διαστάσεις που συμφωνήσαμε.",
+  },
+] as const;
+
+/**
+ * Λογότυπα πελατών για το «Μας εμπιστεύονται».
+ * Μένει κενό μέχρι ο ιδιοκτήτης να συλλέξει γραπτές εγκρίσεις·
+ * η ενότητα δεν εμφανίζεται όσο η λίστα είναι άδεια.
+ * Τα αρχεία μπαίνουν σε /public/images/clients/.
+ */
+export const trustedBy: readonly { name: string; logo: string }[] = [];
 
 export const stats = [
   { value: "4.9", label: "Βαθμολογία Google", suffix: "/5" },
@@ -152,57 +264,6 @@ export const reviews = [
     rating: 5,
     text: "Επισκευή άξονα σε πολύ καλή τιμή. Εξήγησαν ακριβώς τι χρειαζόταν και το αποτέλεσμα ήταν άριστο.",
     source: "Google",
-  },
-  {
-    author: "Panagiotis V.",
-    rating: 5,
-    text: "Μικρό αλλά πολύ οργανωμένο εργαστήριο. Κατασκευή εξαρτήματος κατά σχέδιο χωρίς καθυστερήσεις.",
-    source: "Google",
-  },
-  {
-    author: "Ανδρέας Τ.",
-    rating: 4,
-    text: "Σοβαρή μηχανουργική δουλειά, σωστή συνεννόηση και καθαρό αποτέλεσμα. Το συνιστώ ανεπιφύλακτα.",
-    source: "Google",
-  },
-] as const;
-
-export const processChapters = [
-  {
-    id: "torneusis",
-    code: "CH.01",
-    label: "ΤΟΡΝΕΥΣΗ",
-    title: "Άξονες & κυλινδρική ακρίβεια",
-    description:
-      "Κόψιμο, τόρνευση και finish άξονων κάθε διαμέτρου — από μονάδες μέχρι σειρές, με έλεγχο διαστάσεων και tolerances.",
-    image: "/images/work/turning-lathe.jpg",
-    imageAlt: "Τόρνευση άξονα με γρέζια — κατεργασία σε εξέλιξη",
-    detailImage: "/images/work/shafts-black.jpg",
-    detailAlt: "Έτοιμοι άξονες και γρανάζι",
-  },
-  {
-    id: "freza",
-    code: "CH.02",
-    label: "ΦΡΕΖΑ",
-    title: "Φρεζάρισμα & μηχανολογικά εξαρτήματα",
-    description:
-      "Custom κατασκευές κατά σχέδιο ή δείγμα — πρωτότυπο, μικρές και μεγάλες σειρές με επαναληψιμότητα.",
-    image: "/images/work/shafts-array.jpg",
-    imageAlt: "Σειρά κατεργασμένων πολύσφηνων αξόνων",
-    detailImage: "/images/work/pinions-black.jpg",
-    detailAlt: "Πηνία και κοπτικά σε μαύρο φόντο",
-  },
-  {
-    id: "metadosi",
-    code: "CH.03",
-    label: "ΜΕΤΑΔΟΣΗ",
-    title: "Γρανάζια & μετάδοση κίνησης",
-    description:
-      "Κατασκευή και επισκευή γραναζιών, συμπλεκτών και μηχανισμών μετάδοσης — η ειδικότητα του εργαστηρίου.",
-    image: "/images/work/gearbox-cluster.jpg",
-    imageAlt: "Συστοιχία γραναζιών κιβωτίου μετάδοσης",
-    detailImage: "/images/work/gears-pair-brass.jpg",
-    detailAlt: "Ατσάλινο και μπρούτζινο γρανάζι",
   },
 ] as const;
 
@@ -252,90 +313,4 @@ export const facilityBento = [
     label: "Ελικοειδή",
     span: "col-span-2 row-span-1 sm:col-span-1",
   },
-] as const;
-
-export const statement = {
-  kicker: "Η ΔΟΥΛΕΙΑ ΜΑΣ",
-  words: [
-    { text: "Ό,τι" },
-    { text: "γυρίζει," },
-    { text: "ό,τι" },
-    { text: "μεταδίδει" },
-    { text: "κίνηση," },
-    { text: "ό,τι" },
-    { text: "χρειάζεται" },
-    { text: "ακρίβεια", accent: true },
-    { text: "—" },
-    { text: "κατασκευάζεται" },
-    { text: "εδώ.", accent: true },
-  ],
-} as const;
-
-export const ctaImage = {
-  src: "/images/work/hobbing-macro.jpg",
-  alt: "Κοπή γραναζιού με μπρούτζινα γρέζια — μακρο λεπτομέρεια",
-} as const;
-
-export const gearStages = [
-  {
-    id: "atsali",
-    code: "ST.01",
-    kicker: "Η ΠΡΩΤΗ ΥΛΗ",
-    title: ["Το σχέδιό σας,", "σε ατσάλι."],
-    body: "Κάθε εξάρτημα ξεκινά από συμπαγή χάλυβα — επιλεγμένο για αντοχή, κατεργασιμότητα και τη δουλειά που έχει να κάνει.",
-    image: "/images/work/raw-stock.jpg",
-    imageAlt: "Ράβδοι χάλυβα — πρώτη ύλη στο εργαστήριο",
-    overlay: "hero" as const,
-  },
-  {
-    id: "tornos",
-    code: "ST.02",
-    kicker: "Ο ΤΟΡΝΟΣ",
-    title: ["Η μορφή", "παίρνει σχήμα."],
-    body: "Τόρνευση με ακρίβεια εκατοστού του χιλιοστού — διάμετροι, πατούρες και έδρες σύμφωνα με το σχέδιο ή το δείγμα σας.",
-    image: "/images/work/turning-lathe.jpg",
-    imageAlt: "Τόρνευση άξονα με γρέζια — κατεργασία σε εξέλιξη",
-    overlay: "services" as const,
-  },
-  {
-    id: "kopi",
-    code: "ST.03",
-    kicker: "Η ΚΟΠΗ",
-    title: ["Δόντι-δόντι,", "γεννιέται γρανάζι."],
-    body: "Κοπή οδοντώσεων στη φρέζα — μετωπικά, ελικοειδή, πολύσφηνα. Εδώ το ατσάλι γίνεται μετάδοση κίνησης.",
-    image: "/images/work/hobbing-macro.jpg",
-    imageAlt: "Κοπή γραναζιού με μπρούτζινα γρέζια — μακρο λεπτομέρεια",
-    overlay: "stats" as const,
-  },
-  {
-    id: "elegxos",
-    code: "ST.04",
-    kicker: "Ο ΕΛΕΓΧΟΣ",
-    title: ["Ακρίβεια", "που μετριέται."],
-    body: "Κάθε διάσταση ελέγχεται στο χέρι — tolerances, βήμα οδόντωσης, συναρμογή. Τίποτα δεν φεύγει αν δεν ταιριάζει τέλεια.",
-    image: "/images/work/hands-splines.jpg",
-    imageAlt: "Έλεγχος πολύσφηνων αξόνων στο χέρι",
-    overlay: "text" as const,
-  },
-  {
-    id: "finale",
-    code: "ST.05",
-    kicker: "ΤΟ ΑΠΟΤΕΛΕΣΜΑ",
-    title: ["Έτοιμο να", "δουλέψει χρόνια."],
-    body: "Από την Καστοριάς 2 στη μηχανή σας — γρανάζια και εξαρτήματα που κρατάνε δεκαετίες.",
-    image: "/images/work/spur-gear-macro.jpg",
-    imageAlt: "Μετωπικό γρανάζι — λεπτομέρεια δοντιών, έτοιμο προϊόν",
-    overlay: "cta" as const,
-  },
-] as const;
-
-export const capabilities = [
-  "Κόψιμο & τόρνευση άξονων",
-  "Κατασκευή γραναζιών",
-  "Φρεζάρισμα ακριβείας",
-  "Τρύπημα & επιστρώσεις",
-  "Επισκευή μηχανημάτων",
-  "Κατασκευή κατά σχέδιο",
-  "Μικρές & μεγάλες σειρές",
-  "Συμβουλευτική μηχανολογική",
 ] as const;

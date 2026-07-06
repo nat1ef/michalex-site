@@ -7,13 +7,22 @@ export function LocalBusinessJsonLd() {
     name: siteConfig.name,
     description: siteConfig.description,
     telephone: siteConfig.phone,
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: "Καστοριάς 2",
-      addressLocality: "Αθήνα",
-      postalCode: "104 41",
-      addressCountry: "GR",
-    },
+    address: [
+      {
+        "@type": "PostalAddress",
+        streetAddress: "Καστοριάς 2",
+        addressLocality: "Αθήνα",
+        postalCode: "104 41",
+        addressCountry: "GR",
+      },
+      {
+        "@type": "PostalAddress",
+        streetAddress: "Αλικαρνασσού 102",
+        addressLocality: "Αθήνα",
+        postalCode: "104 41",
+        addressCountry: "GR",
+      },
+    ],
     geo: {
       "@type": "GeoCoordinates",
       latitude: 37.9892,

@@ -1,41 +1,29 @@
 import type { Metadata } from "next";
-import {
-  Commissioner,
-  JetBrains_Mono,
-  Noto_Serif_Display,
-  Sofia_Sans_Condensed,
-} from "next/font/google";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { IBM_Plex_Sans, JetBrains_Mono } from "next/font/google";
 import { LocalBusinessJsonLd } from "@/components/seo/json-ld";
+import { MobileCallBar } from "@/components/layout/mobile-call-bar";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { SiteHeader } from "@/components/layout/site-header";
+import { UtilityStrip } from "@/components/layout/utility-strip";
 import { siteConfig } from "@/lib/content";
 import "./globals.css";
 
-const commissioner = Commissioner({
+const plexSans = IBM_Plex_Sans({
   variable: "--font-body",
   subsets: ["latin", "greek"],
+  weight: ["400", "500", "600", "700"],
 });
 
-const sofiaCondensed = Sofia_Sans_Condensed({
-  variable: "--font-display-var",
-  subsets: ["latin", "greek"],
-});
-
-const jetbrainsMono = JetBrains_Mono({
+const plexMono = JetBrains_Mono({
   variable: "--font-mono-var",
   subsets: ["latin", "greek"],
-});
-
-const notoSerifDisplay = Noto_Serif_Display({
-  variable: "--font-serif-var",
-  subsets: ["latin", "greek"],
-  style: ["normal", "italic"],
-  weight: ["400", "500"],
+  weight: ["400", "600"],
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.siteUrl),
   title: {
-    default: `${siteConfig.name} | Μηχανουργείο Αθήνα`,
+    default: `${siteConfig.name} | Γρανάζια & εξαρτήματα στην Αθήνα`,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
@@ -44,11 +32,13 @@ export const metadata: Metadata = {
     "Αθήνα",
     "τόρνος",
     "φρέζα",
-    "μετάδοση κίνησης",
+    "γρανάζια",
+    "κατασκευή γραναζιών",
+    "κορώνες",
+    "ατέρμονες",
+    "πολύσφηνα",
     "μηχανολογικά εξαρτήματα",
     "Αλεξανδράκης",
-    "γρανάζια",
-    "Καστοριάς",
   ],
   icons: {
     icon: "/favicon.svg",
@@ -88,21 +78,15 @@ export default function RootLayout({
   return (
     <html
       lang="el"
-      className={`dark ${commissioner.variable} ${sofiaCondensed.variable} ${jetbrainsMono.variable} ${notoSerifDisplay.variable} h-full antialiased`}
+      className={`${plexSans.variable} ${plexMono.variable} h-full antialiased`}
     >
-      <head>
-        <meta
-          property="og:image:secure_url"
-          content={`${siteConfig.siteUrl}${siteConfig.ogShareImage}`}
-        />
-        <link
-          rel="image_src"
-          href={`${siteConfig.siteUrl}${siteConfig.ogShareImage}`}
-        />
-      </head>
-      <body className="min-h-full flex flex-col">
+      <body className="flex min-h-full flex-col pb-14 md:pb-0">
         <LocalBusinessJsonLd />
-        <TooltipProvider delay={200}>{children}</TooltipProvider>
+        <UtilityStrip />
+        <SiteHeader />
+        <main className="flex-1">{children}</main>
+        <SiteFooter />
+        <MobileCallBar />
       </body>
     </html>
   );

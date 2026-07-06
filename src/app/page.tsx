@@ -1,46 +1,23 @@
-import { Header } from "@/components/layout/header";
-import { FooterReveal } from "@/components/layout/footer-reveal";
-import { GearBirthSequence } from "@/components/sections/gear-birth-sequence";
-import { BentoFacility } from "@/components/sections/bento-facility";
-import { Services } from "@/components/sections/services";
-import { Reviews } from "@/components/sections/reviews";
-import { CtaBanner } from "@/components/sections/cta-banner";
-import { Contact } from "@/components/sections/contact";
-import { FloatingViber } from "@/components/contact/floating-viber";
-import { AnimationProvider } from "@/components/motion/animation-provider";
-import { SiteExperience } from "@/components/motion/site-experience";
-import { ScrollProgress } from "@/components/motion/scroll-progress";
-import { MagneticButtons } from "@/components/motion/magnetic-buttons";
-import { CustomCursor } from "@/components/motion/custom-cursor";
-import { AmbientField } from "@/components/motion/ambient-field";
-import { ScrollRestoration } from "@/components/motion/scroll-restoration";
-import { CinematicOverlay } from "@/components/motion/cinematic-overlay";
+import { ContactBand } from "@/components/home/contact-band";
+import { Gallery } from "@/components/home/gallery";
+import { Hero } from "@/components/home/hero";
+import { ReviewsSection } from "@/components/home/reviews-section";
+import { ServicesGrid } from "@/components/home/services-grid";
+import { StatsBand } from "@/components/home/stats-band";
+import { TrustedBy } from "@/components/home/trusted-by";
+import { WorkSteps } from "@/components/home/work-steps";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <AnimationProvider>
-      <ScrollRestoration />
-      <SiteExperience>
-        <AmbientField />
-        <CinematicOverlay />
-        <div className="relative z-10">
-          <ScrollProgress />
-          <MagneticButtons />
-          <CustomCursor />
-          <Header />
-          <FooterReveal>
-            <main className="flex-1">
-              <GearBirthSequence />
-              <Services />
-              <BentoFacility />
-              <Reviews />
-              <CtaBanner />
-              <Contact />
-            </main>
-          </FooterReveal>
-          <FloatingViber />
-        </div>
-      </SiteExperience>
-    </AnimationProvider>
+    <>
+      <Hero />
+      <StatsBand />
+      <TrustedBy />
+      <ServicesGrid />
+      <WorkSteps />
+      <Gallery />
+      <ReviewsSection />
+      <ContactBand />
+    </>
   );
 }
