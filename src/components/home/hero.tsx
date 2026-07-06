@@ -5,7 +5,9 @@ import { siteConfig } from "@/lib/content";
 export function Hero() {
   return (
     <section className="relative overflow-hidden border-b border-border">
-      {/* Backdrop: εργαστήριο σε bokeh, σβήνει προς το φόντο */}
+      {/* Backdrop: εργαστήριο σε bokeh, σβήνει προς το φόντο.
+          Σε μεγάλες οθόνες παίζει το ambient βίντεο· η εικόνα μένει
+          από κάτω ως fallback (κινητά, reduced motion, αργή σύνδεση). */}
       <div className="absolute inset-0" aria-hidden>
         <Image
           src="/images/backdrops/workshop-bokeh.jpg"
@@ -14,6 +16,16 @@ export function Hero() {
           priority
           sizes="100vw"
           className="object-cover opacity-[0.38]"
+        />
+        <video
+          src="/videos/hero-ambient.mp4"
+          poster="/images/backdrops/workshop-bokeh.jpg"
+          autoPlay
+          muted
+          loop
+          playsInline
+          disablePictureInPicture
+          className="absolute inset-0 hidden h-full w-full object-cover opacity-[0.38] motion-safe:lg:block"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/78 to-background/30" />
         <div className="mm-grid absolute inset-0 opacity-70" />
