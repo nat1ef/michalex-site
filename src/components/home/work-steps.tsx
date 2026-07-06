@@ -1,28 +1,46 @@
+import Image from "next/image";
 import { Reveal } from "@/components/motion/reveal";
 import { workSteps } from "@/lib/content";
 
 export function WorkSteps() {
   return (
-    <section className="border-y border-border bg-card">
-      <div className="section-shell py-16 lg:py-20">
+    <section className="relative overflow-hidden border-y border-border bg-card">
+      {/* Τεχνικό σχέδιο γραναζιού — διακριτικό υδατογράφημα */}
+      <Image
+        src="/images/drawings/gear-blueprint.svg"
+        alt=""
+        aria-hidden
+        width={900}
+        height={506}
+        className="pointer-events-none absolute -right-24 top-1/2 hidden w-[520px] -translate-y-1/2 opacity-[0.07] lg:block"
+      />
+
+      <div className="section-shell relative py-20 lg:py-28">
         <Reveal>
-          <p className="eyebrow">Πως δουλευουμε</p>
-          <h2 className="mt-2 text-[clamp(1.7rem,3.4vw,2.3rem)] font-bold tracking-[-0.02em]">
-            Από το σχέδιο στο χέρι σας, σε 3 βήματα
+          <h2 className="display-lg">
+            Από το σχέδιο στο χέρι σας,{" "}
+            <span className="text-primary">σε 3 βήματα</span>
           </h2>
         </Reveal>
 
-        <div className="mt-9 grid gap-5 md:grid-cols-3">
+        <div className="mt-12 grid gap-10 md:grid-cols-3 md:gap-8">
           {workSteps.map((step, i) => (
-            <Reveal key={step.n} delay={i * 90}>
-              <div className="h-full rounded-b-md border border-border border-t-[3px] border-t-primary bg-background p-5 pb-6">
-                <p className="font-mono text-[12px] font-semibold tracking-[0.15em] text-primary">
-                  {step.n}
+            <Reveal key={step.n} delay={i * 100}>
+              <div className="relative h-full">
+                <p className="display-num text-[clamp(3.4rem,6vw,4.6rem)] text-primary/16">
+                  {String(i + 1).padStart(2, "0")}
                 </p>
-                <h3 className="mt-2 text-[16.5px] font-bold">{step.title}</h3>
-                <p className="mt-1.5 text-[14px] text-muted-foreground">
-                  {step.text}
-                </p>
+                <div className="-mt-6 border-t-2 border-foreground pt-4">
+                  <h3
+                    className="text-[19px] font-extrabold uppercase"
+                    style={{ fontFamily: "var(--font-display)" }}
+                  >
+                    {step.title}
+                  </h3>
+                  <p className="mt-2 max-w-[36ch] text-[14.5px] text-muted-foreground">
+                    {step.text}
+                  </p>
+                </div>
               </div>
             </Reveal>
           ))}

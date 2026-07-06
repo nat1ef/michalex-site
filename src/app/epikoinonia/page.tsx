@@ -10,11 +10,20 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <>
-      <section className="mm-grid border-b border-border">
-        <div className="section-shell py-12 text-center lg:py-16">
+      <section className="relative overflow-hidden border-b border-border">
+        <div className="absolute inset-0" aria-hidden>
+          <img
+            src="/images/backdrops/workshop-bokeh.jpg"
+            alt=""
+            className="h-full w-full object-cover opacity-30"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/85 to-background" />
+        </div>
+        <div className="section-shell relative py-14 text-center lg:py-20">
           <p className="eyebrow">Επικοινωνια</p>
-          <h1 className="mt-3 text-balance text-[clamp(1.9rem,4.5vw,3rem)] font-bold tracking-[-0.02em]">
-            Πείτε μας τι χρειάζεστε — θα σας πούμε τιμή.
+          <h1 className="display-xl mx-auto mt-4 max-w-[18ch] text-[clamp(2rem,4.6vw,3.4rem)]">
+            Πείτε μας τι χρειάζεστε —{" "}
+            <span className="text-primary">θα σας πούμε τιμή.</span>
           </h1>
           <p className="mx-auto mt-3 max-w-[52ch] text-muted-foreground">
             Ένα τηλεφώνημα αρκεί. Αν έχετε το κομμάτι ή το σχέδιο μπροστά σας,

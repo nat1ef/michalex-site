@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Sans, JetBrains_Mono } from "next/font/google";
+import {
+  IBM_Plex_Sans,
+  JetBrains_Mono,
+  Roboto_Condensed,
+} from "next/font/google";
 import { LocalBusinessJsonLd } from "@/components/seo/json-ld";
 import { MobileCallBar } from "@/components/layout/mobile-call-bar";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -18,6 +22,12 @@ const plexMono = JetBrains_Mono({
   variable: "--font-mono-var",
   subsets: ["latin", "greek"],
   weight: ["400", "600"],
+});
+
+const robotoCondensed = Roboto_Condensed({
+  variable: "--font-display-var",
+  subsets: ["latin", "greek"],
+  weight: ["600", "700", "800"],
 });
 
 export const metadata: Metadata = {
@@ -78,7 +88,7 @@ export default function RootLayout({
   return (
     <html
       lang="el"
-      className={`${plexSans.variable} ${plexMono.variable} h-full antialiased`}
+      className={`${plexSans.variable} ${plexMono.variable} ${robotoCondensed.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col pb-14 md:pb-0">
         <LocalBusinessJsonLd />

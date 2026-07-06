@@ -57,7 +57,7 @@ export default async function ServicePage({
       <div className="section-shell grid items-start gap-10 pb-14 pt-5 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
         <div>
           <p className="eyebrow">{service.eyebrow}</p>
-          <h1 className="mt-2 text-balance text-[clamp(1.9rem,4.2vw,2.8rem)] font-bold leading-[1.08] tracking-[-0.02em]">
+          <h1 className="display-xl mt-3 max-w-[14ch] text-[clamp(2.2rem,4.8vw,3.6rem)]">
             {service.title}
           </h1>
           <p className="mt-4 max-w-[52ch] text-[16px] text-muted-foreground">
@@ -98,9 +98,12 @@ export default async function ServicePage({
       </div>
 
       <div className="section-shell pb-16">
-        <div className="flex flex-wrap items-center justify-between gap-6 rounded-lg bg-band px-7 py-6 text-band-foreground">
+        <div className="texture-band flex flex-wrap items-center justify-between gap-6 rounded-lg px-7 py-7 text-band-foreground">
           <div>
-            <p className="text-[18px] font-bold tracking-[-0.01em]">
+            <p
+              className="text-[21px] font-extrabold uppercase tracking-[0.01em]"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
               Έχετε το κομμάτι μπροστά σας;
             </p>
             <p className="mt-1 text-[13.5px] text-band-foreground/65">

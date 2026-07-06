@@ -4,22 +4,20 @@ import { facilityBento } from "@/lib/content";
 
 export function Gallery() {
   return (
-    <section id="εργαστηριο" className="section-shell py-16 lg:py-20">
+    <section id="εργαστηριο" className="section-shell py-20 lg:py-28">
       <Reveal>
-        <p className="eyebrow">Εργαστηριο</p>
-        <h2 className="mt-2 text-[clamp(1.7rem,3.4vw,2.3rem)] font-bold tracking-[-0.02em]">
-          Μέσα στο εργαστήριο
-        </h2>
-        <p className="mt-2 max-w-[60ch] text-muted-foreground">
-          Πραγματικές δουλειές, φωτογραφημένες στον πάγκο — όχι φωτογραφίες
-          αρχείου.
-        </p>
+        <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-4 border-b-2 border-foreground pb-6">
+          <h2 className="display-lg">Μέσα στο εργαστήριο</h2>
+          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+            Πραγματικές δουλειές · Καστοριας 2
+          </p>
+        </div>
       </Reveal>
 
-      <div className="mt-9 grid auto-rows-[180px] grid-cols-2 gap-4 sm:auto-rows-[200px] sm:grid-cols-4">
+      <div className="mt-10 grid auto-rows-[190px] grid-cols-2 gap-5 sm:auto-rows-[210px] sm:grid-cols-4">
         {facilityBento.map((item, i) => (
           <Reveal key={item.id} delay={i * 60} className={item.span}>
-            <figure className="relative h-full w-full overflow-hidden rounded-md border border-border">
+            <figure className="img-zoom relative h-full w-full overflow-hidden rounded-lg border border-border">
               {item.type === "video" ? (
                 <video
                   src={item.src}
@@ -39,11 +37,11 @@ export function Gallery() {
                   className="object-cover"
                 />
               )}
-              <figcaption className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-gradient-to-t from-band/85 to-transparent px-3 pb-2.5 pt-8">
-                <span className="text-[12px] font-semibold text-band-foreground">
+              <figcaption className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-gradient-to-t from-band/90 to-transparent px-4 pb-3 pt-10">
+                <span className="text-[12.5px] font-bold text-band-foreground">
                   {item.label}
                 </span>
-                <span className="font-mono text-[8.5px] uppercase tracking-[0.18em] text-band-foreground/60">
+                <span className="font-mono text-[8.5px] uppercase tracking-[0.18em] text-band-foreground/55">
                   {item.code}
                 </span>
               </figcaption>
