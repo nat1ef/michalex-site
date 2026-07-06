@@ -215,11 +215,32 @@ export const workSteps = [
 
 /**
  * Λογότυπα πελατών για το «Μας εμπιστεύονται».
- * Μένει κενό μέχρι ο ιδιοκτήτης να συλλέξει γραπτές εγκρίσεις·
- * η ενότητα δεν εμφανίζεται όσο η λίστα είναι άδεια.
- * Τα αρχεία μπαίνουν σε /public/images/clients/.
+ * ΠΡΟΣΟΧΗ: τα παρακάτω είναι ΕΝΔΕΙΚΤΙΚΑ (φανταστικές εταιρείες) για
+ * επίδειξη. Αντικαθίστανται με πραγματικά μόνο αφού ο πελάτης δώσει
+ * γραπτή έγκριση. Τα αρχεία μπαίνουν σε /public/images/clients/.
+ * Το `href` είναι προαιρετικό — αν λείπει, το λογότυπο δεν είναι link.
  */
-export const trustedBy: readonly { name: string; logo: string }[] = [];
+export const trustedBy: readonly {
+  name: string;
+  logo: string;
+  href?: string;
+}[] = [
+  {
+    name: "ΤΕΧΝΟΜΕΤΑΛ Α.Ε. (ενδεικτικό)",
+    logo: "/images/clients/texnometal.svg",
+    href: "https://example.com",
+  },
+  {
+    name: "ΜΥΛΟΙ ΑΤΤΙΚΗΣ (ενδεικτικό)",
+    logo: "/images/clients/myloi-attikis.svg",
+    href: "https://example.com",
+  },
+  {
+    name: "NAVAL ΕΠΙΣΚΕΥΑΣΤΙΚΗ (ενδεικτικό)",
+    logo: "/images/clients/naval-episkevastiki.svg",
+    href: "https://example.com",
+  },
+];
 
 export const stats = [
   { value: "4.9", label: "Βαθμολογία Google", suffix: "/5" },
