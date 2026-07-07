@@ -53,10 +53,6 @@ export function PrecisionShowcase() {
           </a>
         </Reveal>
       </div>
-
-      <p className="absolute bottom-5 right-5 z-10 hidden rounded-sm bg-background/10 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.24em] text-band-foreground/45 backdrop-blur-sm lg:block">
-        3D visualization · ενδεικτικό
-      </p>
     </section>
   );
 }

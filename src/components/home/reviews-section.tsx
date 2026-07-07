@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { Reveal } from "@/components/motion/reveal";
 import { reviews, siteConfig } from "@/lib/content";
 
@@ -39,14 +39,49 @@ function ArrowButton({
 
 export function ReviewsSection() {
   const trackRef = useRef<HTMLDivElement>(null);
+  const pausedRef = useRef(false);
+  const resumeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const scrollByCard = (dir: 1 | -1) => {
+  const scrollByCard = useCallback((dir: 1 | -1) => {
     const track = trackRef.current;
     if (!track) return;
     const card = track.querySelector("blockquote");
     const width = card ? card.getBoundingClientRect().width + 20 : 320;
-    track.scrollBy({ left: dir * width, behavior: "smooth" });
+    const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
+    const atStart = track.scrollLeft <= 4;
+
+    if (dir === 1 && atEnd) {
+      track.scrollTo({ left: 0, behavior: "smooth" });
+    } else if (dir === -1 && atStart) {
+      track.scrollTo({ left: track.scrollWidth, behavior: "smooth" });
+    } else {
+      track.scrollBy({ left: dir * width, behavior: "smooth" });
+    }
+  }, []);
+
+  const pause = () => {
+    pausedRef.current = true;
+    if (resumeTimeout.current) clearTimeout(resumeTimeout.current);
   };
+  const resume = () => {
+    pausedRef.current = false;
+    if (resumeTimeout.current) clearTimeout(resumeTimeout.current);
+  };
+  const pauseThenResume = () => {
+    pausedRef.current = true;
+    if (resumeTimeout.current) clearTimeout(resumeTimeout.current);
+    resumeTimeout.current = setTimeout(() => {
+      pausedRef.current = false;
+    }, 6000);
+  };
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = setInterval(() => {
+      if (!pausedRef.current) scrollByCard(1);
+    }, 5000);
+    return () => clearInterval(id);
+  }, [scrollByCard]);
 
   return (
     <section id="κριτικες" className="border-y border-border bg-card">
@@ -80,7 +115,14 @@ export function ReviewsSection() {
           </div>
         </Reveal>
 
-        <div className="relative mt-11">
+        <div
+          className="relative mt-11"
+          onMouseEnter={pause}
+          onMouseLeave={resume}
+          onFocus={pause}
+          onBlur={resume}
+          onTouchStart={pauseThenResume}
+        >
           <div
             ref={trackRef}
             className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"

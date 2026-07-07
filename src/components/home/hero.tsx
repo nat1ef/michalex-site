@@ -39,10 +39,6 @@ export function Hero() {
         <div className="mm-grid absolute inset-0 opacity-70" />
       </div>
 
-      <p className="absolute bottom-4 right-4 z-10 hidden rounded-sm bg-background/70 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.24em] text-muted-foreground backdrop-blur-sm lg:block">
-        3D visualization · ενδεικτικό
-      </p>
-
       <div className="section-shell relative grid items-center gap-12 py-16 lg:grid-cols-[1fr_0.92fr] lg:gap-16 lg:py-24">
         <div>
           <p className="eyebrow hero-rise">
