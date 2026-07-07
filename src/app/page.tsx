@@ -1,4 +1,5 @@
 import { ContactBand } from "@/components/home/contact-band";
+import { FaqSection } from "@/components/home/faq-section";
 import { Gallery } from "@/components/home/gallery";
 import { Hero } from "@/components/home/hero";
 import { PrecisionShowcase } from "@/components/home/precision-showcase";
@@ -19,6 +20,7 @@ export default function HomePage() {
       <WorkSteps />
       <Gallery />
       <ReviewsSection />
+      <FaqSection />
       <ContactBand />
     </>
   );
