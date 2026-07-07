@@ -37,7 +37,7 @@ export function ReviewsSection() {
         <div className="mt-11 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {reviews.map((review, i) => (
             <Reveal key={review.author} delay={(i % 3) * 70}>
-              <blockquote className="relative flex h-full flex-col rounded-lg border border-border bg-background p-6">
+              <blockquote className="relative flex h-full flex-col rounded-lg border border-border bg-background p-6 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_18px_38px_-22px_rgb(28_39_51/0.35)]">
                 <span
                   aria-hidden
                   className="display-num pointer-events-none absolute -top-1 right-4 text-[64px] text-primary/12"

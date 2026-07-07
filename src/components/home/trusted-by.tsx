@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import { Reveal } from "@/components/motion/reveal";
 import { trustedBy } from "@/lib/content";
 
 /**
@@ -21,7 +22,9 @@ export function TrustedBy() {
       className="border-b border-border bg-card"
     >
       <div className="py-9">
-        <p className="eyebrow text-center">Μας εμπιστευονται</p>
+        <Reveal className="flex justify-center">
+          <p className="eyebrow text-center">Μας εμπιστευονται</p>
+        </Reveal>
         <div className="mt-6 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
           <div className="animate-marquee marquee-pausable flex w-max items-center gap-16 pr-16">
             {row.map((client, i) => {

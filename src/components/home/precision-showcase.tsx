@@ -38,6 +38,8 @@ export function PrecisionShowcase() {
             <br />
             Σε κάθε κομμάτι.
           </h2>
+        </Reveal>
+        <Reveal delay={130}>
           <p className="mt-5 max-w-[44ch] text-[16px] text-band-foreground/70">
             40+ χρόνια μηχανουργικής ακρίβειας — από το γρανάζι που κρατά ένα
             μηχάνημα σε λειτουργία, μέχρι το εξάρτημα που δεν βρίσκεται πουθενά
