@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { ViberIcon } from "@/components/icons/viber-icon";
+import { YearsExperience } from "@/components/motion/years-experience";
 import { siteConfig } from "@/lib/content";
 
 export function Hero() {
@@ -42,7 +43,7 @@ export function Hero() {
       <div className="section-shell relative grid items-center gap-12 py-16 lg:grid-cols-[1fr_0.92fr] lg:gap-16 lg:py-24">
         <div>
           <p className="eyebrow hero-rise">
-            Μηχανουργειο στην Αθηνα · 40+ χρονια
+            Μηχανουργειο στην Αθηνα · απο το 1983
           </p>
           <h1 className="display-xl hero-rise mt-5 max-w-[13ch]">
             Γρανάζια &amp; εξαρτήματα{" "}
@@ -77,7 +78,10 @@ export function Hero() {
               <b className="text-foreground">4.9</b> στο Google (21+ κριτικές)
             </li>
             <li>
-              <b className="text-foreground">40+</b> χρόνια εμπειρίας
+              <b className="text-foreground">
+                <YearsExperience />
+              </b>{" "}
+              χρόνια εμπειρίας
             </li>
             <li>
               <b className="text-foreground">Αυθημερόν</b> προσφορά

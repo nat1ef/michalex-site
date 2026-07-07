@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Reveal } from "@/components/motion/reveal";
+import { YearsExperience } from "@/components/motion/years-experience";
 import { siteConfig } from "@/lib/content";
 
 export function PrecisionShowcase() {
@@ -41,9 +42,9 @@ export function PrecisionShowcase() {
         </Reveal>
         <Reveal delay={130}>
           <p className="mt-5 max-w-[44ch] text-[16px] text-band-foreground/70">
-            40+ χρόνια μηχανουργικής ακρίβειας — από το γρανάζι που κρατά ένα
-            μηχάνημα σε λειτουργία, μέχρι το εξάρτημα που δεν βρίσκεται πουθενά
-            αλλού.
+            <YearsExperience /> χρόνια μηχανουργικής ακρίβειας — από το γρανάζι
+            που κρατά ένα μηχάνημα σε λειτουργία, μέχρι το εξάρτημα που δεν
+            βρίσκεται πουθενά αλλού.
           </p>
           <a
             href={siteConfig.phoneHref}

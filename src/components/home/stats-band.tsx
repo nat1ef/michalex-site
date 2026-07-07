@@ -1,6 +1,8 @@
+"use client";
+
 import { CountUp } from "@/components/motion/count-up";
 import { Reveal } from "@/components/motion/reveal";
-import { stats } from "@/lib/content";
+import { stats, yearsSinceFounding } from "@/lib/content";
 
 export function StatsBand() {
   return (
@@ -13,7 +15,14 @@ export function StatsBand() {
             className="lg:px-8 lg:first:pl-0 lg:last:pr-0"
           >
             <p className="display-num text-[clamp(2.4rem,4vw,3.3rem)]">
-              <CountUp value={stat.value} />
+              <CountUp
+                value={stat.value}
+                computeValue={
+                  "dynamic" in stat && stat.dynamic
+                    ? () => `${yearsSinceFounding()}+`
+                    : undefined
+                }
+              />
               {"suffix" in stat && stat.suffix ? (
                 <span className="ml-0.5 text-[0.45em] font-bold text-band-foreground/45">
                   {stat.suffix}

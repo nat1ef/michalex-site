@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { YearsExperience } from "@/components/motion/years-experience";
 import { pageNav, siteConfig } from "@/lib/content";
 
 export function SiteFooter() {
@@ -13,8 +14,8 @@ export function SiteFooter() {
             ΜΗΧΑΝΟΥΡΓΕΙΟ · ΑΘΗΝΑ
           </p>
           <p className="mt-4 text-sm text-band-foreground/70">
-            {siteConfig.tagline}. 40+ χρόνια εμπειρίας σε τόρνο, φρέζα και κοπή
-            οδοντώσεων.
+            {siteConfig.tagline}. <YearsExperience /> χρόνια εμπειρίας σε
+            τόρνο, φρέζα και κοπή οδοντώσεων.
           </p>
         </div>
 

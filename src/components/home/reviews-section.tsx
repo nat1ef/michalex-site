@@ -72,14 +72,14 @@ export function ReviewsSection() {
     if (resumeTimeout.current) clearTimeout(resumeTimeout.current);
     resumeTimeout.current = setTimeout(() => {
       pausedRef.current = false;
-    }, 6000);
+    }, 4000);
   };
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const id = setInterval(() => {
       if (!pausedRef.current) scrollByCard(1);
-    }, 5000);
+    }, 3000);
     return () => clearInterval(id);
   }, [scrollByCard]);
 

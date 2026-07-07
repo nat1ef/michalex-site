@@ -44,6 +44,20 @@ export const siteConfig = {
   reviewCount: 21,
 } as const;
 
+export const FOUNDING_YEAR = 1983;
+// Η ακριβής ημέρα ίδρυσης δεν είναι γνωστή — 1η Ιανουαρίου χρησιμοποιείται
+// ενδεικτικά ως "επέτειος", ώστε τα χρόνια εμπειρίας να ανανεώνονται σωστά
+// κάθε χρόνο. Άλλαξε month/day αν μάθεις τη συγκεκριμένη ημερομηνία.
+const FOUNDING_ANNIVERSARY = { month: 1, day: 1 } as const;
+
+export function yearsSinceFounding(today: Date = new Date()): number {
+  const anniversaryPassed =
+    today.getMonth() + 1 > FOUNDING_ANNIVERSARY.month ||
+    (today.getMonth() + 1 === FOUNDING_ANNIVERSARY.month &&
+      today.getDate() >= FOUNDING_ANNIVERSARY.day);
+  return today.getFullYear() - FOUNDING_YEAR - (anniversaryPassed ? 0 : 1);
+}
+
 export const pageNav = [
   { href: "/", label: "Αρχική" },
   { href: "/#υπηρεσιες", label: "Υπηρεσίες" },
@@ -245,7 +259,7 @@ export const trustedBy: readonly {
 export const stats = [
   { value: "4.9", label: "Βαθμολογία Google", suffix: "/5" },
   { value: "21+", label: "Κριτικές πελατών" },
-  { value: "40+", label: "Χρόνια εμπειρίας" },
+  { value: "43+", label: "Χρόνια εμπειρίας", dynamic: true },
   { value: "100%", label: "Custom κατασκευές" },
 ] as const;
 
