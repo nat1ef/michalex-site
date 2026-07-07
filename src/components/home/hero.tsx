@@ -5,31 +5,43 @@ import { siteConfig } from "@/lib/content";
 export function Hero() {
   return (
     <section className="relative overflow-hidden border-b border-border">
-      {/* Backdrop: εργαστήριο σε bokeh, σβήνει προς το φόντο.
-          Σε μεγάλες οθόνες παίζει το ambient βίντεο· η εικόνα μένει
-          από κάτω ως fallback (κινητά, reduced motion, αργή σύνδεση). */}
+      {/* Υπόβαθρο: 3D CGI render — γρανάζια που συναρμολογούνται σε έναν
+          μηχανισμό. Σε μεγάλες οθόνες παίζει το animated render σε όλο
+          το section· η στατική εικόνα μένει από κάτω ως fallback
+          (κινητά, reduced motion, αργή σύνδεση). Το gradient αριστερά
+          κρατά το κείμενο ευανάγνωστο ενώ δεξιά το background φαίνεται
+          πλήρως. */}
       <div className="absolute inset-0" aria-hidden>
         <Image
-          src="/images/backdrops/workshop-bokeh.jpg"
+          src="/images/backdrops/gear-3d-assembled.jpg"
           alt=""
           fill
           priority
           sizes="100vw"
-          className="object-cover opacity-[0.38]"
+          className="object-cover"
         />
         <video
-          src="/videos/hero-ambient.mp4"
-          poster="/images/backdrops/workshop-bokeh.jpg"
+          src="/videos/hero-assembly.mp4"
+          poster="/images/backdrops/gear-3d-assembled.jpg"
           autoPlay
           muted
           loop
           playsInline
           disablePictureInPicture
-          className="absolute inset-0 hidden h-full w-full object-cover opacity-[0.38] motion-safe:lg:block"
+          className="absolute inset-0 hidden h-full w-full object-cover motion-safe:lg:block"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/78 to-background/30" />
+        {/* Κινητό: ενιαία, πιο αδιαφανή επικάλυψη ώστε το κείμενο να
+            παραμένει ευανάγνωστο σε όλο το πλάτος (μονή στήλη).
+            Desktop: gradient που αποκαλύπτει πλήρως το background δεξιά,
+            όπου δεν υπάρχει κείμενο. */}
+        <div className="absolute inset-0 bg-background/88 lg:hidden" />
+        <div className="absolute inset-0 hidden bg-gradient-to-r from-background via-background/80 to-background/0 lg:block" />
         <div className="mm-grid absolute inset-0 opacity-70" />
       </div>
+
+      <p className="absolute bottom-4 right-4 z-10 hidden rounded-sm bg-background/70 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.24em] text-muted-foreground backdrop-blur-sm lg:block">
+        3D visualization · ενδεικτικό
+      </p>
 
       <div className="section-shell relative grid items-center gap-12 py-16 lg:grid-cols-[1fr_0.92fr] lg:gap-16 lg:py-24">
         <div>
@@ -77,33 +89,11 @@ export function Hero() {
           </ul>
         </div>
 
-        {/* Σύνθεση με βάθος: 3D animated render μπροστά, πραγματική φωτογραφία δουλειάς από κάτω */}
-        <div className="hero-rise-3 relative mx-auto w-full max-w-[560px] pb-14 pr-4 lg:pb-16">
-          <figure className="corner-ticks relative aspect-[4/3.3] w-full overflow-hidden rounded-md shadow-[0_30px_60px_-30px_rgb(28_39_51/0.55)]">
-            <Image
-              src="/images/backdrops/gear-3d-showcase.jpg"
-              alt="3D απεικόνιση ακρίβειας — γρανάζια σε κίνηση"
-              fill
-              priority
-              sizes="(min-width: 1024px) 560px, 100vw"
-              className="object-cover"
-            />
-            <video
-              src="/videos/precision-showcase.mp4"
-              poster="/images/backdrops/gear-3d-showcase.jpg"
-              autoPlay
-              muted
-              loop
-              playsInline
-              disablePictureInPicture
-              className="absolute inset-0 hidden h-full w-full object-cover motion-safe:lg:block"
-            />
-            <figcaption className="absolute left-4 top-4 rounded-sm bg-band/85 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-band-foreground backdrop-blur-sm">
-              3D visualization · ακρίβεια
-            </figcaption>
-          </figure>
-
-          <figure className="absolute -bottom-0 left-0 hidden w-[46%] -translate-x-6 sm:block">
+        {/* Το 3D animated render είναι πλέον το background όλου του section.
+            Εδώ μένει μόνο μια πραγματική φωτογραφία δουλειάς (εμπιστοσύνη)
+            και η βαθμολογία, να επιπλέουν πάνω από τη σκηνή. */}
+        <div className="hero-rise-3 relative hidden h-full min-h-[380px] lg:block">
+          <figure className="absolute bottom-6 right-1 w-[62%] max-w-[320px]">
             <Image
               src="/images/work/gears-pair-brass.jpg"
               alt="Ατσάλινο και μπρούτζινο γρανάζι — έτοιμη δουλειά"
@@ -111,9 +101,12 @@ export function Hero() {
               height={430}
               className="aspect-[16/10.5] w-full rounded-md border-4 border-background object-cover shadow-[0_24px_45px_-22px_rgb(28_39_51/0.6)]"
             />
+            <figcaption className="mt-2 inline-block rounded-sm bg-background/85 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground backdrop-blur-sm">
+              Πραγματικη δουλεια · Καστοριας 2
+            </figcaption>
           </figure>
 
-          <div className="absolute -right-1 top-6 rounded-md border border-border bg-card px-4 py-3 shadow-[0_18px_38px_-18px_rgb(28_39_51/0.5)]">
+          <div className="absolute right-1 top-6 rounded-md border border-border bg-card px-4 py-3 shadow-[0_18px_38px_-18px_rgb(28_39_51/0.5)]">
             <p className="display-num text-[30px] text-foreground">
               4.9<span className="text-[17px] text-star"> ★</span>
             </p>
