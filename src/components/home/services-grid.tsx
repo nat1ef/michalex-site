@@ -52,7 +52,7 @@ export function ServicesGrid() {
                     {service.eyebrow}
                   </span>
                 </div>
-                <div className="flex flex-1 flex-col gap-2.5 p-6">
+                <div className="flex flex-1 flex-col justify-center gap-2.5 p-6">
                   <h3
                     className="text-[clamp(1.25rem,1.8vw,1.55rem)] font-extrabold uppercase leading-none tracking-[-0.005em]"
                     style={{ fontFamily: "var(--font-display)" }}
@@ -74,7 +74,7 @@ export function ServicesGrid() {
                       ))}
                     </ul>
                   )}
-                  <p className="mt-auto flex items-center gap-1.5 pt-3 text-[13.5px] font-bold text-accent-deep">
+                  <p className="flex items-center gap-1.5 pt-3 text-[13.5px] font-bold text-accent-deep">
                     Δείτε περισσότερα
                     <span
                       aria-hidden

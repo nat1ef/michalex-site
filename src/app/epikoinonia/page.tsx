@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { ContactBand } from "@/components/home/contact-band";
 import { siteConfig } from "@/lib/content";
 
@@ -12,10 +13,13 @@ export default function ContactPage() {
     <>
       <section className="relative overflow-hidden border-b border-border">
         <div className="absolute inset-0" aria-hidden>
-          <img
+          <Image
             src="/images/backdrops/workshop-bokeh.jpg"
             alt=""
-            className="h-full w-full object-cover opacity-30"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover opacity-30"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/85 to-background" />
         </div>

@@ -84,13 +84,14 @@ export default async function ServicePage({
         </div>
 
         <div className="grid gap-4">
-          {service.images.map((image) => (
+          {service.images.map((image, i) => (
             <Image
               key={image.src}
               src={image.src}
               alt={image.alt}
               width={900}
               height={510}
+              priority={i === 0}
               className="aspect-[16/9] w-full rounded-md border border-border object-cover"
             />
           ))}
