@@ -259,6 +259,11 @@
   animation: marquee 32s linear infinite;
 }
 
+/* Πιο αργό πέρασμα — για κάρτες με κείμενο (κριτικές) που χρειάζονται χρόνο ανάγνωσης. */
+.animate-marquee-slow {
+  animation: marquee 60s linear infinite;
+}
+
 .marquee-pausable:hover {
   animation-play-state: paused;
 }
@@ -272,7 +277,8 @@
     translate: none;
     transition: none;
   }
-  .animate-marquee {
+  .animate-marquee,
+  .animate-marquee-slow {
     animation: none !important;
   }
 }

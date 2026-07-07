@@ -2,9 +2,13 @@ import { Reveal } from "@/components/motion/reveal";
 import { reviews, siteConfig } from "@/lib/content";
 
 export function ReviewsSection() {
+  // Το marquee μετακινείται κατά -50%, οπότε το περιεχόμενο επαναλαμβάνεται
+  // μία φορά ώστε κάθε μισό να είναι πανομοιότυπο (χωρίς εμφανές "κόψιμο").
+  const row = [...reviews, ...reviews];
+
   return (
     <section id="κριτικες" className="border-y border-border bg-card">
-      <div className="section-shell py-20 lg:py-28">
+      <div className="section-shell pt-20 lg:pt-28">
         <Reveal>
           <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-6">
             <div className="flex items-end gap-6">
@@ -33,32 +37,35 @@ export function ReviewsSection() {
             </a>
           </div>
         </Reveal>
+      </div>
 
-        <div className="mt-11 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {reviews.map((review, i) => (
-            <Reveal key={review.author} delay={(i % 3) * 70}>
-              <blockquote className="relative flex h-full flex-col rounded-lg border border-border bg-background p-6 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_18px_38px_-22px_rgb(28_39_51/0.35)]">
-                <span
-                  aria-hidden
-                  className="display-num pointer-events-none absolute -top-1 right-4 text-[64px] text-primary/12"
-                >
-                  &rdquo;
-                </span>
-                <p
-                  className="text-[13px] tracking-[2px] text-star"
-                  aria-label={`${review.rating} στα 5 αστέρια`}
-                >
-                  {"★".repeat(review.rating)}
-                </p>
-                <p className="mt-3 flex-1 text-[14.5px] leading-relaxed">
-                  «{review.text}»
-                </p>
-                <footer className="mt-4 text-[12.5px] text-muted-foreground">
-                  <b className="text-foreground">{review.author}</b> ·{" "}
-                  {review.source}
-                </footer>
-              </blockquote>
-            </Reveal>
+      <div className="mb-20 mt-11 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)] lg:mb-28">
+        <div className="animate-marquee-slow marquee-pausable flex w-max gap-5 px-5">
+          {row.map((review, i) => (
+            <blockquote
+              key={`${review.author}-${i}`}
+              className="relative flex h-full w-[300px] shrink-0 flex-col rounded-lg border border-border bg-background p-6 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_18px_38px_-22px_rgb(28_39_51/0.35)] sm:w-[340px]"
+            >
+              <span
+                aria-hidden
+                className="display-num pointer-events-none absolute -top-1 right-4 text-[64px] text-primary/12"
+              >
+                &rdquo;
+              </span>
+              <p
+                className="text-[13px] tracking-[2px] text-star"
+                aria-label={`${review.rating} στα 5 αστέρια`}
+              >
+                {"★".repeat(review.rating)}
+              </p>
+              <p className="mt-3 flex-1 text-[14.5px] leading-relaxed">
+                «{review.text}»
+              </p>
+              <footer className="mt-4 text-[12.5px] text-muted-foreground">
+                <b className="text-foreground">{review.author}</b> ·{" "}
+                {review.source}
+              </footer>
+            </blockquote>
           ))}
         </div>
       </div>
