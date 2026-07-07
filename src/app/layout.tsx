@@ -50,10 +50,6 @@ export const metadata: Metadata = {
     "μηχανολογικά εξαρτήματα",
     "Αλεξανδράκης",
   ],
-  icons: {
-    icon: "/favicon.svg",
-    apple: "/logo-mark.svg",
-  },
   openGraph: {
     title: siteConfig.name,
     description: siteConfig.description,
