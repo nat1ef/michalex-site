@@ -1,14 +1,56 @@
+"use client";
+
+import { useRef } from "react";
 import { Reveal } from "@/components/motion/reveal";
 import { reviews, siteConfig } from "@/lib/content";
 
+function ArrowButton({
+  direction,
+  onClick,
+  className,
+}: {
+  direction: "prev" | "next";
+  onClick: () => void;
+  className: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={direction === "prev" ? "Προηγούμενες κριτικές" : "Επόμενες κριτικές"}
+      className={`touch-target grid h-11 w-11 shrink-0 place-items-center rounded-full border border-border bg-card/95 text-foreground shadow-[0_10px_24px_-12px_rgb(28_39_51/0.35)] backdrop-blur transition-colors hover:border-primary hover:text-primary ${className}`}
+    >
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden
+      >
+        {direction === "prev" ? <path d="M15 18l-6-6 6-6" /> : <path d="M9 18l6-6-6-6" />}
+      </svg>
+    </button>
+  );
+}
+
 export function ReviewsSection() {
-  // Το marquee μετακινείται κατά -50%, οπότε το περιεχόμενο επαναλαμβάνεται
-  // μία φορά ώστε κάθε μισό να είναι πανομοιότυπο (χωρίς εμφανές "κόψιμο").
-  const row = [...reviews, ...reviews];
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  const scrollByCard = (dir: 1 | -1) => {
+    const track = trackRef.current;
+    if (!track) return;
+    const card = track.querySelector("blockquote");
+    const width = card ? card.getBoundingClientRect().width + 20 : 320;
+    track.scrollBy({ left: dir * width, behavior: "smooth" });
+  };
 
   return (
     <section id="κριτικες" className="border-y border-border bg-card">
-      <div className="section-shell pt-20 lg:pt-28">
+      <div className="section-shell py-20 lg:py-28">
         <Reveal>
           <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-6">
             <div className="flex items-end gap-6">
@@ -37,36 +79,50 @@ export function ReviewsSection() {
             </a>
           </div>
         </Reveal>
-      </div>
 
-      <div className="mb-20 mt-11 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)] lg:mb-28">
-        <div className="animate-marquee-slow marquee-pausable flex w-max gap-5 px-5">
-          {row.map((review, i) => (
-            <blockquote
-              key={`${review.author}-${i}`}
-              className="relative flex h-full w-[300px] shrink-0 flex-col rounded-lg border border-border bg-background p-6 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_18px_38px_-22px_rgb(28_39_51/0.35)] sm:w-[340px]"
-            >
-              <span
-                aria-hidden
-                className="display-num pointer-events-none absolute -top-1 right-4 text-[64px] text-primary/12"
+        <div className="relative mt-11">
+          <div
+            ref={trackRef}
+            className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {reviews.map((review) => (
+              <blockquote
+                key={review.author}
+                className="relative flex h-full w-[280px] shrink-0 snap-start flex-col rounded-lg border border-border bg-background p-6 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_18px_38px_-22px_rgb(28_39_51/0.35)] sm:w-[320px]"
               >
-                &rdquo;
-              </span>
-              <p
-                className="text-[13px] tracking-[2px] text-star"
-                aria-label={`${review.rating} στα 5 αστέρια`}
-              >
-                {"★".repeat(review.rating)}
-              </p>
-              <p className="mt-3 flex-1 text-[14.5px] leading-relaxed">
-                «{review.text}»
-              </p>
-              <footer className="mt-4 text-[12.5px] text-muted-foreground">
-                <b className="text-foreground">{review.author}</b> ·{" "}
-                {review.source}
-              </footer>
-            </blockquote>
-          ))}
+                <span
+                  aria-hidden
+                  className="display-num pointer-events-none absolute -top-1 right-4 text-[64px] text-primary/12"
+                >
+                  &rdquo;
+                </span>
+                <p
+                  className="text-[13px] tracking-[2px] text-star"
+                  aria-label={`${review.rating} στα 5 αστέρια`}
+                >
+                  {"★".repeat(review.rating)}
+                </p>
+                <p className="mt-3 flex-1 text-[14.5px] leading-relaxed">
+                  «{review.text}»
+                </p>
+                <footer className="mt-4 text-[12.5px] text-muted-foreground">
+                  <b className="text-foreground">{review.author}</b> ·{" "}
+                  {review.source}
+                </footer>
+              </blockquote>
+            ))}
+          </div>
+
+          <ArrowButton
+            direction="prev"
+            onClick={() => scrollByCard(-1)}
+            className="absolute left-1 top-[calc(50%-10px)] -translate-y-1/2 sm:-left-3"
+          />
+          <ArrowButton
+            direction="next"
+            onClick={() => scrollByCard(1)}
+            className="absolute right-1 top-[calc(50%-10px)] -translate-y-1/2 sm:-right-3"
+          />
         </div>
       </div>
     </section>
