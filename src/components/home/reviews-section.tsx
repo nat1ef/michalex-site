@@ -37,26 +37,38 @@ function ArrowButton({
   );
 }
 
+// Διπλασιασμένη λίστα — επιτρέπει στο carousel να κυλάει συνεχώς προς τα
+// εμπρός χωρίς ποτέ να χρειάζεται ορατό άλμα πίσω στην αρχή.
+const reviewsLoop = [...reviews, ...reviews];
+
 export function ReviewsSection() {
   const trackRef = useRef<HTMLDivElement>(null);
   const pausedRef = useRef(false);
   const resumeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Η λίστα κριτικών είναι διπλωμένη (βλ. reviewsLoop πιο κάτω) ώστε το
+  // carousel να μπορεί να κυλάει συνέχεια προς τα εμπρός. Πριν από κάθε
+  // βήμα, αν έχουμε προχωρήσει στο δεύτερο (πανομοιότυπο) αντίγραφο,
+  // μετακινούμαστε αθόρυβα (χωρίς animation) στο ισοδύναμο σημείο του
+  // πρώτου — αφού το περιεχόμενο είναι ίδιο, δεν φαίνεται καθόλου το
+  // «τίναγμα» και ποτέ δεν χρειάζεται να γυρίσει ορατά προς τα πίσω.
   const scrollByCard = useCallback((dir: 1 | -1) => {
     const track = trackRef.current;
     if (!track) return;
     const card = track.querySelector("blockquote");
     const width = card ? card.getBoundingClientRect().width + 20 : 320;
-    const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
-    const atStart = track.scrollLeft <= 4;
+    const oneSetWidth = track.scrollWidth / 2;
 
-    if (dir === 1 && atEnd) {
-      track.scrollTo({ left: 0, behavior: "smooth" });
-    } else if (dir === -1 && atStart) {
-      track.scrollTo({ left: track.scrollWidth, behavior: "smooth" });
-    } else {
-      track.scrollBy({ left: dir * width, behavior: "smooth" });
+    // Ρητό behavior: "instant" — απλή ανάθεση track.scrollLeft δεν είναι
+    // αξιόπιστα άμεση όσο το container έχει scroll-smooth (μπορεί να
+    // «παλέψει» με το επόμενο smooth scrollBy και να ακυρωθεί σιωπηλά).
+    if (dir === 1 && track.scrollLeft >= oneSetWidth - 4) {
+      track.scrollTo({ left: track.scrollLeft - oneSetWidth, behavior: "instant" });
+    } else if (dir === -1 && track.scrollLeft <= 4) {
+      track.scrollTo({ left: track.scrollLeft + oneSetWidth, behavior: "instant" });
     }
+
+    track.scrollBy({ left: dir * width, behavior: "smooth" });
   }, []);
 
   const pause = () => {
@@ -127,9 +139,10 @@ export function ReviewsSection() {
             ref={trackRef}
             className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
-            {reviews.map((review) => (
+            {reviewsLoop.map((review, i) => (
               <blockquote
-                key={review.author}
+                key={`${review.author}-${i}`}
+                aria-hidden={i >= reviews.length}
                 className="relative flex h-full w-[280px] shrink-0 snap-start flex-col rounded-lg border border-border bg-background p-6 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_18px_38px_-22px_rgb(28_39_51/0.35)] sm:w-[320px]"
               >
                 <span
