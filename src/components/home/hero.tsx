@@ -77,19 +77,29 @@ export function Hero() {
           </ul>
         </div>
 
-        {/* Σύνθεση φωτογραφιών με βάθος */}
+        {/* Σύνθεση με βάθος: 3D animated render μπροστά, πραγματική φωτογραφία δουλειάς από κάτω */}
         <div className="hero-rise-3 relative mx-auto w-full max-w-[560px] pb-14 pr-4 lg:pb-16">
-          <figure className="corner-ticks relative">
+          <figure className="corner-ticks relative aspect-[4/3.3] w-full overflow-hidden rounded-md shadow-[0_30px_60px_-30px_rgb(28_39_51/0.55)]">
             <Image
-              src="/images/work/spline-shaft-machine.jpg"
-              alt="Πολύσφηνος άξονας σε κατεργασία στο εργαστήριο"
-              width={1200}
-              height={980}
+              src="/images/backdrops/gear-3d-showcase.jpg"
+              alt="3D απεικόνιση ακρίβειας — γρανάζια σε κίνηση"
+              fill
               priority
-              className="aspect-[4/3.3] w-full rounded-md object-cover shadow-[0_30px_60px_-30px_rgb(28_39_51/0.55)]"
+              sizes="(min-width: 1024px) 560px, 100vw"
+              className="object-cover"
+            />
+            <video
+              src="/videos/precision-showcase.mp4"
+              poster="/images/backdrops/gear-3d-showcase.jpg"
+              autoPlay
+              muted
+              loop
+              playsInline
+              disablePictureInPicture
+              className="absolute inset-0 hidden h-full w-full object-cover motion-safe:lg:block"
             />
             <figcaption className="absolute left-4 top-4 rounded-sm bg-band/85 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-band-foreground backdrop-blur-sm">
-              Εργαστηριο · Καστοριας 2
+              3D visualization · ακρίβεια
             </figcaption>
           </figure>
 
