@@ -1,6 +1,7 @@
 import { ContactBand } from "@/components/home/contact-band";
 import { Gallery } from "@/components/home/gallery";
 import { Hero } from "@/components/home/hero";
+import { PrecisionShowcase } from "@/components/home/precision-showcase";
 import { ReviewsSection } from "@/components/home/reviews-section";
 import { ServicesGrid } from "@/components/home/services-grid";
 import { StatsBand } from "@/components/home/stats-band";
@@ -14,6 +15,7 @@ export default function HomePage() {
       <StatsBand />
       <TrustedBy />
       <ServicesGrid />
+      <PrecisionShowcase />
       <WorkSteps />
       <Gallery />
       <ReviewsSection />
