@@ -27,7 +27,11 @@ export function Gallery() {
                   loop
                   autoPlay
                   playsInline
-                  className="h-full w-full object-cover"
+                  disablePictureInPicture
+                  disableRemotePlayback
+                  tabIndex={-1}
+                  aria-hidden
+                  className="pointer-events-none h-full w-full object-cover"
                 />
                 <figcaption className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-gradient-to-t from-band/90 to-transparent px-4 pb-3 pt-10">
                   <span className="text-[12.5px] font-bold text-band-foreground">

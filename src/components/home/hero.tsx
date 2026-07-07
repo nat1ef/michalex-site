@@ -29,7 +29,10 @@ export function Hero() {
           loop
           playsInline
           disablePictureInPicture
-          className="absolute inset-0 hidden h-full w-full object-cover motion-safe:lg:block"
+          disableRemotePlayback
+          tabIndex={-1}
+          aria-hidden
+          className="pointer-events-none absolute inset-0 hidden h-full w-full object-cover motion-safe:lg:block"
         />
         {/* Κινητό: ενιαία, πιο αδιαφανή επικάλυψη ώστε το κείμενο να
             παραμένει ευανάγνωστο σε όλο το πλάτος (μονή στήλη).

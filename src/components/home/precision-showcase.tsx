@@ -25,7 +25,10 @@ export function PrecisionShowcase() {
           loop
           playsInline
           disablePictureInPicture
-          className="absolute inset-0 hidden h-full w-full object-cover motion-safe:lg:block"
+          disableRemotePlayback
+          tabIndex={-1}
+          aria-hidden
+          className="pointer-events-none absolute inset-0 hidden h-full w-full object-cover motion-safe:lg:block"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-band via-band/60 to-band/15" />
         <div className="absolute inset-0 bg-gradient-to-r from-band/92 via-band/35 to-transparent" />
