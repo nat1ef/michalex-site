@@ -1,41 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Reveal } from "@/components/motion/reveal";
 import { reviews, siteConfig } from "@/lib/content";
 
-function ArrowButton({
-  direction,
-  onClick,
-  className,
-}: {
-  direction: "prev" | "next";
-  onClick: () => void;
-  className: string;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={direction === "prev" ? "Προηγούμενες κριτικές" : "Επόμενες κριτικές"}
-      className={`touch-target grid h-11 w-11 shrink-0 place-items-center rounded-full border border-border bg-card/95 text-foreground shadow-[0_10px_24px_-12px_rgb(28_39_51/0.35)] backdrop-blur transition-colors hover:border-primary hover:text-primary ${className}`}
-    >
-      <svg
-        width="18"
-        height="18"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden
-      >
-        {direction === "prev" ? <path d="M15 18l-6-6 6-6" /> : <path d="M9 18l6-6-6-6" />}
-      </svg>
-    </button>
-  );
-}
+// Ταχύτητα συνεχούς κύλισης, σε pixel/δευτερόλεπτο.
+const SPEED_PX_PER_SEC = 55;
 
 // Διπλασιασμένη λίστα — επιτρέπει στο carousel να κυλάει συνεχώς προς τα
 // εμπρός χωρίς ποτέ να χρειάζεται ορατό άλμα πίσω στην αρχή.
@@ -44,56 +14,93 @@ const reviewsLoop = [...reviews, ...reviews];
 export function ReviewsSection() {
   const trackRef = useRef<HTMLDivElement>(null);
   const pausedRef = useRef(false);
-  const resumeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const draggingRef = useRef(false);
+  const activePointerId = useRef<number | null>(null);
+  const dragStartRef = useRef({ x: 0, scrollLeft: 0 });
+  // track.scrollLeft rounds to whole pixels on every read/write, so
+  // accumulating sub-pixel per-frame increments straight on it never
+  // actually moves anything (each += reads back the same rounded value).
+  // Keep the "true" position as a float here instead, and only ever
+  // write the rounded result into scrollLeft.
+  const positionRef = useRef(0);
 
-  // Η λίστα κριτικών είναι διπλωμένη (βλ. reviewsLoop πιο κάτω) ώστε το
-  // carousel να μπορεί να κυλάει συνέχεια προς τα εμπρός. Πριν από κάθε
-  // βήμα, αν έχουμε προχωρήσει στο δεύτερο (πανομοιότυπο) αντίγραφο,
-  // μετακινούμαστε αθόρυβα (χωρίς animation) στο ισοδύναμο σημείο του
-  // πρώτου — αφού το περιεχόμενο είναι ίδιο, δεν φαίνεται καθόλου το
-  // «τίναγμα» και ποτέ δεν χρειάζεται να γυρίσει ορατά προς τα πίσω.
-  const scrollByCard = useCallback((dir: 1 | -1) => {
+  useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
-    const card = track.querySelector("blockquote");
-    const width = card ? card.getBoundingClientRect().width + 20 : 320;
-    const oneSetWidth = track.scrollWidth / 2;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    // Ρητό behavior: "instant" — απλή ανάθεση track.scrollLeft δεν είναι
-    // αξιόπιστα άμεση όσο το container έχει scroll-smooth (μπορεί να
-    // «παλέψει» με το επόμενο smooth scrollBy και να ακυρωθεί σιωπηλά).
-    if (dir === 1 && track.scrollLeft >= oneSetWidth - 4) {
-      track.scrollTo({ left: track.scrollLeft - oneSetWidth, behavior: "instant" });
-    } else if (dir === -1 && track.scrollLeft <= 4) {
-      track.scrollTo({ left: track.scrollLeft + oneSetWidth, behavior: "instant" });
-    }
+    positionRef.current = track.scrollLeft;
+    let lastTime: number | null = null;
+    let rafId: number;
 
-    track.scrollBy({ left: dir * width, behavior: "smooth" });
+    const tick = (now: number) => {
+      if (lastTime === null) lastTime = now;
+      const dt = (now - lastTime) / 1000;
+      lastTime = now;
+
+      if (!pausedRef.current) {
+        const oneSetWidth = track.scrollWidth / 2;
+        positionRef.current += SPEED_PX_PER_SEC * dt;
+        if (positionRef.current >= oneSetWidth) {
+          positionRef.current -= oneSetWidth;
+        }
+        track.scrollLeft = positionRef.current;
+      }
+      rafId = requestAnimationFrame(tick);
+    };
+
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
   }, []);
 
   const pause = () => {
     pausedRef.current = true;
-    if (resumeTimeout.current) clearTimeout(resumeTimeout.current);
   };
   const resume = () => {
     pausedRef.current = false;
-    if (resumeTimeout.current) clearTimeout(resumeTimeout.current);
-  };
-  const pauseThenResume = () => {
-    pausedRef.current = true;
-    if (resumeTimeout.current) clearTimeout(resumeTimeout.current);
-    resumeTimeout.current = setTimeout(() => {
-      pausedRef.current = false;
-    }, 4000);
   };
 
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const id = setInterval(() => {
-      if (!pausedRef.current) scrollByCard(1);
-    }, 3000);
-    return () => clearInterval(id);
-  }, [scrollByCard]);
+  const endDrag = () => {
+    if (!draggingRef.current) return;
+    draggingRef.current = false;
+    const track = trackRef.current;
+    if (track && activePointerId.current !== null) {
+      try {
+        track.releasePointerCapture(activePointerId.current);
+      } catch {
+        // ο δείκτης μπορεί να έχει ήδη απελευθερωθεί από τον browser
+      }
+      track.style.cursor = "grab";
+      track.style.userSelect = "";
+    }
+    activePointerId.current = null;
+  };
+
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "mouse") return; // η αφή έχει ήδη φυσικό swipe-scroll
+    const track = trackRef.current;
+    if (!track) return;
+    e.preventDefault(); // να μην ξεκινάει επιλογή κειμένου ενώ σέρνουμε
+    draggingRef.current = true;
+    pausedRef.current = true;
+    activePointerId.current = e.pointerId;
+    dragStartRef.current = { x: e.clientX, scrollLeft: track.scrollLeft };
+    track.setPointerCapture(e.pointerId);
+    track.style.cursor = "grabbing";
+    track.style.userSelect = "none";
+  };
+
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!draggingRef.current) return;
+    const track = trackRef.current;
+    if (!track) return;
+    const dx = e.clientX - dragStartRef.current.x;
+    const oneSetWidth = track.scrollWidth / 2;
+    let next = dragStartRef.current.scrollLeft - dx;
+    next = ((next % oneSetWidth) + oneSetWidth) % oneSetWidth;
+    track.scrollLeft = next;
+    positionRef.current = next;
+  };
 
   return (
     <section id="κριτικες" className="border-y border-border bg-card">
@@ -128,56 +135,45 @@ export function ReviewsSection() {
         </Reveal>
 
         <div
-          className="relative mt-11"
+          ref={trackRef}
           onMouseEnter={pause}
-          onMouseLeave={resume}
-          onFocus={pause}
-          onBlur={resume}
-          onTouchStart={pauseThenResume}
+          onMouseLeave={() => {
+            endDrag();
+            resume();
+          }}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={endDrag}
+          onPointerCancel={endDrag}
+          className="mt-11 flex cursor-grab gap-5 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
-          <div
-            ref={trackRef}
-            className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          >
-            {reviewsLoop.map((review, i) => (
-              <blockquote
-                key={`${review.author}-${i}`}
-                aria-hidden={i >= reviews.length}
-                className="relative flex h-full w-[280px] shrink-0 snap-start flex-col rounded-lg border border-border bg-background p-6 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_18px_38px_-22px_rgb(28_39_51/0.35)] sm:w-[320px]"
+          {reviewsLoop.map((review, i) => (
+            <blockquote
+              key={`${review.author}-${i}`}
+              aria-hidden={i >= reviews.length}
+              className="relative flex h-full w-[280px] shrink-0 flex-col rounded-lg border border-border bg-background p-6 transition-shadow duration-300 hover:border-primary/40 hover:shadow-[0_18px_38px_-22px_rgb(28_39_51/0.35)] sm:w-[320px]"
+            >
+              <span
+                aria-hidden
+                className="display-num pointer-events-none absolute -top-1 right-4 text-[64px] text-primary/12"
               >
-                <span
-                  aria-hidden
-                  className="display-num pointer-events-none absolute -top-1 right-4 text-[64px] text-primary/12"
-                >
-                  &rdquo;
-                </span>
-                <p
-                  className="text-[13px] tracking-[2px] text-star"
-                  aria-label={`${review.rating} στα 5 αστέρια`}
-                >
-                  {"★".repeat(review.rating)}
-                </p>
-                <p className="mt-3 flex-1 text-[14.5px] leading-relaxed">
-                  «{review.text}»
-                </p>
-                <footer className="mt-4 text-[12.5px] text-muted-foreground">
-                  <b className="text-foreground">{review.author}</b> ·{" "}
-                  {review.source}
-                </footer>
-              </blockquote>
-            ))}
-          </div>
-
-          <ArrowButton
-            direction="prev"
-            onClick={() => scrollByCard(-1)}
-            className="absolute left-1 top-[calc(50%-10px)] -translate-y-1/2 sm:-left-3"
-          />
-          <ArrowButton
-            direction="next"
-            onClick={() => scrollByCard(1)}
-            className="absolute right-1 top-[calc(50%-10px)] -translate-y-1/2 sm:-right-3"
-          />
+                &rdquo;
+              </span>
+              <p
+                className="text-[13px] tracking-[2px] text-star"
+                aria-label={`${review.rating} στα 5 αστέρια`}
+              >
+                {"★".repeat(review.rating)}
+              </p>
+              <p className="mt-3 flex-1 text-[14.5px] leading-relaxed">
+                «{review.text}»
+              </p>
+              <footer className="mt-4 text-[12.5px] text-muted-foreground">
+                <b className="text-foreground">{review.author}</b> ·{" "}
+                {review.source}
+              </footer>
+            </blockquote>
+          ))}
         </div>
       </div>
     </section>
